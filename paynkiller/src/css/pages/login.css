@@ -1,0 +1,26 @@
+#back-menu-button {
+    background-color: #04BF8A;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#icon-menu-button {
+    background-color: #04BF8A;
+    color: white;
+    font-weight: bold;
+}
+
+#containerLogin {
+    font-family: 'Lato', sans-serif;
+    background-color: #fafafa;
+}
+
+#button-submit {
+    background-color: #04BF8A;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+}
