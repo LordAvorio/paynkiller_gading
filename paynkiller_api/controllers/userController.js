@@ -10,7 +10,7 @@ module.exports = {
 
         let username = req.body.username
         let password = req.body.password
-
+        
         try{
             let sql = `SELECT * FROM data_customer WHERE username = '${username}' `
             let rows = await asyncQuery(sql)
@@ -24,10 +24,18 @@ module.exports = {
             if(hasil === false) return res.status(400).send("Password salah !")
             
             const token = createToken({
-                username: rows[0].username
+                username: rows[0].username,
+                id_user: rows[0].id_customer
             })
 
-            res.status(200).send(token)
+            let data = {
+                username: rows[0].username,
+                id_customer: rows[0].id_customer
+            }
+
+            data.token = token
+
+            res.status(200).send(data)
         }
         catch(err){
             console.log(err)
