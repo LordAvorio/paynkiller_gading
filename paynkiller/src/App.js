@@ -1,13 +1,21 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
+import {useDispatch} from 'react-redux'
 
 
 // import Pages
 import LoginScreen from './pages/loginscreen'
 import HomeScreen from './pages/homescreen'
 
-export default function App() {
+//import actions
+import { keeplogin } from './action'
 
+export default function App() {
+  const dispatch = useDispatch()
+  useDispatch(keeplogin())
+  React.useEffect(()=> {
+      dispatch(keeplogin())
+  },[])
   return (
     <div>
       <Switch>
