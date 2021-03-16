@@ -41,6 +41,21 @@ module.exports = {
             console.log(err)
             res.status(400).send(err)
         }
+    },
+    keeplogin : async(req, res) => {   
+        const {username, id_user} = req.user
+        try{
+            const sql = `SELECT * FROM data_customer WHERE username = '${username}' AND id_customer = '${id_user}' `
+            const rows = await asyncQuery(sql)
+            const data = {
+                username: rows[0].username,
+                id_customer: rows[0].id_customer
+            }
+            res.status(200).send(data)
+        }
+        catch(err){
+            res.status(400).send('error' + err)
+        }
     }
 }
 
