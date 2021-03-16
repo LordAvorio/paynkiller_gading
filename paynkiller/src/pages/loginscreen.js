@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 
-import {Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input} from 'rsuite'
+import {Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, Modal} from 'rsuite'
+
+import swal from 'sweetalert';
 
 import LoginImage from '../images/Resources/LoginImage.png'
 
@@ -8,9 +10,57 @@ import '../css/pages/login.css'
 
 import {Link} from 'react-router-dom'
 
+import {login,removeError,logout} from '../action'
+
+import {useDispatch, useSelector} from 'react-redux'
+
 
 export default function Loginscreen() {
+    
+    const[username,setUsername] = useState("")
+    const[password,setPassword] = useState("")
+    const[textError,setTextError] = useState(false)
+
+    const[showPass,setShowPass] = useState(false)
+
+    const dispatch = useDispatch()
+
+    const {usernameCust,loginError} = useSelector((state) => {
+        return {
+            usernameCust : state.userReducer.username,
+            loginError: state.userReducer.errLogin
+        }
+      })
+
+    const handleLogin = () => {
+        
+        if(username === "" || password === "") return swal("Oops!", "Inputan tidak boleh kosong", "error");
+
+        const body = {
+            username,
+            password
+        }
+
+        dispatch(login(body))
+
+        setUsername("")
+        setPassword("")
+    }
+
+    const handleModalError = () => {
+        setTextError(false)
+        dispatch(removeError())
+    }
+
+   
+    React.useEffect(() => {
+        if(loginError){
+            setTextError(true)
+        }
+    }, [usernameCust,loginError])
+    
     return (
+
         <div id="containerLogin">
             <Grid fluid style={{padding: "0px"}}>
                 <Row style={{margin: "0px"}}>
@@ -34,18 +84,23 @@ export default function Loginscreen() {
                                         <InputGroup.Addon style={{width: '40px', backgroundColor: '#04BF8A', color: 'white'}}>
                                             <Icon icon="avatar"/>
                                         </InputGroup.Addon>
-                                        <Input type="text" placeholder="Username" style={{color: '#04BF8A'}}/>
+                                        <Input value={username} onChange={(value, event) => setUsername(value)} type="text" placeholder="Username" style={{color: '#04BF8A'}}/>
                                     </InputGroup>
                                     <InputGroup style={{height: '45px', margin: '45px 0px', }}>
-                                        <InputGroup.Addon style={{width: '40px', backgroundColor: '#04BF8A', color: 'white'}}>
-                                            <Icon icon="unlock-alt"/>
-                                        </InputGroup.Addon>
-                                        <Input type="password" placeholder="Password" style={{color: '#04BF8A'}}/>
+                                        <InputGroup.Button style={{width: '40px', backgroundColor: '#04BF8A', color: 'white'}} onClick={() => setShowPass(!showPass)}>
+                                            <Icon icon={showPass ? "unlock" : "unlock-alt"}/>
+                                        </InputGroup.Button>
+                                        <Input value={password} onChange={(value, event) => setPassword(value)} type={showPass ? "text" : "password"} placeholder="Password" style={{color: '#04BF8A'}}/>
                                     </InputGroup>
                                 </Form>
                             </Col>
                             <Col md={24} style={{padding: '0px 155px'}}>
-                                <Button id="button-submit">Lets Go !</Button>                            
+                                <Button id="button-submit" onClick={() => handleLogin()}>Lets Go !</Button>                            
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={23} style={{padding: '30px 90px'}}>
+                                <p style={{textAlign: 'center', fontSize: '25px'}}>Dont have an account ? <span ><Link id="linkRegister">Click Here</Link></span></p>
                             </Col>
                         </Row>
                     </Col>
@@ -59,6 +114,31 @@ export default function Loginscreen() {
                     </Col>
                 </Row>
             </Grid>
+
+            <Modal backdrop="static" show={textError === true} onHide={textError === false} size="xs">
+                <Modal.Body>
+                   <p>{loginError}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => handleModalError()} appearance="primary">
+                    Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal backdrop="static" show={Boolean(usernameCust) === true} onHide={Boolean(usernameCust) === false} size="xs">
+                <Modal.Body>
+                   <p>Anda Berhasil Login</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Link to='/'>
+                        <Button appearance="primary">
+                        Ok
+                        </Button>
+                    </Link>
+                </Modal.Footer>
+            </Modal>
+
         </div>
     )
 }

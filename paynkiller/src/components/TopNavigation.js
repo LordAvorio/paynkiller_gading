@@ -5,8 +5,18 @@ import logoNavbar from '../images/logo/PaynKiller.svg'
 
 import {Redirect, Link} from 'react-router-dom'
 
+import {useSelector} from 'react-redux'
+
+
 
 export default function TopNavigation() {
+
+    const {usernameCust} = useSelector((state) => {
+        return {
+            usernameCust : state.userReducer.username,
+        }
+      })
+
     return (
         <div>
             <Navbar style={{padding: '15px 50px'}}>
@@ -20,10 +30,20 @@ export default function TopNavigation() {
                 </Navbar.Header>
                 <Navbar.Body>
                     <Nav>
-                        <Nav.Item icon={<Icon icon="home" />} >Home</Nav.Item>
-                        <Link to='/login'>
-                            <Nav.Item>Login</Nav.Item>
-                        </Link>
+                        {
+                            usernameCust
+                            ?
+                            <>
+                            <Nav.Item icon={<Icon icon="home" />} >Home</Nav.Item>
+                            </>
+                            :
+                            <>
+                            <Nav.Item icon={<Icon icon="home" />} >Home</Nav.Item>
+                            <Link to='/login'>
+                                <Nav.Item>Login</Nav.Item>
+                            </Link>
+                            </>
+                        }
                     </Nav>
                     <Nav pullRight>
                         <Nav.Item icon={<Icon icon="cog" />} >Settings</Nav.Item>

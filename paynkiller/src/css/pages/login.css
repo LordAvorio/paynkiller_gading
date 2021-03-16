@@ -24,3 +24,17 @@
     font-weight: bold;
     font-size: 20px;
 }
+
+.inputStyling {
+    color: #04BF8A; 
+}
+
+#linkRegister {
+    color: #04BF8A
+}
+
+#linkRegister:hover {
+    font-size: 30px;
+    text-decoration: none;
+}
+
