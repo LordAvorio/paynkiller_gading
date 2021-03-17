@@ -7,9 +7,11 @@ import {useDispatch} from 'react-redux'
 import LoginScreen from './pages/loginscreen'
 import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
+import FPassScreen from './pages/ForgotPassScreen'
 
 //import actions
 import { keeplogin } from './action'
+import ChangePassScreen from './pages/changepassScreen'
 
 export default function App() {
   const dispatch = useDispatch()
@@ -23,6 +25,8 @@ export default function App() {
         <Route path='/' component={HomeScreen} exact/>
         <Route path='/login' component={LoginScreen} />
         <Route path='/profile' component={ProfileScreen} />
+        <Route path='/forgotpass' component={FPassScreen} />
+        <Route path='/changePass' component={ChangePassScreen} />
       </Switch>
     </div>
   )
