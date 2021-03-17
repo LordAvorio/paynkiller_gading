@@ -3,13 +3,16 @@ import Navbar from '../components/TopNavigation'
 import '../css/pages/profile.css'
 import { Button } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { logout } from '../action'
+
 import { Link } from 'react-router-dom'
 
 const ProfileScreen = () => {
     const dispatch = useDispatch()
     const btnlogout = () => {
         dispatch(logout())
+
         localStorage.removeItem('token')
     }
 
