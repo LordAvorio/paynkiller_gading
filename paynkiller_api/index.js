@@ -24,4 +24,4 @@ app.use('/user', userRouter)
 app.use('/category', categoryRouter)
 
 const port = 2000
-app.listen(port, () => console.log('connected to port' + port))
+app.listen(port, () => console.log('Connected to Port = ' + port))

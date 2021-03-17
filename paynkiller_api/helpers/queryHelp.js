@@ -3,10 +3,10 @@ const db = require('../database')
 
 module.exports = {
     asyncQuery: util.promisify(db.query).bind(db),
-    generateQuery: (query) => {
+    generateQueryBody: (body) => {
         let result = ''
-        for(let property in query){
-            result += ` ${property} = ${db.escape(query[property])},`
+        for(let property in body){
+            result += ` ${property} = ${db.escape(body[property])},`
         }
         return result.slice(0, -1)
     }

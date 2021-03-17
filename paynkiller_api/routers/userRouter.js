@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const {body} = require('express-validator')
 const {userController} = require('../controllers')
-
+const {verifyToken} = require('../helpers/jwt')
 
 const registerValidation = [
     body('username')
@@ -24,4 +24,7 @@ const registerValidation = [
 ]
 
 router.post('/register', registerValidation, userController.register)
+router.post('/login',userController.login)
+router.post('/keeplogin', verifyToken, userController.keeplogin)
+
 module.exports = router

@@ -16,7 +16,6 @@ module.exports = {
             // add token to req.user
             req.user = result
             // lanjut ke proses berikutnya
-            next()
         }
         catch(err) {
             console.log(err)
