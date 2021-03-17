@@ -19,5 +19,9 @@ app.get('/',(req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
+const {userRouter, categoryRouter} = require('./routers')
+app.use('/user', userRouter)
+app.use('/category', categoryRouter)
+
 const port = 2000
 app.listen(port, () => console.log('connected to port' + port))
