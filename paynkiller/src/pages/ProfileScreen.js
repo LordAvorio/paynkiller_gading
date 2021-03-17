@@ -1,7 +1,8 @@
 import React from 'react'
 import Navbar from '../components/TopNavigation'
-import {Button} from 'rsuite'
-import {useDispatch} from 'react-redux'
+import '../css/pages/profile.css'
+import { Button } from 'rsuite'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../action'
 import { Link } from 'react-router-dom'
 
@@ -12,13 +13,23 @@ const ProfileScreen = () => {
         localStorage.removeItem('token')
     }
 
-    return(
+    const { username } = useSelector((state) => {
+        return {
+            username: state.userReducer.username
+        }
+    })
+
+    return (
         <div>
             <Navbar />
-            <h1>This is Profile Screen</h1>
-            <Link to='/'>
-            <Button onClick={btnlogout}>LOGOUT</Button>
-            </Link>
+            <div id="containerProfile">
+                <div id="profileBar">
+                    <h1>This is Profile {username}</h1>
+                    <Link to='/'>
+                        <Button onClick={btnlogout} color='red' id="Button">LOGOUT</Button>
+                    </Link>
+                </div>
+            </div>
         </div>
     )
 }
