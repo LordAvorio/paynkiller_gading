@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const TOKEN_KEY= process.env.TOKEN_KEY
+const TOKEN_KEY= '!@#$%^&*'
 
 module.exports = {
     createToken: (data) => {
@@ -16,6 +16,7 @@ module.exports = {
             // add token to req.user
             req.user = result
             // lanjut ke proses berikutnya
+            next()
         }
         catch(err) {
             console.log(err)

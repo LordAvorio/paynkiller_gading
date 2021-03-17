@@ -2,7 +2,6 @@ const router = require('express').Router()
 const {body} = require('express-validator')
 const {userController} = require('../controllers')
 const {verifyToken} = require('../helpers/jwt')
-const {body} = require('express-validator')
 
 const passValidation = [
     body('password')

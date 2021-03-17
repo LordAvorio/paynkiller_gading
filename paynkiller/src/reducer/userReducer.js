@@ -1,7 +1,9 @@
 let INITIAL_STATE = {
     username: "",
     id_customer: null,
-    errLogin: ""
+    errLogin: "",
+    errFpass: '',
+    FpassRes: ''
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -23,6 +25,18 @@ const userReducer = (state = INITIAL_STATE, action) => {
             return{
                 ...state,
                 errLogin: ""
+            }
+        case 'FORGOT_PASS':
+            return{
+                ...state,
+                FpassRes: action.payload
+            }
+        case 'REMOVE_RES' :
+            return INITIAL_STATE
+        case 'Err_FORGOT_PASS':
+            return{
+                ...state,
+                errFpass: action.payload
             }
         default:
             return state
