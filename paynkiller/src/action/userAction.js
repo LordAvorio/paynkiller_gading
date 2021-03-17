@@ -66,3 +66,45 @@ export const keeplogin = () => {
         }
     }
 }
+
+export const forgotpass = (data) => {
+    return async(dispatch) => {
+        try{
+            const res = await Axios.post('http://localhost:2000/user/forgotPass', data)
+            dispatch({
+                type: 'FORGOT_PASS',
+                payload: res.data
+            })
+        }
+        catch(err){
+            dispatch({
+                type: 'Err_FORGOT_PASS',
+                payload: err.response.data
+            })
+        }
+    }
+}
+
+export const FpassRes = () => {
+    return {
+        type: 'REMOVE_RES'
+    }
+}
+
+export const ChangePass = (data) => {
+    return async(dispatch) => {
+        try{
+            const res = await Axios.post('http://localhost:2000/user/changepass', data)
+            dispatch({
+                type: 'FORGOT_PASS',
+                payload: res.data
+            })
+        }
+        catch(err){
+            dispatch({
+                type: 'Err_FORGOT_PASS',
+                payload: err.response.data
+            })
+        }
+    }
+}
