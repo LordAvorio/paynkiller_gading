@@ -31,6 +31,7 @@ const ChangePassScreen = (props) => {
             password: password,
             token: token
         }
+        console.log(data)
         dispatch(ChangePass(data))
     }
 

@@ -95,6 +95,7 @@ export const ChangePass = (data) => {
     return async(dispatch) => {
         try{
             const res = await Axios.post('http://localhost:2000/user/changepass', data)
+            console.log(res)
             dispatch({
                 type: 'FORGOT_PASS',
                 payload: res.data

@@ -2,8 +2,6 @@ const db = require('../database')
 const transporter = require('../helpers/nodemailer')
 const { validationResult } = require('express-validator')
 
-const fs = require('fs')
-
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const handlebars = require('handlebars')
@@ -11,8 +9,6 @@ const {asyncQuery, generateQuery} = require('../helpers/queryHelp')
 const {createToken, verifyToken} = require('../helpers/jwt')
 
 var salt = bcrypt.genSaltSync(10);
-
-const db = require('../database')
 
 module.exports = {
     login: async(req,res) => {
@@ -132,7 +128,7 @@ module.exports = {
             const info = await transporter.sendMail(option)
             res.status(200).send('Email Sended')
         }
-        catch{
+        catch(err){
             res.status(400).send('error' + err)
         }
     },
@@ -140,6 +136,7 @@ module.exports = {
         const {username, id_user} = req.user
         const {password} = req.body
         let errors = validationResult(req)
+        console.log(errors)
         const msg = errors.array().map(
             (item) => item.msg
         )
