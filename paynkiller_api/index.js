@@ -19,8 +19,9 @@ app.get('/',(req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
-const {userRouter, categoryRouter} = require('./routers')
+const {userRouter, categoryRouter, orderRouter} = require('./routers')
 app.use('/user', userRouter)
+app.use('/order', orderRouter)
 app.use('/category', categoryRouter)
 
 const port = 2000
