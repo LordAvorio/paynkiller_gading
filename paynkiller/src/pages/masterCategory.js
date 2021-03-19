@@ -1,10 +1,13 @@
 import React from 'react'
-import { Grid, Row, Col, Button, IconButton, Modal, Input } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCategory, addCategory, editCategory, deleteCategory } from '../action'
 
-const Category = () => {
-    const [selectId, setSelectId] = React.useState(null)
+import SideNav from '../components/sideNavigation'
+import { Grid, Row, Col, Panel, Button, Modal, Input, IconButton } from 'rsuite'
+import MaterialTable from 'material-table'
+import swal from 'sweetalert'
+
+const MasterCategory = () => {
     const [showModal, setShowModal] = React.useState({
         title: '',
         muncul: false,
@@ -27,19 +30,20 @@ const Category = () => {
     const dispatch = useDispatch()
     React.useEffect(() => {
         dispatch(getCategory())
-        // dispatch(username)
+        console.log(categories)
     }, [])
 
     const add = () => {
         setShowModal({
             title: 'add',
             muncul: true,
-            isi: 'write here',
+            isi: '',
             id: null
         })
     }
 
     const save = () => {
+        if (!showModal.isi) return swal("Oops!", "Input Form cannot be empty", "error")
         if (showModal.title === 'add') {
             console.log(showModal.isi)
             dispatch(addCategory(showModal.isi))
@@ -67,25 +71,21 @@ const Category = () => {
         })
     }
 
-    const edit = async (index) => {
+    const edit = async (id_category, nama_category) => {
         await setShowModal({
             title: 'edit',
             muncul: true,
-            isi: categories[index].title,
-            id: categories[index].id_category
+            isi: nama_category,
+            id: id_category
         })
-        setSelectId(categories[index].id_category)
-        // console.log('params', categories[index].id_category)
-        // console.log('selected', showModal)
-        // console.log(categories[index].title)
     }
 
-    const del = (index) => {
+    const del = (id_category, nama_category) => {
         setModalDel({
             title: 'delete',
             muncul: true,
-            isi: `are you sure you want to delete '${categories[index].title}' ?`,
-            id: categories[index].id_category
+            isi: `are you sure you want to delete '${nama_category}' ?`,
+            id: id_category
         })
 
         console.log(modalDel)
@@ -109,47 +109,58 @@ const Category = () => {
         })
     }
 
-    const Render = () => {
-        return (
-            <div>
-                {categories.map((item, index) => {
-                    return (
-                        <div style={styles.rows}>
-                            <span>{item.title}</span>
-                            <div>
-                                <IconButton onClick={() => edit(index)} style={{ backgroundColor: 'white', marginTop: '-10px' }} icon={<span className="material-icons">create</span>}> edit</IconButton>
-                                <IconButton onClick={() => del(index)} style={{ backgroundColor: 'white', marginTop: '-10px' }} icon={<span className="material-icons">delete</span>}> delete</IconButton>
-                            </div>
-                        </div>
-                    )
-                })}
-
-            </div>
-        )
-    }
-
     return (
-        <Grid fluid>
-            <Row>
-                <Col md={4} style={{backgroundColor: 'yellow'}}>
-                    <h1>ini drawer</h1>
-                </Col>
-                <Col md={14}>
-                    <Row style={{margin: '30px -312px 0px' }} >
-                    <Button onClick={add} style={{ float: 'right', height: '46px', backgroundColor: '#40e0d0', color: 'white', fontWeight: 'bold' }}>
-                        add new category
-                    </Button>
-                    </Row>
-                    <Row style={{ height: '80vh', justifyContent: 'center', marginLeft: '140px' }}>
-                        <div style={styles.header}>
-                            <span className="material-icons">list</span>
-                            <span style={{ marginLeft: '10px' }}>Total Categories {categories.length}</span>
-                        </div>
-                        <Render />
-                    </Row>
+        <div style={{ backgroundColor: "#f4f3f3" }}>
+            <Grid fluid style={{ margin: "0px", padding: "0px" }}>
+                <Row style={{ margin: "0px", padding: "0px" }}>
+                    <SideNav />
+                    <Col md={21}>
+                        <Row style={{ padding: "60px 40px" }}>
+                            <Col md={24}>
+                                <Panel shaded>
+                                    <Row>
+                                        <Col md={21}>
+                                            <p style={{ fontSize: "25px", color: "#04BF8A" }}>Master Category</p>
+                                        </Col>
+                                        <Col md={3}>
+                                            <Button color="cyan" style={{ width: "100%" }} onClick={add}>
+                                                Tambah Data
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                    <Row style={{ paddingTop: "25px" }}>
+                                        <Col md={24}>
+                                            <MaterialTable
+                                                columns={[
+                                                    { title: 'Nama Kategori', field: 'nama_category' }
+                                                ]}
+                                                data={categories}
+                                                actions={[
+                                                    {
+                                                        icon: 'edit',
+                                                        tooltip: 'Edit',
+                                                        onClick: (event, rowData) => edit(rowData.id_category, rowData.nama_category)
+                                                    },
+                                                    {
+                                                        icon: 'delete',
+                                                        tooltip: 'Delete',
+                                                        onClick: (event, rowData) => del(rowData.id_category, rowData.nama_category)
+                                                    },
+                                                ]}
+                                                title=""
+                                                options={{
+                                                    actionsColumnIndex: -1
+                                                }}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Panel>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </Grid>
 
-                </Col>
-            </Row>
             <Modal show={showModal.muncul} onHide={close} style={{ width: '300px', justifySelf: 'center', position: 'fixed', top: '35%', left: '40%' }}>
                 <Modal.Header>{showModal.title} category</Modal.Header>
                 <Modal.Body>
@@ -182,40 +193,8 @@ const Category = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </Grid>
+        </div>
     )
-
 }
 
-const styles = {
-    header: {
-        height: '56px',
-        width: '910px',
-        border: '1px solid  white',
-        padding: '15px 15px 15px 15px',
-        minHeight: '20px',
-        backgroundColor: ' #F8F8F8',
-        color: '#606060',
-        fontSize: '20px',
-        fontWeight: 600,
-        lineHeight: '22px',
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    rows: {
-        height: '56px',
-        width: '910px',
-        border: '2px solid #F8F8F8',
-        padding: '15px 15px 15px 15px',
-        minHeight: '20px',
-        backgroundColor: 'white',
-        color: '#606060',
-        fontSize: '16px',
-        fontWeight: 600,
-        lineHeight: '22px',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }
-}
-export default Category
+export default MasterCategory
