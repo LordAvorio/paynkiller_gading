@@ -6,6 +6,6 @@ const produkRouter = require('./produkRouter')
 module.exports = {
     userRouter,
     categoryRouter,
-    produkRouter
-    orderRouter,
+    produkRouter,
+    orderRouter
 }

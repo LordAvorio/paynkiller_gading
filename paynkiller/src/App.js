@@ -9,7 +9,6 @@ import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
 
 // import screen
-import Category from './pages/categoryAdmin'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
 import MasterCategory from './pages/masterCategory'
