@@ -3,9 +3,9 @@ import Axios from 'axios'
 import { Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, FormControl, Modal } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
 import { register, removeError } from '../action'
-import LoginImage from '../images/Resources/LoginImage.png'
+import TinyGuys from '../images/Resources/TinyGuys.jpg'
 
-import '../css/pages/login.css'
+import '../css/pages/register.css'
 
 import { Redirect } from 'react-router-dom'
 
@@ -49,7 +49,6 @@ const RegisterScreen = () => {
         //     .catch(err => console.log(err))
 
         dispatch(register(user))
-        if (!loginError) return setModalAcc([true, 'a verification request has been sent to your email'])
         // if (!loginErr) {
         //     setShowModal([true, 'a verification request has been sent to your email'])
         //     console.log(loginErr)
@@ -57,7 +56,7 @@ const RegisterScreen = () => {
         //     setShowModal([true, loginErr])
 
     }
-    
+
     const notError = () => {
         setSameAccount(false)
         dispatch(removeError())
@@ -67,17 +66,20 @@ const RegisterScreen = () => {
         setModalAcc([false, ''])
         setToHome(true)
     }
-    
+
     React.useEffect(() => {
         if (loginError) {
             setSameAccount(true)
+            setModalAcc([false, ''])
         }
-    }, [loginError])
+
+        if (usernameCust) return setModalAcc([true, 'a verification request has been sent to your email'])
+    }, [loginError, usernameCust])
 
     if (toHome) return <Redirect to="/" />
 
     return (
-        <div id="containerLogin">
+        <div id="containerRegister">
             <Grid fluid style={{ padding: "0px" }}>
                 <Row style={{ margin: "0px" }}>
                     <Col md={10} style={{ height: "100vh" }}>
@@ -108,7 +110,7 @@ const RegisterScreen = () => {
                                             <Input
                                                 type="text"
                                                 placeholder="Username"
-                                                style={{ color: '#04BF8A' }}
+                                                style={{ color: '#2d5a7e' }}
                                                 value={username}
                                                 onChange={username => setUsername(username)}
                                             />
@@ -123,7 +125,7 @@ const RegisterScreen = () => {
                                             <Input
                                                 type="text"
                                                 placeholder="email"
-                                                style={{ color: '#04BF8A' }}
+                                                style={{ color: '#2d5a7e' }}
                                                 value={email}
                                                 onChange={email => setEmail(email)}
                                             />
@@ -138,7 +140,7 @@ const RegisterScreen = () => {
                                             <Input
                                                 type={show1 ? "text" : "password"}
                                                 placeholder="Password"
-                                                style={{ color: '#04BF8A' }}
+                                                style={{ color: '#2d5a7e' }}
                                                 value={password}
                                                 onChange={password => setPassword(password)}
                                             />
@@ -153,7 +155,7 @@ const RegisterScreen = () => {
                                             <Input
                                                 type={show2 ? "text" : "password"}
                                                 placeholder="Confirm Password"
-                                                style={{ color: '#04BF8A' }}
+                                                style={{ color: '#2d5a7e' }}
                                                 value={confpass}
                                                 onChange={confpass => setconfpass(confpass)}
                                             />
@@ -161,7 +163,7 @@ const RegisterScreen = () => {
                                     </Form>
                                 </Col>
                                 <Col md={24} style={{ margin: '30px 97px' }}>
-                                    <Button id="button-submit" onClick={buttonRegis}>Lets Go !</Button>
+                                    <Button id="button-register" onClick={buttonRegis}>Sign Up</Button>
                                 </Col>
                             </Row>
                         </div>
@@ -169,9 +171,10 @@ const RegisterScreen = () => {
                     <Col md={14} style={{ height: "100vh" }}>
                         <img
                             alt=""
-                            src={LoginImage}
-                            width="100%"
-                            height="100%"
+                            src={TinyGuys}
+                            width="70%"
+                            height="80%"
+                            style={{ margin: '70px 80px' }}
                         />
                     </Col>
                 </Row>
@@ -209,13 +212,13 @@ const RegisterScreen = () => {
 const styles = {
     title: {
         textAlign: 'center',
-        fontSize: '40px',
-        color: '#04BF8A',
+        fontSize: '34px',
+        color: '#2d5a7e',
         fontWeight: 'bold'
     },
     icon: {
         width: '40px',
-        backgroundColor: '#04BF8A',
+        backgroundColor: '#95d9c7',
         color: 'white',
         justifyContent: 'center'
     }

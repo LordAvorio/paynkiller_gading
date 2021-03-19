@@ -1,9 +1,9 @@
-const {asyncQuery, generateQuery} = require('../helpers/queryHelp')
+const {asyncQuery, generateQueryBody} = require('../helpers/queryHelp')
 
 module.exports = {
     getAllCate: async (req, res) => {
         try {
-            const queryCate = 'SELECT * FROM category_obat'
+            const queryCate = 'SELECT * FROM category'
             const result = await asyncQuery(queryCate)
             res.status(200).send(result)
         }
@@ -13,13 +13,12 @@ module.exports = {
         }
     },
     add: async (req, res) => {
-        const {isi, parent_id} = req.body
-        const parent_baru = parent_id || null
+        const {isi} = req.body
         try {
-            const addQuery = `INSERT INTO category_obat (title, parent_id) VALUES ('${isi}', ${parent_baru})`
+            const addQuery = `INSERT INTO category (nama_category) VALUES ('${isi}')`
             await asyncQuery(addQuery)
 
-            const queryCate = 'SELECT * FROM category_obat'
+            const queryCate = 'SELECT * FROM category'
             const result = await asyncQuery(queryCate)
             res.status(200).send(result)
         }
@@ -30,10 +29,10 @@ module.exports = {
     },
     delete: async (req, res) => {
         try {
-            const deleteQuery = `DELETE FROM category_obat WHERE id_category = ${parseInt(req.params.id)}`
+            const deleteQuery = `DELETE FROM category WHERE id_category = ${parseInt(req.params.id)}`
             await asyncQuery(deleteQuery)
 
-            const queryCate = 'SELECT * FROM category_obat'
+            const queryCate = 'SELECT * FROM category'
             const result = await asyncQuery(queryCate)
             res.status(200).send(result)
         }
@@ -44,10 +43,10 @@ module.exports = {
     },
     editCate: async (req , res) => {
         try {
-            const editQuery = `UPDATE category_obat SET${generateQuery(req.body)} where id_category = ${parseInt(req.params.id)}`
+            const editQuery = `UPDATE category SET${generateQueryBody(req.body)} where id_category = ${parseInt(req.params.id)}`
             await asyncQuery(editQuery)
 
-            const queryCate = 'SELECT * FROM category_obat'
+            const queryCate = 'SELECT * FROM category'
             const result = await asyncQuery(queryCate)
             res.status(200).send(result)
         }
@@ -58,7 +57,7 @@ module.exports = {
     },
     topNode: async (req , res) => {
         try {
-            const nodeQuery = 'SELECT id_category, title FROM category_obat WHERE parent_id IS NULL'
+            const nodeQuery = 'SELECT id_category, nama_category FROM category WHERE parent_id IS NULL'
             const result = await asyncQuery(nodeQuery)
             res.status(200).send(result)
         }

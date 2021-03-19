@@ -22,6 +22,7 @@ export const addCategory = (isi) => {
             dispatch({type: 'GET_CATEGORY', payload: res.data})
         }
         catch (err) {
+            dispatch({ type: 'CATEGORY_ERR', payload: err.response.data })
             console.log(err)
         }
     }
@@ -40,17 +41,24 @@ export const deleteCategory = (id) => {
     }
 }
 
-export const editCategory = (title, id) => {
+export const editCategory = (nama_category, id) => {
     return async (dispatch) => {
-        console.log({title})
+        console.log({nama_category})
         console.log(id)
         try {
-            const res  = await Axios.patch(`http://localhost:2000/category/edit/${id}`, {title})
+            const res  = await Axios.patch(`http://localhost:2000/category/edit/${id}`, {nama_category})
             console.log(res.data)
             dispatch({type: 'GET_CATEGORY', payload: res.data})
         }
         catch (err) {
+            dispatch({ type: 'CATEGORY_ERR', payload: err.response.data })
             console.log(err)
         }
+    }
+}
+
+export const removeError = () => {
+    return{
+        type: 'REMOVE_ERR'
     }
 }
