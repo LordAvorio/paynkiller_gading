@@ -19,8 +19,11 @@ app.get('/',(req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
-const {userRouter, categoryRouter, produkRouter} = require('./routers')
+
+const {userRouter, categoryRouter, produkRouter,  orderRouter} = require('./routers')
+
 app.use('/user', userRouter)
+app.use('/order', orderRouter)
 app.use('/category', categoryRouter)
 app.use('/produk', produkRouter )
 
