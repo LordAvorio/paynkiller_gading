@@ -12,7 +12,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
             return{
                 ...state,
                 username: action.payload.username,
-                id_customer: action.payload.id_customer
+                id_customer: action.payload.id_customer,
+                cart: action.payload.cart
             }
         case 'LOGOUT':
             return INITIAL_STATE
