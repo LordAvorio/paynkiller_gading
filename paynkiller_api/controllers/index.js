@@ -6,6 +6,6 @@ const produkController = require('./produkController')
 module.exports = {
     userController,
     categoryController,
-    produkController
-    orderController,
+    produkController,
+    orderController
 }
