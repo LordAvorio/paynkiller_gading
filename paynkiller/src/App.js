@@ -7,8 +7,7 @@ import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
 import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
-
-// import screen
+import CartScreen from './pages/cartscreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
 import MasterCategory from './pages/masterCategory'
@@ -31,6 +30,7 @@ export default function App() {
         <Route path='/' component={HomeScreen} exact/>
         <Route path='/register' component={RegisterScreen} />
         <Route path='/profile' component={ProfileScreen}/>
+        <Route path='/cart' component={CartScreen}/>
         <Route path='/admin/master/category' component={MasterCategory}/>
         <Route path='/login' component={LoginScreen} />
         <Route path='/profile' component={ProfileScreen} />
