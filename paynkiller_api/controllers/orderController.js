@@ -50,7 +50,7 @@ module.exports = {
         const id = parseInt(req.params.idcustomer)
         console.log('id customer', id)
         try {
-            const get = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, od.id_details, od.qty, sp.jumlah_produk as stock, od.komposisi, od.harga_produk, 
+            const get = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, p.gambar_obat, od.id_details, od.qty, sp.jumlah_produk as stock, od.komposisi, od.harga_produk, 
                         od.aturan_pakai, p.komposisi, os.status as status_order, od.total_harga 
                         from orders o join order_details od on o.order_number = od.order_number 
                         join produk p on od.id_produk = p.id_produk
@@ -76,12 +76,12 @@ module.exports = {
     editQty: async (req, res) => {
         const id = parseInt(req.params.idproduk)
         console.log(req.body)
-        const { qty, total_harga, order_number } = req.body
+        const { qty, total_harga, id_details } = req.body
         try {
             const edit = `update order_details set qty=${qty}, total_harga=${total_harga} 
-            where id_produk=${id} and order_number=${order_number}`
+                        where id_details=${id_details}`
             await asyncQuery(edit)
-            
+            console.log('berhasil edit qty')
             res.sendStatus(200)
         }
         catch (err) {
