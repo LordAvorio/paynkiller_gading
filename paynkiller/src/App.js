@@ -11,7 +11,7 @@ import CartScreen from './pages/cartscreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
 import MasterCategory from './pages/masterCategory'
-
+import CartScreen from './pages/cartscreen'
 import {useDispatch} from 'react-redux'
 
 //import actions
