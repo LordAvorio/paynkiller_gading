@@ -94,18 +94,13 @@ export default function Loginscreen() {
                                     </InputGroup>
                                 </Form>
                             </Col>
-                        <Row>
-                            <Col md={23} style={{padding: '30px 90px'}}>
-                                <p style={{textAlign: 'center', fontSize: '20px'}}>Forgot Password? <span ><Link to='/forgotpass' id="linkRegister">Click Here</Link></span></p>
-                            </Col>
-                        </Row>
                             <Col md={24} style={{padding: '0px 155px'}}>
                                 <Button id="button-submit" onClick={() => handleLogin()}>Lets Go !</Button>                            
                             </Col>
                         </Row>
                         <Row>
                             <Col md={23} style={{padding: '30px 90px'}}>
-                                <p style={{textAlign: 'center', fontSize: '20px'}}>Dont have an account ? <span ><Link id="linkRegister">Click Here</Link></span></p>
+                                <p style={{textAlign: 'center', fontSize: '14px'}}>Dont have an account ? <span ><Link style={{fontSize: '14px', color: '#04BF8A'}}>Click Here</Link></span></p>
                             </Col>
                         </Row>
                     </Col>
