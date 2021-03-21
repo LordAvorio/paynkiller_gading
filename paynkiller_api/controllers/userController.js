@@ -119,7 +119,12 @@ module.exports = {
                 from: `admin <andhika.jeremia@gmail.com>`,
                 to: 'emailsampahnyague287@gmail.com',
                 subject: 'Forgot Password',
-                text: ''
+                text: '',
+                attachments: [{
+                    filename: 'paynkiller.svg',
+                    path: __dirname + '/images/logo/paynkiller.png',
+                    cid:'paynkiller'
+                }],
             }
             const fileEmail = fs.readFileSync('./file_email/index.html').toString()
 

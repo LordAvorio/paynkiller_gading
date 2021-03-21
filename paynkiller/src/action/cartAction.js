@@ -4,6 +4,7 @@ export const getUserCart = (id_customer) => {
     return async (dispatch) => {
         try {
             console.log('id di action', id_customer)
+
             const res = await Axios.get(`http://localhost:2000/order/userCart/${id_customer}`)
             console.log(res.data)
             dispatch({ type: 'GET_CART', payload: res.data })

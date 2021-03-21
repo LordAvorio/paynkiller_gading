@@ -3,6 +3,7 @@ import { Panel, IconButton, Button, Input, InputGroup, } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserCart, editCartQty, deleteCartItem, keeplogin } from '../action'
 import Navbar from '../components/TopNavigation'
+import { blueGrey } from '@material-ui/core/colors'
 
 const CartScreen = () => {
     const [tempProduk, setTempProduk] = React.useState({})
@@ -14,7 +15,7 @@ const CartScreen = () => {
         total_harga: 0,
         order_number: 0
     })
-
+    const [grandTotal, setgrandTotal] = React.useState(null)
     const { id_customer, cart } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
@@ -88,7 +89,6 @@ const CartScreen = () => {
         // console.log('itung grand', cart)
         return counter
     }
-
 
     const Render = () => {
         return (
