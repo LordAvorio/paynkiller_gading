@@ -9,5 +9,12 @@ module.exports = {
             result += ` ${property} = ${db.escape(body[property])},`
         }
         return result.slice(0, -1)
+    },
+    generateQuery: (query) => {
+        let result = ''
+        for(let property in query){
+            result += ` ${property} = ${db.escape(query[property])},`
+        }
+        return result.slice(0, -1)
     }
 }
