@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom'
 import RegisterScreen from './pages/registerscreen'
 import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
+import CartScreen from './pages/cartscreen'
 import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
 import MasterCategory from './pages/masterCategory'
@@ -28,6 +29,7 @@ export default function App() {
         <Route path='/' component={HomeScreen} exact/>
         <Route path='/register' component={RegisterScreen} />
         <Route path='/profile' component={ProfileScreen}/>
+        <Route path='/cart' component={CartScreen}/>
         <Route path='/admin/master/category' component={MasterCategory}/>
         <Route path='/login' component={LoginScreen} />
         <Route path='/profile' component={ProfileScreen} />
