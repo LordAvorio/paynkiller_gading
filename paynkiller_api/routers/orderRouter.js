@@ -1,9 +1,10 @@
 const router = require('express').Router()
+const {verifyToken} = require('../helpers/jwt')
 const {orderController} = require('../controllers')
 
-router.post('/addCart/:id_customer', orderController.addToCart)
-router.get('/userCart/:id_customer', orderController.getCartUser)
-router.patch('/editQty/:id_produk', orderController.editQty)
-router.delete('/delete/:id_produk', orderController.delete)
+router.post('/addCart/:idcustomer', orderController.addToCart)
+router.get('/userCart/:idcustomer', orderController.getCartUser)
+router.patch('/editQty', orderController.editQty)
+router.delete('/delete/:iddetails', orderController.delete)
 
 module.exports = router
