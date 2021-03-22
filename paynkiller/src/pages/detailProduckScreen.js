@@ -18,20 +18,21 @@ const DetailProdukScreen = (props) => {
         axios.post(`http://localhost:2000/produk/getProduk?${id_produk}`)
             .then((res) => setData(res.data[0]))
     }, [])
+
+    const btnBuy = () => {
+        console.log(angka)
+    }
+
     console.log(Data)
     return (
-        <div id='bigContainer'>
-            <TopNavigation />            
-            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "25px" }}>
+        <div>
+            <TopNavigation />
+            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "50px" }}>
                 <Link to='/'>
                     <IconButton id="back-menu-button" icon={<Icon icon="angle-left" id="icon-menu-button" />}>Back To Home</IconButton>
                 </Link>
             </Col>
-            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "25px" }}>
-                <div id='container1'>
-                    <h1 id='judulDetailProduk'>{Data.nama_produk}</h1>
-                    <h1 id='hargaDetailProduk'>Rp. {Data.harga_produk}</h1>
-                </div>
+            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "50px" }}>
                 <div id='container2'>
                     <div id='container2_1'>
                         <div id='Box'>
@@ -39,6 +40,10 @@ const DetailProdukScreen = (props) => {
                         </div>
                     </div>
                     <div id='container2_2'>
+                        <div id='container1'>
+                            <h1 id='judulDetailProduk'>{Data.nama_produk}</h1>
+                            <h1 id='hargaDetailProduk'>Rp. {Data.harga_produk ? Data.harga_produk.toLocaleString() : 0}</h1>
+                        </div>
                         <p id='minititle' >Indikasi Umum</p>
                         <p id='minitext'>{Data.indikasi_umum}</p>
                         <p id='minititle' >Aturan Pakai</p>
@@ -53,14 +58,15 @@ const DetailProdukScreen = (props) => {
                         <p id='minitext'>{Data.nama_category}</p>
                     </div>
                     <div id='container2_3'>
-                        <InputGroup style={{ height: '45px' }}>
-                            <Input value={angka} onChange={(value, event) => setAngka(value)} type="number" placeholder="Username" style={{ color: '#04BF8A' }} />
-                        </InputGroup>
-                        <div style={{display:'flex', justifyContent:'space-evenly'}}>
-                        <Button color='cyan' onClick={() => setAngka(prev => prev + 1)}>➕</Button>
-                        <Button color='cyan' onClick={() => setAngka(prev => prev - 1)}>➖</Button>
+                        <div style={{ display: 'flex' }}>
+                            <Button style={{ backgroundColor: angka !== 0 ? '#dfe6e9' : '#636e72' }} onClick={() => setAngka(prev => parseInt(prev) - 1)} disabled={angka === 0}>➖</Button>
+                            <InputGroup style={{ height: '45px', width: 150 }}>
+                                <Input value={angka} onChange={(value, event) => setAngka(parseInt(value))} type="number" placeholder="Username" style={{ color: '#04BF8A' }} />
+                            </InputGroup>
+                            <Button style={{ backgroundColor: angka >= Data.jumlah_produk ? '#636e72' : '#dfe6e9' }} onClick={() => setAngka(prev => parseInt(prev) + 1)} disabled={angka >= Data.jumlah_produk}>➕</Button>
+                            <p id='minititle' style={{marginTop: 10, marginLeft: 10}}>Stock : {Data.jumlah_produk}</p>
                         </div>
-                        <Button color='green' style={{width:179.6}}>Buy</Button>
+                        <Button style={{ width: 350, backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', borderRadius: 5, marginTop: 20 }} onClick={btnBuy}>Buy</Button>
                     </div>
                 </div>
             </Col>
