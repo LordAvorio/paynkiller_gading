@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
+app.use(express.static('./public'))
 
 const {
     userRouter,

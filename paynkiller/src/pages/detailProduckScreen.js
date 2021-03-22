@@ -58,15 +58,14 @@ const DetailProdukScreen = (props) => {
                         <p id='minitext'>{Data.nama_category}</p>
                     </div>
                     <div id='container2_3'>
-                        <div style={{ display: 'flex' }}>
-                            <Button style={{ backgroundColor: angka !== 0 ? '#dfe6e9' : '#636e72' }} onClick={() => setAngka(prev => parseInt(prev) - 1)} disabled={angka === 0}>➖</Button>
-                            <InputGroup style={{ height: '45px', width: 150 }}>
-                                <Input value={angka} onChange={(value, event) => setAngka(parseInt(value))} type="number" placeholder="Username" style={{ color: '#04BF8A' }} />
-                            </InputGroup>
-                            <Button style={{ backgroundColor: angka >= Data.jumlah_produk ? '#636e72' : '#dfe6e9' }} onClick={() => setAngka(prev => parseInt(prev) + 1)} disabled={angka >= Data.jumlah_produk}>➕</Button>
-                            <p id='minititle' style={{marginTop: 10, marginLeft: 10}}>Stock : {Data.jumlah_produk}</p>
+                        <InputGroup style={{ height: '45px' }}>
+                            <Input value={angka} onChange={(value, event) => setAngka(parseInt(value))} type="number" placeholder="Username" style={{ color: '#04BF8A' }} />
+                        </InputGroup>
+                        <div style={{display:'flex', justifyContent:'space-evenly'}}>
+                        <Button color='cyan' onClick={() => setAngka(prev => parseInt(prev) + 1)} disabled={angka >= Data.jumlah_produk}>➕</Button>
+                        <Button color='cyan' onClick={() => setAngka(prev => parseInt(prev) - 1)} disabled={angka === 0}>➖</Button>
                         </div>
-                        <Button style={{ width: 350, backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', borderRadius: 5, marginTop: 20 }} onClick={btnBuy}>Buy</Button>
+                        <Button color='green' style={{width:179.6}} onClick={btnBuy}>Buy</Button>
                     </div>
                 </div>
             </Col>
