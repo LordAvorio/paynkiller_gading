@@ -25,18 +25,14 @@ const DetailProdukScreen = (props) => {
 
     console.log(Data)
     return (
-        <div id='bigContainer'>
-            <TopNavigation />            
-            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "25px" }}>
+        <div>
+            <TopNavigation />
+            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "50px" }}>
                 <Link to='/'>
                     <IconButton id="back-menu-button" icon={<Icon icon="angle-left" id="icon-menu-button" />}>Back To Home</IconButton>
                 </Link>
             </Col>
-            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "25px" }}>
-                <div id='container1'>
-                    <h1 id='judulDetailProduk'>{Data.nama_produk}</h1>
-                    <h1 id='hargaDetailProduk'>Rp. {Data.harga_produk}</h1>
-                </div>
+            <Col md={24} style={{ paddingTop: "20px", paddingLeft: "50px" }}>
                 <div id='container2'>
                     <div id='container2_1'>
                         <div id='Box'>
@@ -44,6 +40,10 @@ const DetailProdukScreen = (props) => {
                         </div>
                     </div>
                     <div id='container2_2'>
+                        <div id='container1'>
+                            <h1 id='judulDetailProduk'>{Data.nama_produk}</h1>
+                            <h1 id='hargaDetailProduk'>Rp. {Data.harga_produk ? Data.harga_produk.toLocaleString() : 0}</h1>
+                        </div>
                         <p id='minititle' >Indikasi Umum</p>
                         <p id='minitext'>{Data.indikasi_umum}</p>
                         <p id='minititle' >Aturan Pakai</p>

@@ -7,5 +7,4 @@ router.post('/editstokproduk/:id',stokProdukController.editStokProduk)
 router.post('/deletestokproduk/:id',stokProdukController.deleteStokProduk)
 router.post('/searchprodukfilter',stokProdukController.searchProdukFilter)
 
-
 module.exports = router
