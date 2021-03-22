@@ -1,5 +1,6 @@
 let INITIAL_STATE = {
     dataStokProduct: [],
+    testProduct:[],
     errLogin: ""
 }
 
@@ -15,6 +16,11 @@ const stokProdukReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 errLogin: action.payload
             }
+        case 'TEST':
+        return {
+            ...state,
+            testProduct: action.payload
+        }
         case 'REMOVE_ERR':
             return {
                 ...state,

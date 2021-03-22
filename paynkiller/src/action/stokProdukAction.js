@@ -21,6 +21,25 @@ export const addStockProduct = (data) => {
         try{
             const res = await Axios.post('http://localhost:2000/stokproduk/addstokproduct',data)
 
+            const res2 = await Axios.get('http://localhost:2000/stokproduk/stokproducts')
+
+            dispatch({
+                type: 'GET_STOCK_PRODUCT',
+                payload: res2.data
+            })
+        }
+        catch(err){
+            dispatch({ type: 'STOCK_PRODUCT_ERR', payload: err.response.data })
+        }
+    }
+}
+
+export const filteringProductList = (body) => {
+    return async(dispatch) => {
+        try{
+            console.log(body)
+            const res = await Axios.post('http://localhost:2000/stokproduk/searchprodukfilter', body)
+
             dispatch({
                 type: 'GET_STOCK_PRODUCT',
                 payload: res.data

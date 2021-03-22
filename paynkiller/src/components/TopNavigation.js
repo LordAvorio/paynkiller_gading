@@ -40,10 +40,16 @@ export default function TopNavigation() {
                                     <Link to='/profile'>
                                         <Nav.Item>Profile</Nav.Item>
                                     </Link>
+                                    <Link to ='/products'>
+                                        <Nav.Item>Products</Nav.Item>
+                                    </Link>
                                 </>
                                 :
                                 <>
                                     <Nav.Item icon={<Icon icon="home" />} >Home</Nav.Item>
+                                    <Link to ='/products'>
+                                        <Nav.Item>Products</Nav.Item>
+                                    </Link>
                                     <Link to='/login'>
                                         <Nav.Item>Login</Nav.Item>
                                     </Link>
