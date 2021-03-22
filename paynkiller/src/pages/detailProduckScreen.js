@@ -4,13 +4,15 @@ import { Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, Moda
 import { Link } from 'react-router-dom'
 import '../css/pages/detailProduk.css'
 import TopNavigation from '../components/TopNavigation'
-
 const DetailProdukScreen = (props) => {
+    const URL_IMG = 'http://localhost:2000/'
+
     const [Data, setData] = React.useState({})
     const id_produk = props.location.search.substring(1)
     const [angka, setAngka] = React.useState(0)
     console.log(id_produk)
     console.log(angka)
+    console.log(Data)
 
     React.useEffect(() => {
         axios.post(`http://localhost:2000/produk/getProduk?${id_produk}`)
@@ -33,7 +35,7 @@ const DetailProdukScreen = (props) => {
                 <div id='container2'>
                     <div id='container2_1'>
                         <div id='Box'>
-                            <img src={Data.gambar_obat} style={{ height: 313, width: 313 }} id='gambarProduk' />
+                            <img src={Data.gambar_obat ? URL_IMG + Data.gambar_obat : 'https://dimarta.com/wp-content/uploads/2019/09/Cara-Memperbaiki-Error-404-Wordpress-Dengan-Mudah.png'} style={{ height: 313, width: 313 }} id='gambarProduk' />
                         </div>
                     </div>
                     <div id='container2_2'>
