@@ -7,8 +7,6 @@ const app = express()
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use(express.static('./public'))
-
 
 const db = require('./database')
 
@@ -21,27 +19,13 @@ app.get('/',(req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
-const {
-    userRouter,
-    categoryRouter,
-    brandRouter,
-    uomRouter,
-    productRouter,
-    rawMaterialRouter,
-    stokProdukRouter,
-    stokRawMaterialRouter,
-    adminRouter
-} = require('./routers')
+
+const {userRouter, categoryRouter, produkRouter,  orderRouter} = require('./routers')
 
 app.use('/user', userRouter)
+app.use('/order', orderRouter)
 app.use('/category', categoryRouter)
-app.use('/brand', brandRouter)
-app.use('/uom', uomRouter)
-app.use('/admin', adminRouter)
-app.use('/product', productRouter)
-app.use('/rawmaterial', rawMaterialRouter)
-app.use('/stokproduk', stokProdukRouter)
-app.use('/stokrawmaterial', stokRawMaterialRouter)
+app.use('/produk', produkRouter )
 
 const port = 2000
 app.listen(port, () => console.log('Connected to Port = ' + port))
