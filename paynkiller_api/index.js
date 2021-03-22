@@ -10,22 +10,41 @@ app.use(bodyParser.json())
 
 const db = require('./database')
 
-    db.connect((err) => {
-        if(err) return console.log('error connecting')
-        console.log('connected as id' + db.threadId)
-    })
+db.connect((err) => {
+    if (err) return console.log('error connecting')
+    console.log('connected as id' + db.threadId)
+})
 
-app.get('/',(req, res) => {
+app.get('/', (req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
 
-const {userRouter, categoryRouter, produkRouter,  orderRouter} = require('./routers')
+const {
+    userRouter,
+    categoryRouter,
+    produkRouter,
+    orderRouter,
+    brandRouter,
+    uomRouter,
+    productRouter,
+    rawMaterialRouter,
+    stokProdukRouter,
+    stokRawMaterialRouter,
+    adminRouter
+} = require('./routers')
 
 app.use('/user', userRouter)
 app.use('/order', orderRouter)
 app.use('/category', categoryRouter)
-app.use('/produk', produkRouter )
+app.use('/produk', produkRouter)
+app.use('/brand', brandRouter)
+app.use('/uom', uomRouter)
+app.use('/admin', adminRouter)
+app.use('/product', productRouter)
+app.use('/rawmaterial', rawMaterialRouter)
+app.use('/stokproduk', stokProdukRouter)
+app.use('/stokrawmaterial', stokRawMaterialRouter)
 
 const port = 2000
 app.listen(port, () => console.log('Connected to Port = ' + port))

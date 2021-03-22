@@ -28,6 +28,30 @@ export const addCategory = (isi) => {
     }
 }
 
+export const selectPickerCategory = () => {
+    return async(dispatch) => {
+        try{
+            const res = await Axios.get('http://localhost:2000/category/getAll')
+
+            const dataSelectPickerCategory = res.data.map(item => {
+                return{
+                    label: item.nama_category,
+                    value: item.id_category
+                }
+            })
+
+            dispatch({
+                type: 'SELECT_PICKER_CATEGORY',
+                payload: dataSelectPickerCategory
+            })
+
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+}
+
 export const deleteCategory = (id) => {
     return async (dispatch) => {
         try {
