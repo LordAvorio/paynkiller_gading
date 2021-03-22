@@ -4,6 +4,7 @@ module.exports = {
     addToCart: async (req, res) => {
         const id_customer = parseInt(req.params.idcustomer)
         const { order_number, id_produk, qty, komposisi, harga_produk, aturan_pakai, total_harga } = req.body
+        console.log(req.body)
         try {
             const cek = `SELECT * FROM orders WHERE id_customer = ${id_customer} AND status = 1`
             const qcek = await asyncQuery(cek)
@@ -16,10 +17,11 @@ module.exports = {
                 (${current_order_number}, ${id_customer}, 1)`
                 await asyncQuery(addOrders)
             }
+            // console.log(id_produk)
             const cekQty = `select o.id_order, o.order_number, o.id_customer, od.id_produk, od.qty, od.komposisi, 
                             od.harga_produk, od.aturan_pakai, od.total_harga, o.status 
                             from orders o left join order_details od on o.order_number = od.order_number 
-                            where od.id_produk=${id_produk} and o.id_customer=${id_customer} having o.status=1;`
+                            where od.id_produk=${db.escape(req.body.id_produk)} and o.order_number=${current_order_number} having o.status=1;`
             const qcekQty = await asyncQuery(cekQty)
 
             if (qcekQty.length !== 0) {
@@ -28,16 +30,14 @@ module.exports = {
                 const prevOrder = qcekQty[0].order_number
 
                 const editCart = `update order_details set qty=${qty + prevQty}, total_harga=${total_harga + prevTotalHarga} 
-                where id_produk=${id_produk} and order_number=${prevOrder}`
+                where id_produk=${db.escape(id_produk)} and order_number=${prevOrder}`
                 await asyncQuery(editCart)
             } else {
                 const addDetail = `INSERT INTO order_details (order_number, id_produk, qty, komposisi, harga_produk, aturan_pakai, total_harga) VALUES 
-                                    (${current_order_number}, ${id_produk}, ${qty}, '${komposisi}', ${harga_produk},
-                                    '${aturan_pakai}', ${total_harga})`
+                                    (${current_order_number}, ${db.escape(id_produk)}, ${db.escape(qty)}, ${db.escape(komposisi)}, ${db.escape(harga_produk)},
+                                    ${db.escape(aturan_pakai)}, ${db.escape(total_harga)})`
                 await asyncQuery(addDetail)
             }
-
-
             res.sendStatus(200)
         }
         catch (err) {

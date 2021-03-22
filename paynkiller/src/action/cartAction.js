@@ -14,10 +14,11 @@ export const getUserCart = (id_customer) => {
         }
     }
 }
-export const addCart = (id_customer) => {
+export const addCart = (id_customer, body) => {
     return async (dispatch) => {
         try {
-            const res = await Axios.post(`http://localhost:2000/order/addCart/${id_customer}`)
+            console.log('body di action', body)
+            const res = await Axios.post(`http://localhost:2000/order/addCart/${id_customer}`, body)
             console.log(res.data)
 
             const res2 = await Axios.get(`http://localhost:2000/order/userCart/${id_customer}`)
@@ -30,14 +31,14 @@ export const addCart = (id_customer) => {
     }
 }
 
-export const editCartQty = (body) => {
+export const editCartQty = (body, idCust) => {
     return async (dispatch) => {
         try {
             console.log('tempproduk di action', body)
-            const res = await Axios.patch(`http://localhost:2000/order/editQty/${body.id_produk}`, body)
+            const res = await Axios.patch(`http://localhost:2000/order/editQty/`, body)
             console.log(res.data)
             
-            const res2 = await Axios.get(`http://localhost:2000/order/userCart/${body.id_customer}`)
+            const res2 = await Axios.get(`http://localhost:2000/order/userCart/${idCust}`)
             console.log(res2.data)
             dispatch({ type: 'GET_CART', payload: res2.data })
             

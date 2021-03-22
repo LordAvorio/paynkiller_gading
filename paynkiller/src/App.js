@@ -5,14 +5,12 @@ import { Switch, Route } from 'react-router-dom'
 import RegisterScreen from './pages/registerscreen'
 import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
-import CartScreen from './pages/cartscreen'
 import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
 import CartScreen from './pages/cartscreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
 import MasterCategory from './pages/masterCategory'
-import CartScreen from './pages/cartscreen'
 import DashboardScreen from './pages/dashboard'
 import MasterBrandScreen from './pages/masterBrands'
 import MasterUomScreen from './pages/masterUom'
@@ -30,7 +28,6 @@ import { keeplogin } from './action'
 
 export default function App() {
   const dispatch = useDispatch()
-  useDispatch(keeplogin())
   React.useEffect(()=> {
       dispatch(keeplogin())
   },[])

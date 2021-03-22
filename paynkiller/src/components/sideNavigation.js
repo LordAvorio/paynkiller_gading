@@ -25,6 +25,9 @@ export default function sideNavigation() {
                   <Link to="/admin/master/brand">
                     <Dropdown.Item eventKey="2-1">Brands</Dropdown.Item>
                   </Link>
+                  <Link to="/admin/master/category">
+                    <Dropdown.Item eventKey="2-1">Categories</Dropdown.Item>
+                  </Link>
                   <Link to="/admin/master/uom">
                     <Dropdown.Item eventKey="2-2">UOM</Dropdown.Item>
                   </Link>

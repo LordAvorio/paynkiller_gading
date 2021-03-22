@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Nav, Icon, Dropdown } from 'rsuite'
+import { Navbar, Nav, Icon, Dropdown, Button } from 'rsuite'
 
 import logoNavbar from '../images/logo/PaynKiller.svg'
 
@@ -51,6 +51,21 @@ export default function TopNavigation() {
                         }
                     </Nav>
                     <Nav pullRight>
+                        {
+                            usernameCust
+                                ?
+                                <>
+                                    <Link to='/cart'>
+                                        <Nav.Item><span style={{color:'#51bea5', marginRight: 20}} className="material-icons">shopping_cart</span></Nav.Item>
+                                    </Link>
+                                </>
+                                :
+                                <>
+                                    <Link to='/register'>
+                                        <Button style={{backgroundColor:"#51bea5", borderRadius: 20, fontWeight: 'bold', color: 'white', margin: '10px 10px 0 0', width:'8vw'}}>Sign Up</Button>
+                                    </Link>
+                                </>
+                        }
                         <Nav.Item icon={<Icon icon="cog" />} >Settings</Nav.Item>
                     </Nav>
                 </Navbar.Body>

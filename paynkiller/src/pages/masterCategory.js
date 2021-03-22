@@ -110,10 +110,13 @@ const MasterCategory = () => {
     }
 
     return (
-        <div style={{ backgroundColor: "#f4f3f3" }}>
+        <div>
             <Grid fluid style={{ margin: "0px", padding: "0px" }}>
                 <Row style={{ margin: "0px", padding: "0px" }}>
                     <SideNav />
+                    <Col md={3}>
+                    
+                    </Col>
                     <Col md={21}>
                         <Row style={{ padding: "60px 40px" }}>
                             <Col md={24}>
