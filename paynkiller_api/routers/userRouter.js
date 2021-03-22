@@ -34,4 +34,5 @@ router.post('/login',userController.login)
 router.post('/keeplogin', verifyToken, userController.keeplogin)
 router.post('/forgotPass', userController.forgotPass)
 router.post('/changepass', passValidation, verifyToken, userController.changePass)
+
 module.exports = router
