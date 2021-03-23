@@ -32,12 +32,12 @@ const DetailProdukScreen = (props) => {
     <div>
       <TopNavigation />
       <Col md={24} style={{ paddingTop: "20px", paddingLeft: "50px" }}>
-        <Link to="/">
+        <Link to="/products">
           <IconButton
             id="back-menu-button"
             icon={<Icon icon="angle-left" id="icon-menu-button" />}
           >
-            Back To Home
+            Back To Products
           </IconButton>
         </Link>
       </Col>
@@ -81,16 +81,16 @@ const DetailProdukScreen = (props) => {
               <Row>
                 <Col md={4}>
                   <Button
-                    color="cyan"
-                    onClick={() => setAngka((prev) => parseInt(prev) + 1)}
-                    disabled={angka >= Data.jumlah_produk}
-                    style={{width: '100%', padding: '12px 0px'}}
+                    
+                    onClick={() => setAngka((prev) => parseInt(prev) - 1)}
+                    disabled={angka === 0}
+                    style={{ backgroundColor: angka !== 0 ? '#dfe6e9' : '#636e72' }}
                   >
-                    ➕
+                    ➖
                   </Button>
                 </Col>
                 <Col md={16}>
-                  <InputGroup style={{ height: "100%",width: '100%'}}>
+                  <InputGroup style={{ height: "100%", width: '100%' }}>
                     <Input
                       value={angka}
                       onChange={(value, event) => setAngka(parseInt(value))}
@@ -102,18 +102,19 @@ const DetailProdukScreen = (props) => {
                 </Col>
                 <Col md={4}>
                   <Button
-                    color="cyan"
-                    onClick={() => setAngka((prev) => parseInt(prev) - 1)}
-                    disabled={angka === 0}
-                    style={{width: '100%', padding: '12px 0px'}}
+                    
+                    onClick={() => setAngka((prev) => parseInt(prev) + 1)}
+                    disabled={angka >= Data.jumlah_produk}
+                    style={{ backgroundColor: angka >= Data.jumlah_produk ? '#636e72' : '#dfe6e9' }}
                   >
-                    ➖
+                    ➕
                   </Button>
                 </Col>
-                <Col md={24} style={{padding: '0px 50px'}}>
+                <Col md={24} style={{ padding: '0px 50px' }}>
+                  <p id='minititle' style={{marginTop: 10, marginLeft: 10}}>Stock : {Data.jumlah_produk}</p>
                   <Button
                     color="green"
-                    style={{ width: "100%", marginTop: '20px',}}
+                    style={{ width: "100%", marginTop: '20px', }}
                     onClick={btnBuy}
                   >
                     Buy

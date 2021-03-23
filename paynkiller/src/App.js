@@ -18,6 +18,7 @@ import MasterProductScreen from './pages/masterProduct'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
+import CartScreen from './pages/cartscreen'
 
 import {useDispatch} from 'react-redux'
 
