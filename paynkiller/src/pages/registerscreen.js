@@ -1,6 +1,6 @@
 import React from 'react'
 import Axios from 'axios'
-import { Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, FormControl, Modal } from 'rsuite'
+import { Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, FormControl, Modal, Alert } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
 import { register, removeError } from '../action'
 import TinyGuys from '../images/Resources/TinyGuys.jpg'
@@ -49,6 +49,7 @@ const RegisterScreen = () => {
         //     .catch(err => console.log(err))
 
         dispatch(register(user))
+        Alert.info('May take a few sec to check existing account', 5000)
         // if (!loginErr) {
         //     setShowModal([true, 'a verification request has been sent to your email'])
         //     console.log(loginErr)
@@ -69,11 +70,13 @@ const RegisterScreen = () => {
 
     React.useEffect(() => {
         if (loginError) {
+            Alert.close()
             setSameAccount(true)
             setModalAcc([false, ''])
         }
-
-        if (usernameCust) return setModalAcc([true, 'a verification request has been sent to your email'])
+        
+        if (usernameCust) return setModalAcc([true, 'Welcome to Paynkiller, a verification request has been sent to your email'])
+        Alert.close()
     }, [loginError, usernameCust])
 
     if (toHome) return <Redirect to="/" />

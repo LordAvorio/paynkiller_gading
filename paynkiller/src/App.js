@@ -5,7 +5,6 @@ import { Switch, Route } from 'react-router-dom'
 import RegisterScreen from './pages/registerscreen'
 import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
-import CartScreen from './pages/cartscreen'
 import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
 import ChangePassScreen from './pages/changepassScreen'
@@ -29,7 +28,6 @@ import { keeplogin } from './action'
 
 export default function App() {
   const dispatch = useDispatch()
-  useDispatch(keeplogin())
   React.useEffect(()=> {
       dispatch(keeplogin())
   },[])

@@ -1,23 +1,15 @@
 import React from "react";
 import axios from "axios";
-import {
-  Grid,
-  Row,
-  Col,
-  Button,
-  IconButton,
-  Icon,
-  Form,
-  InputGroup,
-  Input,
-  Modal,
-} from "rsuite";
+import swal from 'sweetalert';
+import { Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, Modal, Alert } from 'rsuite'
+import { useDispatch, useSelector } from 'react-redux'
+import { addCart, getUserCart } from '../action'
 import { Link } from "react-router-dom";
 import "../css/pages/detailProduk.css";
 import TopNavigation from "../components/TopNavigation";
+
 const DetailProdukScreen = (props) => {
   const URL_IMG = "http://localhost:2000/";
-
   const [Data, setData] = React.useState({});
   const id_produk = props.location.search.substring(1);
   const [angka, setAngka] = React.useState(0);
