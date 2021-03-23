@@ -1,4 +1,3 @@
-import "../css/pages/productList.css";
 import React, { useState } from "react";
 import {
   Grid,
@@ -18,19 +17,27 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "../components/TopNavigation";
 
-import { getProducts } from "../action/productAction";
 import {
   getStockProducts,
   filteringProductList,
 } from "../action/stokProdukAction";
+
 import { selectPickerCategory } from "../action/categoryAction";
+
+import {Redirect} from 'react-router-dom'
+
 import Pagination from "../components/Pagination";
 
 import swal from "sweetalert";
 
+import "../css/pages/productList.css";
+
 const URL_IMG = "http://localhost:2000/";
 
 export default function ProductListScreen() {
+
+  const[tempId,setTempId] = useState(null)
+  const [redirectTo, setRedirectTo] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(8);
   const [selectCategory, setSelectCategory] = useState([]);
@@ -49,21 +56,25 @@ export default function ProductListScreen() {
     },
   ];
 
-  const {stockProductData, dataCategory } = useSelector(
+  const {stockProductData, dataCategory, idUser} = useSelector(
     (state) => {
       return {
         stockProductData: state.stockProdukReducer.dataStokProduct,
         dataCategory: state.categoryReducer.selectPickerCategory,
+        idUser: state.userReducer.id_customer
       };
     }
   );
 
-  let indexOfLastPost = currentPage * postsPerPage;
-  let indexOfFirstPost = indexOfLastPost - postsPerPage;
+  //#region PAGINATE
+    let indexOfLastPost = currentPage * postsPerPage;
+    let indexOfFirstPost = indexOfLastPost - postsPerPage;
 
-  let paginate = (pageNumber) => setCurrentPage(pageNumber);
+    let paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  let currentPosts = Array.from(stockProductData).slice(indexOfFirstPost, indexOfLastPost);
+    let currentPosts = Array.from(stockProductData).slice(indexOfFirstPost, indexOfLastPost);
+  //#endregion
+
 
   const searchDataProduct = () => {
     if (!selectCategory && !sortingPrice) return swal("Opps!", "Inputan tidak boleh kosong !", "error");
@@ -78,9 +89,22 @@ export default function ProductListScreen() {
     
        dispatch(getStockProducts());
        dispatch(selectPickerCategory());
-    
-  }, [dataCategory.length]);
+  }, [dataCategory.length,tempId,redirectTo]);
 
+  const handleToDetailProduk = (id_produk) => {
+    if(!idUser) return swal("Opps!", "Login Terlebih Dahulu !", "error");
+
+    setTempId(id_produk)
+    setRedirectTo(true)
+  }
+
+  if(redirectTo){
+    return <Redirect to={`/detailproduk?id=${tempId}`}/>
+  }else{
+      console.log('Gagal Jhon')
+  }
+
+  
   return (
     <div>
       <Navbar />
@@ -178,7 +202,7 @@ export default function ProductListScreen() {
                           <Avatar
                             style={{
                               width: "100%",
-                              height: "200px",
+                              height: "220px",
                               backgroundImage: `url(${
                                 URL_IMG + item.gambar_obat
                               })`,
@@ -248,6 +272,7 @@ export default function ProductListScreen() {
                               width: "100%",
                               color: "white",
                             }}
+                            onClick={() => handleToDetailProduk(item.id_produk)}
                           >
                             Details
                           </Button>
