@@ -53,7 +53,8 @@ export const keeplogin = () => {
         try{
             const token = localStorage.getItem('token')
             const res = await Axios.post('http://localhost:2000/user/keeplogin', {token})
-
+            console.log(token)
+            console.log(res.data)
             dispatch({
                 type: 'LOGIN',
                 payload: res.data

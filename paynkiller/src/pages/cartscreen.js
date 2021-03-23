@@ -20,7 +20,7 @@ const CartScreen = () => {
         console.log('id', id_customer)
         dispatch(getUserCart(id_customer))
         console.log(cart)
-    }, [id_customer, dispatch])
+    }, [id_customer, cart.length])
 
     const del = async (index) => {
         dispatch(deleteCartItem(cart[index], () => {
@@ -33,25 +33,22 @@ const CartScreen = () => {
         const tempProduk = cart.find(e => e.id_details == id && (e.qty = e.qty - 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
         console.log('minus', tempProduk)
 
-        await dispatch(editCartQty(tempProduk, () => {
-            dispatch(keeplogin())
-        }
-        ))
+        await dispatch(editCartQty(tempProduk, id_customer))
     }
 
     const plus = async (id) => {
         const tempProduk = cart.find(e => e.id_details === id && (e.qty = parseInt(e.qty) + 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
         console.log('plus', tempProduk)
 
-        await dispatch(editCartQty(tempProduk, () => {
-            dispatch(keeplogin())
-        }
-        ))
+        await dispatch(editCartQty(tempProduk, id_customer))
     }
 
     const grandTotal = () => {
+        console.log(cart)
         let counter = 0
-        cart.map(item => counter += item.total_harga)
+        if (cart.length !== 0) {
+            cart.forEach(item => counter += item.total_harga)
+        }
         return counter
     }
 
@@ -61,7 +58,7 @@ const CartScreen = () => {
             cart.map((item, index) => {
                 return (
                     <div key={index} style={{ backgroundColor: 'white', height: '160px', width: '650px', border: '1px solid gray', margin: '10px 0 0 10px', display: 'flex', flexDirection: 'row', borderRadius: '20px' }}>
-                        <div style={{ flexGrow: 3, maxWidth: '30vw', padding: '40px 0 0 30px', display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ flexGrow: 3, width: '40vw', padding: '40px 0 0 30px', display: 'flex', flexDirection: 'row' }}>
                             {/* <div style={{
                                 height: '70%',
                                 width: '30%',
@@ -73,31 +70,32 @@ const CartScreen = () => {
                             }}></div> */}
                             <img src={URL_IMG + item.gambar_obat} style={{ height: '80px', width: '100px' }} />
                             <div>
-                                <h1 style={{ fontSize: '15px', fontWeight: 600, margin: '-15px 0 0 20px' }}>{item.nama_produk}</h1>
-                                <h1 style={{ fontSize: '15px', fontWeight: 600, margin: '-35px 0 0 20px' }}>Rp {item.harga_produk.toLocaleString()}</h1>
+                                <h1 style={{ fontSize: '15px', fontWeight: 600, margin: '-15px 0 0 20px', lineHeight: '2' }}>{item.nama_produk}</h1>
+                                <h1 style={{ fontSize: '15px', fontWeight: 600, margin: '15px 0 0 20px' }}>Rp {item.harga_produk.toLocaleString()}</h1>
                             </div>
                         </div>
-                        <div style={{ flexGrow: 3, maxWidth: '40vw', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ flexGrow: 3, width: '30vw', display: 'flex', flexDirection: 'column' }}>
                             <div style={{ flexGrow: 10 }}>
 
                             </div>
                             <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                                 <div>
                                     <span style={{ borderLeft: '1px solid gray', height: '25px', alignSelf: 'center', margin: 0 }}></span>
-                                    <Button onClick={() => del(index)} style={{ backgroundColor: 'white', margin: '5px', position: 'initial' }}><span color='gray' className="material-icons">delete</span></Button>
+                                    <Button onClick={() => del(index)} style={{ backgroundColor: 'white', margin: '5px', position: 'initial', color: '#d3d3d3'}}><span color='gray' className="material-icons">delete</span></Button>
                                 </div>
-                                <InputGroup style={{ height: '30px', width: '150px', margin: '10px 0 0 20px' }}>
-                                    <InputGroup.Button disabled={item.qty === 1} onClick={() => minus(item.id_details)}>
+                                <InputGroup style={{ height: '30px', width: '160px', margin: '10px 0 0 20px' }}>
+                                    <InputGroup.Button style={{color:'#51bea5'}} disabled={item.qty === 1} onClick={() => minus(item.id_details)}>
                                         <span className="material-icons">remove</span>
                                     </InputGroup.Button>
                                     <Input
                                         type="number"
-                                        style={{ color: '#2d5a7e', textAlign: 'center' }}
+                                        style={{ color: 'black', textAlign: 'center', fontWeight:'400' }}
                                         defaultValue={item.qty}
                                         disabled={true}
                                     // onChange={e => change(e)}
                                     />
-                                    <InputGroup.Button disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
+
+                                    <InputGroup.Button style={{color:'#51bea5'}} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
                                         <span className="material-icons">add</span>
                                     </InputGroup.Button>
                                 </InputGroup>
