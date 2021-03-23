@@ -82,7 +82,6 @@ module.exports = {
     },
     searchProdukFilter: async(req,res) => {
         const {selectCategory, sortingPrice} = req.body
-        console.log(selectCategory.length)
 
         let sortingQuery = ""
         let FilterCategory = ""
@@ -95,9 +94,9 @@ module.exports = {
 
             if(selectCategory.length != 0){
                 for(let x in selectCategory){
-                    FilterCategory += `id_category = ${selectCategory[x]} AND `
+                    FilterCategory += `id_category = ${selectCategory[x]} OR `
                 }
-                let hasil = FilterCategory.toString().slice(0, -4)
+                let hasil = FilterCategory.toString().slice(0, -3)
                 hasilQuery += `WHERE ${hasil}`
             }
            
