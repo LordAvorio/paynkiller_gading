@@ -95,7 +95,6 @@ const DetailProdukScreen = (props) => {
                       value={angka}
                       onChange={(value, event) => setAngka(parseInt(value))}
                       type="number"
-                      placeholder="Username"
                       style={{ color: "#04BF8A", textAlign: 'center', fontSize: '20px' }}
                     />
                   </InputGroup>
