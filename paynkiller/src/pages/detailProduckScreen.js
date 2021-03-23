@@ -18,7 +18,6 @@ const DetailProdukScreen = (props) => {
     console.log(angka)
     console.log(Data)
 
-
     const dispatch = useDispatch()
     const { id_customer, cart } = useSelector((state) => {
         return {

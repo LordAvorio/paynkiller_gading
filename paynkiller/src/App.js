@@ -7,7 +7,6 @@ import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
 import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
-import CartScreen from './pages/cartscreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
 import MasterCategory from './pages/masterCategory'
@@ -18,6 +17,7 @@ import MasterRawMaterialScreen from './pages/masterRawMaterial'
 import MasterProductScreen from './pages/masterProduct'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
+import ProductListScreen from './pages/productListScreen'
 
 import {useDispatch} from 'react-redux'
 
@@ -52,6 +52,8 @@ export default function App() {
         <Route path='/admin/master/product' component={MasterProductScreen} />
         <Route path='/admin/stock/rawmaterial' component={ManagementStockRawMaterialScreen} />
         <Route path='/admin/stock/product' component={ManagementStockProductScreen} />
+        <Route path='/products' component={ProductListScreen} />
+
       </Switch>
     </div>
   )

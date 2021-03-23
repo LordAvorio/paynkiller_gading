@@ -94,6 +94,7 @@ const CartScreen = () => {
                                         disabled={true}
                                     // onChange={e => change(e)}
                                     />
+
                                     <InputGroup.Button style={{color:'#51bea5'}} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
                                         <span className="material-icons">add</span>
                                     </InputGroup.Button>

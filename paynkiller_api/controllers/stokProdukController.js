@@ -79,5 +79,45 @@ module.exports = {
             console.log(err)
             res.status(400).send(err)
         }
+    },
+    searchProdukFilter: async(req,res) => {
+        const {selectCategory, sortingPrice} = req.body
+        console.log(selectCategory.length)
+
+        let sortingQuery = ""
+        let FilterCategory = ""
+        let hasilQuery = ""
+
+        try{
+            if(sortingPrice){
+                sortingQuery += `ORDER BY b.harga_produk ${sortingPrice}`
+            }
+
+            if(selectCategory.length != 0){
+                for(let x in selectCategory){
+                    FilterCategory += `id_category = ${selectCategory[x]} AND `
+                }
+                let hasil = FilterCategory.toString().slice(0, -4)
+                hasilQuery += `WHERE ${hasil}`
+            }
+           
+            let sql = `SELECT a.*,
+            b.nama_produk,b.kode_produk,b.indikasi_umum,b.aturan_pakai,b.gambar_obat,b.harga_produk,b.keterangan_obat,b.komposisi,
+            c.nama_category,c.id_category,
+            d.nama_brand
+            FROM stok_produk a
+            INNER JOIN produk AS b ON a.id_produk = b.id_produk
+            INNER JOIN category AS c ON b.id_kategori = c.id_category
+            INNER JOIN brands AS d ON b.id_brand = d.id_brand ${hasilQuery} ${sortingQuery}`
+            let rows = await asyncQuery(sql)
+            
+            res.status(200).send(rows)
+
+        }
+        catch(err){
+            console.log(err)
+            res.status(400).send(err)
+        }
+
     }
 }

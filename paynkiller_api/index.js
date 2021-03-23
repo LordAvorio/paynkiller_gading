@@ -9,6 +9,8 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('./public'))
 
+app.use(express.static('./public'))
+
 const db = require('./database')
 
 db.connect((err) => {
@@ -20,6 +22,7 @@ app.get('/', (req, res) => {
     res.status(200).send('<h1>Test masuk route utama</h1>')
 })
 
+app.use(express.static('./public'))
 
 const {
     userRouter,

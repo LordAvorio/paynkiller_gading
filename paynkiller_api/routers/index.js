@@ -13,13 +13,13 @@ const stokRawMaterialRouter = require('./stokRawMaterialRouter')
 module.exports = {
     userRouter,
     categoryRouter,
-    produkRouter,
-    orderRouter,
     brandRouter,
     uomRouter,
     adminRouter,
     productRouter,
     rawMaterialRouter,
     stokProdukRouter,
-    stokRawMaterialRouter
+    stokRawMaterialRouter,
+    orderRouter,
+    produkRouter
 }
