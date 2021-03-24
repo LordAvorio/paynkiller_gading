@@ -8,9 +8,9 @@ import LoginImage from '../images/Resources/LoginImage.png'
 
 import '../css/pages/login.css'
 
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 
-import {login,removeError,logout} from '../action'
+import {loginAdmin,removeError} from '../action/adminAction'
 
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -20,19 +20,20 @@ export default function Loginscreen() {
     const[username,setUsername] = useState("")
     const[password,setPassword] = useState("")
     const[textError,setTextError] = useState(false)
+    const [redirectTo, setRedirectTo] = useState(false)
 
     const[showPass,setShowPass] = useState(false)
 
     const dispatch = useDispatch()
 
-    const {usernameCust,loginError} = useSelector((state) => {
+    const {usernameAdmin,loginError} = useSelector((state) => {
         return {
-            usernameCust : state.userReducer.username,
-            loginError: state.userReducer.errLogin
+            usernameAdmin : state.adminReducer.usernameAdmin,
+            loginError: state.adminReducer.errLogin
         }
       })
 
-    const handleLogin = () => {
+    const handleLogin = async() => {
         
         if(username === "" || password === "") return swal("Oops!", "Inputan tidak boleh kosong", "error");
 
@@ -41,10 +42,11 @@ export default function Loginscreen() {
             password
         }
 
-        dispatch(login(body))
+        await dispatch(loginAdmin(body))
 
         setUsername("")
         setPassword("")
+        
     }
 
     const handleModalError = () => {
@@ -52,13 +54,22 @@ export default function Loginscreen() {
         dispatch(removeError())
     }
 
-   
     React.useEffect(() => {
         if(loginError){
             setTextError(true)
         }
-    }, [usernameCust,loginError])
-    
+        if(usernameAdmin){
+            setRedirectTo(true)
+        }
+    }, [loginError,usernameAdmin])
+
+
+    if(redirectTo){
+        return <Redirect to={'/admin/dashboard'}/>
+      }else{
+          console.log('Gagal Jhon')
+      }
+
     return (
 
         <div id="containerLogin">
@@ -74,7 +85,7 @@ export default function Loginscreen() {
                         </Row>
                         <Row>
                             <Col md={24} style={{padding: '50px 10px'}}>
-                                <p style={{textAlign: 'center', fontSize: '40px', color: '#04BF8A', fontWeight: 'bold'}}>SIGN IN</p>
+                                <p style={{textAlign: 'center', fontSize: '40px', color: '#04BF8A', fontWeight: 'bold'}}>SIGN IN ADMIN</p>
                             </Col>
                         </Row>
                         <Row>
@@ -97,21 +108,6 @@ export default function Loginscreen() {
                             <Col md={24} style={{textAlign: 'center'}}>
                                 <Button id="button-submit" onClick={() => handleLogin()}>Lets Go !</Button>                            
                             </Col>
-                            <Row>
-                                <Col md={24} style={{padding: '30px 90px', paddingBottom: '10px'}}>
-                                    <p style={{textAlign: 'center', fontSize: '14px'}}>Dont have an account ? <span ><Link to='/register' id="linkRegister">Click Here</Link></span></p>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={24} style={{padding: '0px 90px'}}>
-                                    <p style={{textAlign: 'center', fontSize: '14px'}}>Forgot your Password ? <span ><Link to='/forgotpass' id="linkRegister">Change Password</Link></span></p>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col md={24} style={{padding: '0px 90px', paddingTop: '20px'}}>
-                                    <p style={{textAlign: 'center', fontSize: '14px'}}>Are You Admin ? <span ><Link to='/loginadmin' id="linkRegister">Click Here</Link></span></p>
-                                </Col>
-                            </Row>
                         </Row>
                         
                     </Col>
@@ -126,7 +122,7 @@ export default function Loginscreen() {
                 </Row>
             </Grid>
 
-            <Modal backdrop="static" show={textError === true} onHide={textError === false} size="xs">
+            <Modal backdrop="static" show={textError} onHide={() => setTextError(false)} size="xs">
                 <Modal.Body>
                    <p>{loginError}</p>
                 </Modal.Body>
@@ -137,18 +133,7 @@ export default function Loginscreen() {
                 </Modal.Footer>
             </Modal>
 
-            <Modal backdrop="static" show={Boolean(usernameCust) === true} onHide={Boolean(usernameCust) === false} size="xs">
-                <Modal.Body>
-                   <p>Anda Berhasil Login</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Link to='/'>
-                        <Button appearance="primary">
-                        Ok
-                        </Button>
-                    </Link>
-                </Modal.Footer>
-            </Modal>
+            
 
         </div>
     )

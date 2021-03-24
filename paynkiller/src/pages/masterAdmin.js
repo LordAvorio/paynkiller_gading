@@ -5,33 +5,31 @@ import {Row, Col, Panel, Button, Modal, Grid, Form, FormGroup, ControlLabel, For
 
 
 import {useDispatch, useSelector} from 'react-redux'
-import {addUom, getUoms,removeError, deleteUom, editUom} from '../action/uomAction'
+
+import {getAdmin,removeError,addAdmin,deactiveAdmin} from '../action/adminAction'
 
 import MaterialTable from 'material-table'
 
 import swal from 'sweetalert'
 
-export default function MasterUom() {
+export default function MasterAdmin() {
 
 
     const[openModalAdd,setOpenModalAdd] = useState(false)
     const[openModalEdit,setOpenModalEdit] = useState(false)
     
-    const[namaUom,setNamaUom] = useState("")
-    const[keterangan,setKeterangan] = useState("")
+    const [username,setUsername] = useState("")
+    const [password,setPassword] = useState("")
     
-    const[editNamaUom,setEditNamaUom] = useState("")
-    const[editKeterangan,setEditKeterangan] = useState("")
-    const[tempId,setTempId] = useState(null)
-    
+
     const[textError,setTextError] = useState(false)
 
 
 
-    const {loginError,uomData} = useSelector((state) => {
+    const {loginError, adminData} = useSelector((state) => {
         return {
-            loginError: state.uomReducer.errLogin,
-            uomData: state.uomReducer.dataUom,
+            loginError: state.adminReducer.errLogin,
+            adminData: state.adminReducer.dataAdmin,
         }
       })
 
@@ -39,46 +37,36 @@ export default function MasterUom() {
 
     React.useEffect(() => {
         document.body.style.backgroundColor = "#f4f3f3";
-        dispatch(getUoms())
+        dispatch(getAdmin())
         if(loginError){
             setTextError(true)
         }
-    }, [loginError,uomData.length])
+    }, [loginError])
 
-    const handleAddUom = () => {
 
-        if(!namaUom && !keterangan) return swal("Opps!", "Inputan tidak boleh kosong !", "error");
-        
-        let nama_uom = namaUom
-
-        const data = {nama_uom, keterangan}
-
-        dispatch(addUom(data))
-        
+    const handleAddAdmin = () => {
+        console.log(username,password)
+        let body = {username,password}
+        dispatch(addAdmin(body))
 
         setOpenModalAdd(false)
-        setNamaUom("")
-        setKeterangan("")
+        setUsername("")
+        setPassword("")
     }
 
-    const handleOpenModalEdit = (id_brand,nama_brand,kode_brand) => {
-        setTempId(id_brand)
-        setEditNamaUom(nama_brand)
-        setEditKeterangan(kode_brand)
-        setOpenModalEdit(true)
+    const handleDeactiveAccount = async(id_admin,status) => {
+        if(status === 2) return swal("Opps!", "Akun sudah tidak aktif !", "error");
+
+        await dispatch(deactiveAdmin(id_admin))
+
+        swal("Yeah!", "Akun berhasil dinonaktifkan !", "success");
+
     }
 
-    const handleSaveEditUom = async(id_uom) => {
-
-        let nama_uom = editNamaUom
-        let keterangan = editKeterangan
-        let data = {nama_uom,keterangan}
-
-        await dispatch(editUom(id_uom,data))
-
-        setOpenModalEdit(false)
-        setEditNamaUom("")
-        setEditKeterangan("")
+    const handleCloseModalAdd = () => {
+        setOpenModalAdd(false)
+        setUsername("")
+        setPassword("")
     }
 
     const handleModalError = () => {
@@ -86,20 +74,10 @@ export default function MasterUom() {
         dispatch(removeError())
     }
 
-    const handleCloseModalAdd = () => {
-        setOpenModalAdd(false)
-        setNamaUom("")
-        setKeterangan("")
-    }
-
-    const handleCloseModalEdit = () => {
-        setOpenModalEdit(false)
-        setEditNamaUom("")
-        setEditKeterangan("")
-    }
+    
     
     return (
-        <div style={{backgroundColor: "#f4f3f3"}}>
+        <div>
             <Grid fluid style={{margin: "0px", padding: "0px"}}>
                 <Row style={{margin: "0px", padding: "0px"}}>
                     <SideNav/>
@@ -112,7 +90,7 @@ export default function MasterUom() {
                             <Panel shaded style={{padding: '20px'}}>
                                 <Row>
                                     <Col md={21}>
-                                        <p style={{fontSize: "25px", color: "#04BF8A"}}>Master Unit Of Measurements</p>
+                                        <p style={{fontSize: "25px", color: "#04BF8A"}}>Management Admin</p>
                                     </Col>
                                     <Col md={3}>
                                     <Button color="cyan" style={{width: "100%"}} onClick={() => setOpenModalAdd(true)}>
@@ -124,20 +102,20 @@ export default function MasterUom() {
                                     <Col md={24}>
                                         <MaterialTable
                                             columns={[
-                                                { title: 'Nama UOM', field: 'nama_uom' },
-                                                { title: 'Keterangan', field: 'keterangan' }
+                                                { title: 'Username', field: 'username' },
+                                                { title: 'Status', field: 'nama_status'}
                                             ]}
-                                            data={uomData}
+                                            data={adminData}
                                             actions={[
+                                                // {
+                                                //     icon: 'edit',
+                                                //     tooltip: 'Edit',
+                                                //     onClick: (event, rowData) => handleOpenModalEdit(rowData.id_brand,rowData.nama_brand,rowData.kode_brand)
+                                                // },
                                                 {
-                                                    icon: 'edit',
-                                                    tooltip: 'Edit',
-                                                    onClick: (event, rowData) => handleOpenModalEdit(rowData.id_uom,rowData.nama_uom,rowData.keterangan)
-                                                },
-                                                {
-                                                    icon: 'delete',
+                                                    icon: 'highlight_off',
                                                     tooltip: 'Delete',
-                                                    onClick: (event, rowData) => dispatch(deleteUom(rowData.id_uom))
+                                                    onClick: (event, rowData) => handleDeactiveAccount(rowData.id_admin,rowData.status)
                                                 },
                                             ]}
                                             title=""
@@ -159,19 +137,19 @@ export default function MasterUom() {
                     <Grid fluid>
                         <Row>
                             <Col md={24} style={{paddingBottom: '20px'}}>
-                                <p style={{fontSize: '25px', fontWeight: 'bold'}}>Add Data Uom</p>
+                                <p style={{fontSize: '25px', fontWeight: 'bold'}}>Add Data Admin</p>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={24}>
                                 <Form fluid>
                                     <FormGroup>
-                                        <ControlLabel>Nama UOM</ControlLabel>
-                                        <FormControl value={namaUom} onChange={(value, event) => setNamaUom(value)}/>
+                                        <ControlLabel>Username</ControlLabel>
+                                        <FormControl value={username} onChange={(value, event) => setUsername(value)}/>
                                     </FormGroup>
                                     <FormGroup>
-                                        <ControlLabel>Keterangan</ControlLabel>
-                                        <FormControl value={keterangan} onChange={(value, event) => setKeterangan(value)}/>
+                                        <ControlLabel>Password</ControlLabel>
+                                        <FormControl value={password} onChange={(value, event) => setPassword(value)}/>
                                     </FormGroup>
                                 </Form>
                             </Col>
@@ -179,7 +157,7 @@ export default function MasterUom() {
                     </Grid>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button  appearance="primary" onClick={() => handleAddUom()}>
+                    <Button  appearance="primary" onClick={() => handleAddAdmin()}>
                     Add Data
                     </Button>
                     <Button onClick={() => handleCloseModalAdd(false)} appearance="subtle">
@@ -188,24 +166,24 @@ export default function MasterUom() {
                 </Modal.Footer>
             </Modal>
 
-            <Modal backdrop="static" show={openModalEdit} onHide={() => setOpenModalEdit(false)} size="sm">
+            {/* <Modal backdrop="static" show={openModalEdit} onHide={() => setOpenModalEdit(false)} size="sm">
                 <Modal.Body style={{marginTop: '0px'}}>
                     <Grid fluid>
                         <Row>
                             <Col md={24} style={{paddingBottom: '20px'}}>
-                                <p style={{fontSize: '25px', fontWeight: 'bold'}}>Edit Data UOM</p>
+                                <p style={{fontSize: '25px', fontWeight: 'bold'}}>Edit Data Brands</p>
                             </Col>
                         </Row>
                         <Row>
                             <Col md={24}>
                                 <Form fluid>
                                     <FormGroup>
-                                        <ControlLabel>Nama UOM</ControlLabel>
-                                        <Input type="text" defaultValue={editNamaUom} onChange={(value, event) => setEditNamaUom(value)}/>
+                                        <ControlLabel>Kode Brand</ControlLabel>
+                                        <Input type="text" defaultValue={editKodeBrand} onChange={(value, event) => setEditKodeBrand(value)}/>
                                     </FormGroup>
                                     <FormGroup>
                                         <ControlLabel>Nama Brand</ControlLabel>
-                                        <Input type="text" defaultValue={editKeterangan} onChange={(value, event) => setEditKeterangan(value)}/>
+                                        <Input type="text" defaultValue={editNamaBrand} onChange={(value, event) => setEditNamaBrand(value)}/>
                                     </FormGroup>
                                 </Form>
                             </Col>
@@ -213,14 +191,14 @@ export default function MasterUom() {
                     </Grid>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button  appearance="primary" onClick={() => handleSaveEditUom(tempId)}>
+                    <Button  appearance="primary" onClick={() => handleSaveEditBrand(brandDataSpecific.id_brand)}>
                     Add Data
                     </Button>
                     <Button onClick={() => handleCloseModalEdit(false)} appearance="subtle">
                     Cancel
                     </Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
 
             <Modal backdrop="static" show={textError} onHide={() => setTextError(false)} size="xs">
                 <Modal.Body>

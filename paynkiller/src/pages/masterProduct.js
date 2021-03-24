@@ -292,7 +292,7 @@ export default function MasterProduct() {
                     <Col md={21}>
                         <Row style={{padding: "60px 40px"}}>
                             <Col md={24}>
-                            <Panel shaded>
+                            <Panel shaded style={{padding: '20px'}}>
                                 <Row>
                                     <Col md={21}>
                                         <p style={{fontSize: "25px", color: "#04BF8A"}}>Master Products</p>

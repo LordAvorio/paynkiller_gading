@@ -1,6 +1,8 @@
 const {createToken} = require('../helpers/jwt')
 const {asyncQuery} = require('../helpers/queryHelp')
 
+const { validationResult } = require('express-validator')
+
 var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 
@@ -47,6 +49,9 @@ module.exports = {
         let username = req.body.username
         let password = req.body.password
 
+        const errors = validationResult(req)
+        if(!errors.isEmpty()) return res.status(400).send(errors.array()[0].msg)
+
         let hashedPass = bcrypt.hashSync(password, salt)
 
         try{
@@ -58,7 +63,7 @@ module.exports = {
             let sql2 = `INSERT INTO data_admin (username,password,status) VALUES ('${username}','${hashedPass}',1)`
             let rows2 = await asyncQuery(sql2)
 
-            res.status(200).send("Admin berhasil dimasukkan !")
+            res.status(200).send(rows2)
 
         }catch(err){
             console.log(err)
@@ -96,5 +101,68 @@ module.exports = {
             console.log(err)
             res.status(400).send(err)
         }
-    }
+    },
+    deactiveAccount: async(req,res) => {
+        
+        let id_admin = req.params.id
+        
+        try{
+            let sql = `UPDATE data_admin SET status = 2 WHERE id_admin = ${id_admin}`
+            let rows = await asyncQuery(sql)
+
+            res.status(200).send("Akun telah dinonaktifkan")
+
+        }catch(err){
+            console.log(err)
+            res.status(400).send(err)
+        }
+    },
+    loginAdmin: async(req,res) => {
+        let username = req.body.username
+        let password = req.body.password
+        
+        try{
+            let sql = `SELECT * FROM data_admin WHERE username = '${username}' `
+            let rows = await asyncQuery(sql)
+
+            if(rows.length === 0) return res.status(400).send("Username salah !")
+
+            let hash = rows[0].password
+
+            let hasil = await bcrypt.compare(password, hash)
+            
+            if(hasil === false) return res.status(400).send("Password salah !")
+            
+            const token = createToken({
+                username: rows[0].username,
+            })
+
+            let data = {
+                username: rows[0].username,
+                id_customer: rows[0].id_customer
+            }
+
+            data.token = token
+
+            res.status(200).send(data)
+        }
+        catch(err){
+            console.log(err)
+            res.status(400).send(err)
+        }
+    },
+    keeplogin : async(req, res) => {   
+        const {username} = req.user
+        try{
+            const sql = `SELECT * FROM data_admin WHERE username = '${username}' `
+            const rows = await asyncQuery(sql)
+            const data = {
+                username: rows[0].username,
+            }
+            res.status(200).send(data)
+        }
+        catch(err){
+            res.status(400).send('error' + err)
+        }
+    },
 }
