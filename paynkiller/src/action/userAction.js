@@ -111,3 +111,41 @@ export const ChangePass = (data) => {
     }
 }
 
+export const showProfile = () => {
+    return async(dispatch) => {
+        try {
+            const token = localStorage.getItem('token')
+            console.log('token di profile action', {token})
+            const res = await Axios.post('http://localhost:2000/user/showProfile', {token})
+            // console.log('profile di action', res.data)
+            dispatch({
+                type: 'GET_PROFILE',
+                payload: res.data
+            })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+}
+
+export const editProfile = (id_customer, body) => {
+    return async(dispatch) => {
+        try {
+            const res = await Axios.patch(`http://localhost:2000/user/editProfile/${id_customer}`, body)
+            console.log(res.data)
+
+            const token = localStorage.getItem('token')
+            console.log('token di profile action', {token})
+            const res2 = await Axios.post('http://localhost:2000/user/showProfile', {token})
+            // console.log('profile di action', res.data)
+            dispatch({
+                type: 'GET_PROFILE',
+                payload: res2.data
+            })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+}
