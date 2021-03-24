@@ -7,6 +7,7 @@ import HomeScreen from './pages/homescreen'
 import ProfileScreen from './pages/ProfileScreen'
 import FPassScreen from './pages/ForgotPassScreen'
 import LoginScreen from './pages/loginscreen'
+import AdminLoginScreen from './pages/adminLoginScreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
 import MasterCategory from './pages/masterCategory'
@@ -15,22 +16,25 @@ import MasterBrandScreen from './pages/masterBrands'
 import MasterUomScreen from './pages/masterUom'
 import MasterRawMaterialScreen from './pages/masterRawMaterial'
 import MasterProductScreen from './pages/masterProduct'
+import MasterAdminScreen from './pages/masterAdmin'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
 import CartScreen from './pages/cartscreen'
+import OrderScreen from './pages/orderScreen'
 
 import {useDispatch} from 'react-redux'
 
 
 
 //import actions
-import { keeplogin } from './action'
+import { keeplogin, keepLoginAdmin } from './action'
 
 export default function App() {
   const dispatch = useDispatch()
   React.useEffect(()=> {
       dispatch(keeplogin())
+      dispatch(keepLoginAdmin())
   },[])
 
   return (
@@ -41,6 +45,7 @@ export default function App() {
         <Route path='/profile' component={ProfileScreen}/>
         <Route path='/cart' component={CartScreen}/>
         <Route path='/login' component={LoginScreen} />
+        <Route path='/loginadmin' component={AdminLoginScreen} />
         <Route path='/profile' component={ProfileScreen} />
         <Route path='/forgotpass' component={FPassScreen} />
         <Route path='/changePass' component={ChangePassScreen} />
@@ -53,6 +58,8 @@ export default function App() {
         <Route path='/admin/master/product' component={MasterProductScreen} />
         <Route path='/admin/stock/rawmaterial' component={ManagementStockRawMaterialScreen} />
         <Route path='/admin/stock/product' component={ManagementStockProductScreen} />
+        <Route path='/admin/order/allorder' component={OrderScreen} />
+        <Route path='/admin/master/admin' component={MasterAdminScreen} />
         <Route path='/products' component={ProductListScreen} />
 
       </Switch>
