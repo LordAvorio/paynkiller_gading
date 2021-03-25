@@ -43,15 +43,15 @@ export default function TopNavigation() {
                                     <Link to ='/products'>
                                         <Nav.Item>Products</Nav.Item>
                                     </Link>
+                                    <Link to ='/customOrder'>
+                                        <Nav.Item>Custom Order</Nav.Item>
+                                    </Link>
                                 </>
                                 :
                                 <>
                                     <Nav.Item icon={<Icon icon="home" />} >Home</Nav.Item>
                                     <Link to ='/products'>
                                         <Nav.Item>Products</Nav.Item>
-                                    </Link>
-                                    <Link to='/login'>
-                                        <Nav.Item>Login</Nav.Item>
                                     </Link>
                                 </>
                         }
@@ -67,12 +67,11 @@ export default function TopNavigation() {
                                 </>
                                 :
                                 <>
-                                    <Link to='/register'>
-                                        <Button style={{backgroundColor:"#51bea5", borderRadius: 20, fontWeight: 'bold', color: 'white', margin: '10px 10px 0 0', width:'8vw'}}>Sign Up</Button>
+                                    <Link to='/login'>
+                                        <Button style={{backgroundColor:"#51bea5", borderRadius: 20, fontWeight: 'bold', color: 'white', margin: '10px 10px 0 0', width:'8vw'}}>Sign In</Button>
                                     </Link>
                                 </>
                         }
-                        <Nav.Item icon={<Icon icon="cog" />} >Settings</Nav.Item>
                     </Nav>
                 </Navbar.Body>
             </Navbar>

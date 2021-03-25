@@ -34,7 +34,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 FpassRes: action.payload
             }
         case 'REMOVE_RES' :
-            return INITIAL_STATE
+            return {
+                ...state,
+                FpassRes: '',
+                errFpass: ''
+            }
         case 'Err_FORGOT_PASS':
             return{
                 ...state,

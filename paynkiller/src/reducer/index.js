@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux'
 
 import userReducer from './userReducer'
+import adminReducer from './adminReducer'
 import cartReducer from './cartReducer'
 import {categoryReducer} from './categoryReducer'
 import brandReducer from './brandReducer'
@@ -9,9 +10,12 @@ import productReducer from './productReducer'
 import rawMaterialReducer from './rawMaterialReducer'
 import stockRawMaterialReducer from './stokRawMaterialReducer'
 import stockProdukReducer from './stokProdukReducer'
+import orderReducer from './orderReducer'
+import customOrderReducer from './customOrderReducer'
 
 const allReducer = combineReducers({
     userReducer,
+    adminReducer,
     cartReducer,
     categoryReducer,
     brandReducer,
@@ -19,7 +23,9 @@ const allReducer = combineReducers({
     productReducer,
     rawMaterialReducer,
     stockRawMaterialReducer,
-    stockProdukReducer
+    stockProdukReducer,
+    orderReducer,
+    customOrderReducer
 })
 
 export default allReducer

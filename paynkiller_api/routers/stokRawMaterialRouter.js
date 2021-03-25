@@ -5,5 +5,7 @@ router.get('/stokrawmaterials',stokRawMaterialController.getStokRawMaterial)
 router.post('/addstokrawmaterial',stokRawMaterialController.addStokRawMaterial)
 router.post('/editstokrawmaterial/:id',stokRawMaterialController.editStokRawMaterial)
 router.post('/deletestokrawmaterial/:id',stokRawMaterialController.deleteStokRawMaterial)
+router.get('/selectpickerrawmaterial',stokRawMaterialController.selectPickerRawMaterial)
+
 
 module.exports = router

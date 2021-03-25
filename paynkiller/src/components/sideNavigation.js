@@ -1,8 +1,36 @@
-import React from 'react'
-import { Dropdown, Sidenav, Nav, Icon, Container, Sidebar, Col, Row} from 'rsuite'
-import {Link} from 'react-router-dom'
+import React, {useState} from 'react'
+import { Dropdown, Sidenav, Nav, Icon, Container, Sidebar, Col, Row, Button} from 'rsuite'
+import {Link, Redirect} from 'react-router-dom'
 
-export default function sideNavigation() {
+import {logout} from '../action/adminAction'
+
+import {useDispatch, useSelector} from 'react-redux'
+
+export default function SideNavigation() {
+
+
+    const dispatch = useDispatch()
+    const[redirectTo,setRedirectTo] = useState(false)
+
+    const {usernameAdmin} = useSelector((state) => {
+        return {
+          usernameAdmin : state.adminReducer.usernameAdmin,
+        }
+    })
+
+    const handleLogout = () => {
+        dispatch(logout())
+        localStorage.removeItem('tokenAdmin')
+        setRedirectTo(true)
+    }
+
+    if(redirectTo){
+      return <Redirect to={'/'}/>
+    }else{
+        console.log('Gagal Jhon')
+    }
+
+
   return (
     <div style={{backgroundColor: "#f4f3f3"}}>
       {/* <Col md={3} style={{padding: "0px", margin: "0px", position: "sticky", left: 0}}> */}
@@ -10,7 +38,12 @@ export default function sideNavigation() {
             <Sidenav.Header style={{backgroundColor: "#038C73", padding: "45px 5px"}}>
               <Row>
                 <Col md={24}>
-                 <p style={{color: "white", fontSize: "25px", textAlign: "center"}}>Hello, Ahmad</p>
+                 <p style={{color: "white", fontSize: "25px", textAlign: "center"}}>Hello, {usernameAdmin}</p>
+                </Col>
+                <Col md={24} style={{textAlign: 'center', paddingTop: '30px'}}>
+                  <Button style={{textAlign: 'center'}} onClick={() => handleLogout()}>
+                    Logout
+                  </Button>
                 </Col>
               </Row>
             </Sidenav.Header>
@@ -38,7 +71,7 @@ export default function sideNavigation() {
                     <Dropdown.Item eventKey="2-4">Products</Dropdown.Item>
                   </Link>
                 </Dropdown>
-                <Dropdown eventKey="3" title="Management Stock" icon={<Icon icon="dropbox" />}>
+                <Dropdown eventKey="3" title="Management Stock" icon={<Icon icon="archive" />}>
                   <Link to="/admin/stock/product">
                     <Dropdown.Item eventKey="3-1">Stock Product</Dropdown.Item>
                   </Link>
@@ -46,6 +79,22 @@ export default function sideNavigation() {
                     <Dropdown.Item eventKey="3-2">Stock Raw Material</Dropdown.Item>
                   </Link>
                 </Dropdown>
+                  <Link to="/admin/order/allorder">
+                    <Nav.Item eventKey="4" icon={<Icon icon="credit-card" />}>
+                      Order
+                    </Nav.Item>
+                  </Link>
+                  <Link to="/admin/order/customorder">
+                    <Nav.Item eventKey="5" icon={<Icon icon="cart-arrow-down" />}>
+                      Custom Order
+                    </Nav.Item>
+                  </Link>
+                  <Link to="/admin/master/admin">
+                    <Nav.Item eventKey="6" icon={<Icon icon="people-group" />}>
+                      Management Admin
+                    </Nav.Item>
+                  </Link>
+                  
               </Nav>
           </Sidenav.Body>
         </Sidenav>

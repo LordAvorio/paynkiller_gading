@@ -12,4 +12,7 @@ router.patch('/toCheckout', orderController.checkoutFromCart)
 router.get('/ordersCheckout/:idcustomer', orderController.ordersCheckout)
 router.get('/paymentMethods', orderController.paymentMethods)
 router.post('/paymentProof', uploader, orderController.uploadPaymentProof)
+router.get('/getallorder', orderController.getAllOrder)
+router.post('/getorderdetailspecific/:orderNumber', orderController.getSpecificOrderDetail)
+
 module.exports = router

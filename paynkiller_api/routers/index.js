@@ -9,6 +9,7 @@ const productRouter = require('./productRouter')
 const rawMaterialRouter = require('./rawMaterialRouter')
 const stokProdukRouter = require('./stokProdukRouter')
 const stokRawMaterialRouter = require('./stokRawMaterialRouter')
+const customOrderRouter = require('./customOrderRouter')
 
 module.exports = {
     userRouter,
@@ -21,5 +22,6 @@ module.exports = {
     stokProdukRouter,
     stokRawMaterialRouter,
     orderRouter,
-    produkRouter
+    produkRouter,
+    customOrderRouter
 }

@@ -125,6 +125,29 @@ const ProfileScreen = () => {
                     <Link to='/'>
                         <Button onClick={btnlogout} color='red' id="Button">LOGOUT</Button>
                     </Link>
+//                     <div style={{display:'flex', justifyContent: 'space-around'}}>
+//                         <div style={{backgroundColor:'coral', borderRadius: '20px', flexGrow: 1}}>
+//                             <Avatar>AB</Avatar>
+//                             <p>username</p>
+//                             <h5>isi username</h5>
+//                             <p>email</p>
+//                             <div style={{display:'flex', justifyContent: 'space-between', width:'15vw'}}>
+//                             <h5>isi email</h5>
+//                             <h5>status</h5>
+//                             </div>
+//                         </div>
+//                         <div style={{backgroundColor:'cornflowerblue', flexGrow: 1}}>
+//                             <h5>first name</h5>
+//                             <h5>last name</h5>
+//                             <h5>address</h5>
+//                         </div>
+//                     </div>
+//             <Link to='/'>
+//                 <Button onClick={btnlogout} color='red' id="Button">LOGOUT</Button>
+//             </Link>
+//             <Link to='/ShowCustomOrder'>
+//                 <Button  style={{backgroundColor:'#04BF8A', color:'white', marginLeft:20}} id="Button">My Custom Order</Button>
+//             </Link>
                 </div>
             </div>
             {/* <div id="containerProfile">
