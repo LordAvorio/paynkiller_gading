@@ -10,6 +10,8 @@ import LoginScreen from './pages/loginscreen'
 import AdminLoginScreen from './pages/adminLoginScreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
+import CartScreen from './pages/cartscreen'
+import CheckoutScreen from './pages/checkoutScreen'
 import MasterCategory from './pages/masterCategory'
 import DashboardScreen from './pages/dashboard'
 import MasterBrandScreen from './pages/masterBrands'
@@ -47,6 +49,7 @@ export default function App() {
         <Route path='/register' component={RegisterScreen} />
         <Route path='/profile' component={ProfileScreen}/>
         <Route path='/cart' component={CartScreen}/>
+        <Route path='/checkout' component={CheckoutScreen}/>
         <Route path='/login' component={LoginScreen} />
         <Route path='/loginadmin' component={AdminLoginScreen} />
         <Route path='/profile' component={ProfileScreen} />
