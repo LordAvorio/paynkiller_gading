@@ -52,6 +52,9 @@ const ProfileScreen = () => {
             <Link to='/'>
                 <Button onClick={btnlogout} color='red' id="Button">LOGOUT</Button>
             </Link>
+            <Link to='/ShowCustomOrder'>
+                <Button  style={{backgroundColor:'#04BF8A', color:'white', marginLeft:20}} id="Button">My Custom Order</Button>
+            </Link>
                 </div>
             </div>
             {/* <div id="containerProfile">
