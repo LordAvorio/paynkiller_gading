@@ -94,5 +94,25 @@ module.exports = {
             console.log(err)
             res.status(400).send(err)
         }
+    },
+    selectPickerRawMaterial: async(req,res) => {
+        try{
+            let sql = `SELECT a.*,
+            b.nama_bahan_baku,b.total_kapasitas,
+            c.nama_uom,
+            CONCAT(b.nama_bahan_baku," (",c.nama_uom,")") AS bahan_baku_keterangan
+            FROM stok_bahan_baku a
+            INNER JOIN bahan_baku AS b ON a.id_bahan = b.id_bahan_baku
+            INNER JOIN uom AS c ON b.id_uom = c.id_uom`
+
+            let rows = await asyncQuery(sql)
+
+            res.status(200).send(rows)
+
+        }
+        catch(err){
+            console.log(err)
+            res.status(400).send(err)
+        }
     }
 }

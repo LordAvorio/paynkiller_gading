@@ -117,40 +117,6 @@ module.exports = {
             res.status(400).send(err)
         }
     },
-    loginAdmin: async(req,res) => {
-        let username = req.body.username
-        let password = req.body.password
-        
-        try{
-            let sql = `SELECT * FROM data_admin WHERE username = '${username}' `
-            let rows = await asyncQuery(sql)
-
-            if(rows.length === 0) return res.status(400).send("Username salah !")
-
-            let hash = rows[0].password
-
-            let hasil = await bcrypt.compare(password, hash)
-            
-            if(hasil === false) return res.status(400).send("Password salah !")
-            
-            const token = createToken({
-                username: rows[0].username,
-            })
-
-            let data = {
-                username: rows[0].username,
-                id_customer: rows[0].id_customer
-            }
-
-            data.token = token
-
-            res.status(200).send(data)
-        }
-        catch(err){
-            console.log(err)
-            res.status(400).send(err)
-        }
-    },
     keeplogin : async(req, res) => {   
         const {username} = req.user
         try{

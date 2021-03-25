@@ -57,7 +57,7 @@ export const loginAdmin = (data) => {
         try{
             const res = await Axios.post('http://localhost:2000/admin/loginadmin', data)
 
-            localStorage.token = res.data.tokenadmin
+            localStorage.tokenAdmin = res.data.token
             console.log(res.data)
 
             dispatch({
@@ -81,9 +81,9 @@ export const logout = () => {
 export const keepLoginAdmin = () => {
     return async(dispatch) => {
         try{
-            const token = localStorage.getItem('tokenadmin')
-            const res = await Axios.post('http://localhost:2000/admin/keeplogin', {token})
-            console.log(token)
+            const tokenAdmin = localStorage.getItem('tokenAdmin')
+            const res = await Axios.post('http://localhost:2000/admin/keeplogin', {tokenAdmin})
+            console.log(tokenAdmin)
             console.log(res.data)
             dispatch({
                 type: 'LOGIN_ADMIN',
@@ -91,7 +91,9 @@ export const keepLoginAdmin = () => {
             })
         }
         catch(err){
-            dispatch({ type: 'LOGIN_ADMIN_ERR', payload: err.response.data })        }
+            localStorage.removeItem('tokenAdmin')
+            dispatch({type: 'LOGOUT_ADMIN'})        
+        }
     }
 }
 

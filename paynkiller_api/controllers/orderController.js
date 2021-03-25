@@ -136,13 +136,13 @@ module.exports = {
             b.nama_produk,
             c.kode_custom_order,
             d.nama_brand,
-            e.nama_category 
-            FROM order_details a
-            INNER JOIN produk AS b ON a.id_produk = b.id_produk
+            e.nama_category
+            FROM  order_details a 
+            LEFT JOIN produk AS b ON a.id_produk = b.id_produk
             LEFT JOIN custom_order AS c ON a.id_custom_order = c.id_custom_order
-            INNER JOIN brands AS d ON b.id_brand = d.id_brand
-            INNER JOIN category AS e ON b.id_kategori = b.id_kategori
-            WHERE order_number = '${orderNumber}'
+            LEFT JOIN brands AS d ON b.id_brand = d.id_brand
+            LEFT JOIN category AS e ON b.id_kategori = e.id_category
+            WHERE order_number = ${orderNumber}
             GROUP BY id_details
             `
             let rows = await asyncQuery(sql)

@@ -22,5 +22,23 @@ module.exports = {
             console.log(err)
             res.status(400).send(err)
         }
-    }
+    },
+    verifyTokenAdmin: (req, res, next) => {
+        const tokenAdmin = req.body.tokenAdmin
+        // console.log('jwt token:', token)
+        if (!tokenAdmin) return res.status(400).send('no token available')
+        try {
+            // verify token
+            const result = jwt.verify(tokenAdmin, TOKEN_KEY)
+            console.log('result:', result)
+            // add token to req.user
+            req.user = result
+            // lanjut ke proses berikutnya
+            next()
+        }
+        catch(err) {
+            console.log(err)
+            res.status(400).send(err)
+        }
+    },
 }

@@ -72,6 +72,30 @@ export const tambahStockBahan = (id,data) => {
     }
 }
 
+export const selectPickerRawMaterial = () => {
+    return async(dispatch) => {
+        try{
+            const res = await Axios.get('http://localhost:2000/stokrawmaterial/selectpickerrawmaterial')
+
+            const dataSelectPickerRawMaterial = res.data.map(item => {
+                return{
+                    label: item.bahan_baku_keterangan,
+                    value: item.id_stok_bahan
+                }
+            })
+
+            dispatch({
+                type: 'SELECT_PICKER_RAW_MATERIAL',
+                payload: dataSelectPickerRawMaterial
+            })
+
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+}
+
 export const removeError = () => {
     return{
         type: 'REMOVE_ERR'
