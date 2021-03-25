@@ -23,6 +23,8 @@ import ProductListScreen from './pages/productListScreen'
 import CartScreen from './pages/cartscreen'
 import OrderScreen from './pages/orderScreen'
 import CustomOrderAdminScreen from './pages/customOrderAdmin'
+import CustomOrderScreen from './pages/customOrderScreen'
+import ShowCustomOrderScreen from './pages/showCustomOrderScreen'
 
 import {useDispatch} from 'react-redux'
 
@@ -63,6 +65,8 @@ export default function App() {
         <Route path='/admin/order/customorder' component={CustomOrderAdminScreen} />
         <Route path='/admin/master/admin' component={MasterAdminScreen} />
         <Route path='/products' component={ProductListScreen} />
+        <Route path='/customOrder' component={CustomOrderScreen} />
+        <Route path='/ShowCustomOrder' component={ShowCustomOrderScreen} />
 
       </Switch>
     </div>

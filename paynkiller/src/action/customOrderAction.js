@@ -115,3 +115,32 @@ export const removeError = () => {
         type: 'REMOVE_ERR'
     }
 }
+
+export const UploadMedPrescription = (data, id) => {
+    return async (dispatch) => {
+        try{
+            const option = {
+                headers: {'Content-Type' : 'multipart/form-data'}
+            }
+            console.log('ululululu', data, option)
+            console.log(id)
+            const res = await Axios.post(`http://localhost:2000/customorder/customOrder/${id}`, data, option )
+            console.log(res.data)
+            dispatch({type: 'CUSTOM_ORDER_RES', payload: res.data})
+        }
+        catch(err){
+            dispatch({type: 'CUSTOM_ORDER_RES_ERR', payload: err.response.data})
+        }
+    }
+}
+
+export const RemoveResUpload = () => {
+    return async(dispatch) => {
+        try{
+            dispatch({type: 'REMOVE_RES_UPLOAD'})
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+}
