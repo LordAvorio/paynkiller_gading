@@ -11,6 +11,7 @@ import rawMaterialReducer from './rawMaterialReducer'
 import stockRawMaterialReducer from './stokRawMaterialReducer'
 import stockProdukReducer from './stokProdukReducer'
 import orderReducer from './orderReducer'
+import customOrderReducer from './customOrderReducer'
 
 const allReducer = combineReducers({
     userReducer,
@@ -23,7 +24,8 @@ const allReducer = combineReducers({
     rawMaterialReducer,
     stockRawMaterialReducer,
     stockProdukReducer,
-    orderReducer
+    orderReducer,
+    customOrderReducer
 })
 
 export default allReducer

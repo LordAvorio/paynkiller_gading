@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const {adminController} = require('../controllers')
 const {body} = require('express-validator')
-const {verifyToken} = require('../helpers/jwt')
+const {verifyToken,verifyTokenAdmin} = require('../helpers/jwt')
 
 
 const addAdminValidation = [
@@ -22,12 +22,11 @@ const addAdminValidation = [
 ]
 
 router.get('/admins',adminController.getAdmin)
-router.get('/loginadmin',adminController.login)
+router.post('/loginadmin',adminController.login)
 router.post('/adminadd',addAdminValidation,adminController.tambahAdmin)
 router.post('/editadmin/:id',adminController.editAdmin)
 router.post('/deactiveaccount/:id', adminController.deactiveAccount)
-router.post('/loginadmin', adminController.loginAdmin)
-router.post('/keeplogin', verifyToken, adminController.keeplogin)
+router.post('/keeplogin', verifyTokenAdmin, adminController.keeplogin)
 
 
 module.exports = router

@@ -22,6 +22,7 @@ import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
 import CartScreen from './pages/cartscreen'
 import OrderScreen from './pages/orderScreen'
+import CustomOrderAdminScreen from './pages/customOrderAdmin'
 
 import {useDispatch} from 'react-redux'
 
@@ -59,6 +60,7 @@ export default function App() {
         <Route path='/admin/stock/rawmaterial' component={ManagementStockRawMaterialScreen} />
         <Route path='/admin/stock/product' component={ManagementStockProductScreen} />
         <Route path='/admin/order/allorder' component={OrderScreen} />
+        <Route path='/admin/order/customorder' component={CustomOrderAdminScreen} />
         <Route path='/admin/master/admin' component={MasterAdminScreen} />
         <Route path='/products' component={ProductListScreen} />
 

@@ -1,5 +1,6 @@
 let INITIAL_STATE = {
     dataStockRawMaterial: [],
+    dataSelectPickerRawMaterial: [],
     errLogin: ""
 }
 
@@ -14,6 +15,11 @@ const stockRawMaterialReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 errLogin: action.payload
+            }
+        case 'SELECT_PICKER_RAW_MATERIAL':
+            return {
+                ...state,
+                dataSelectPickerRawMaterial: action.payload
             }
         case 'REMOVE_ERR':
             return {

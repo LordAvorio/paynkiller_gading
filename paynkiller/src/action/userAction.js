@@ -61,7 +61,8 @@ export const keeplogin = () => {
             })
         }
         catch(err){
-            dispatch({ type: 'LOGIN_ERR', payload: err.response.data })
+            localStorage.removeItem('token')
+            dispatch({type: 'LOG_OUT'})
         }
     }
 }

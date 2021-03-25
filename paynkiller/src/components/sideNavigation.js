@@ -20,6 +20,7 @@ export default function SideNavigation() {
 
     const handleLogout = () => {
         dispatch(logout())
+        localStorage.removeItem('tokenAdmin')
         setRedirectTo(true)
     }
 
@@ -83,11 +84,17 @@ export default function SideNavigation() {
                       Order
                     </Nav.Item>
                   </Link>
+                  <Link to="/admin/order/customorder">
+                    <Nav.Item eventKey="5" icon={<Icon icon="cart-arrow-down" />}>
+                      Custom Order
+                    </Nav.Item>
+                  </Link>
                   <Link to="/admin/master/admin">
-                    <Nav.Item eventKey="5" icon={<Icon icon="people-group" />}>
+                    <Nav.Item eventKey="6" icon={<Icon icon="people-group" />}>
                       Management Admin
                     </Nav.Item>
                   </Link>
+                  
               </Nav>
           </Sidenav.Body>
         </Sidenav>
