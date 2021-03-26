@@ -86,7 +86,7 @@ const CustomOrderScreen = () => {
                     <Modal.Title>Success Upload</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Your Medical Prescription has been Uploaded
+                    {res}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={doneShow} style={{backgroundColor: '#04BF8A', color:'white', fontWeight:'bold', width:100}}>

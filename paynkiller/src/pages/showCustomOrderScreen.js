@@ -41,11 +41,13 @@ const ShowCustomOrderScreen = () => {
                 .then((res) => setData(res.data))
                 .catch((err) => console.log(err))
         }
+    }, [id_customer])
+    React.useEffect(() => {
         if (idCO) {
             axios.get(`http://localhost:2000/customorder/getcustomorderdetail/${idCO}`)
             .then((res) => setData2(res.data))
         }
-    }, [id_customer])
+    }, [idCO])
     console.log(Data)
 
     const showDetail = (data) => {

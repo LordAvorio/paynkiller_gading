@@ -148,6 +148,9 @@ const ProfileScreen = () => {
 //             <Link to='/ShowCustomOrder'>
 //                 <Button  style={{backgroundColor:'#04BF8A', color:'white', marginLeft:20}} id="Button">My Custom Order</Button>
 //             </Link>
+//             <Link to='/historyUser'>
+//                 <Button  style={{backgroundColor:'#04BF8A', color:'white', marginLeft:20}} id="Button">My Orders</Button>
+//             </Link>
                 </div>
             </div>
             {/* <div id="containerProfile">
