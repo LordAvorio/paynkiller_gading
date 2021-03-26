@@ -3,18 +3,21 @@ import Axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import { Panel, IconButton, Button, Input, InputGroup, Alert } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserCart, editCartQty, deleteCartItem, keeplogin } from '../action'
+import { getUserCart, editCartQty, deleteCartItem, keeplogin, getMaterialsInCart } from '../action'
 import Navbar from '../components/TopNavigation'
 
 const URL_IMG = 'http://localhost:2000/'
 
 const CartScreen = () => {
     const [toCheckout, setToCheckout] = React.useState(false)
+    const [showDetails, setShowDetails] = React.useState(false)
+    const { id_customer, cart, materialsinCart } = useSelector((state) => {
 
     const { id_customer, cart } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
-            cart: state.cartReducer.cart
+            cart: state.cartReducer.cart,
+            materialsinCart: state.customOrderReducer.materialsinCart
         }
     })
 
@@ -23,8 +26,9 @@ const CartScreen = () => {
     React.useEffect(() => {
         console.log('id', id_customer)
         dispatch(getUserCart(id_customer))
+        dispatch(getMaterialsInCart(id_customer))
         console.log(cart)
-    }, [id_customer, cart.length])
+    }, [id_customer])
 
     const del = async (index) => {
         dispatch(deleteCartItem(cart[index], () => {
@@ -53,21 +57,39 @@ const CartScreen = () => {
         }
     }
 
-    const grandTotal = () => {
+    const totalPriceProducts = () => {
         console.log(cart)
         let counter = 0
-        if (cart.length !== 0) {
-            cart.forEach(item => counter += item.total_harga)
-        }
+        cart ? cart.forEach(item => counter += item.total_harga) : counter = 0
+        // if (cart.length !== 0) {
+        //     cart.forEach(item => counter += item.total_harga)
+        // }
         return counter
+    }
+
+
+    const totalPriceIngredients = () => {
+        let n = 0
+        materialsinCart ? materialsinCart.forEach(item => n += item.total_harga) : n = 0
+        return n
+
     }
 
     const continueCheckout = async () => {
         try {
-            let grandTotal = 0
+            let products = 0
             if (cart.length !== 0) {
-                cart.forEach(item => grandTotal += item.total_harga)
+                cart.forEach(item => products += item.total_harga)
             }
+
+            let ingredients = 0
+            if (materialsinCart.length !== 0) {
+                materialsinCart.forEach(item => ingredients += item.total_harga)
+            }
+
+            let grandTotal = products + ingredients
+            console.log(grandTotal)
+
             const body = {
                 grandTotal,
                 order_number: cart[0].order_number
@@ -80,7 +102,6 @@ const CartScreen = () => {
         catch (err) {
             console.log(err)
         }
-
     }
 
     if (toCheckout) return <Redirect to="/checkout" />
@@ -106,7 +127,7 @@ const CartScreen = () => {
                                     <Button onClick={() => del(index)} style={{ backgroundColor: 'white', margin: '5px', position: 'initial', color: '#d3d3d3' }}><span color='gray' className="material-icons">delete</span></Button>
                                 </div>
                                 <InputGroup style={{ height: '30px', width: '160px', margin: '10px 0 0 20px' }}>
-                                    <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty === 1} onClick={() => minus(item.id_details, index)}>
+                                    <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty === 1} onClick={() => minus(item.id_details)}>
                                         <span className="material-icons">remove</span>
                                     </InputGroup.Button>
                                     <Input
@@ -116,7 +137,7 @@ const CartScreen = () => {
                                         disabled={true}
                                     // onChange={e => change(e)}
                                     />
-                                    <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details, index)}>
+                                    <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
                                         <span className="material-icons">add</span>
                                     </InputGroup.Button>
                                 </InputGroup>
@@ -129,28 +150,66 @@ const CartScreen = () => {
         )
     }
 
+    const IngredientsCode = () => {
+        return (
+            materialsinCart.map(item => {
+                return (
+                    <div style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '-10px 10px 10px', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
+                        <p style={{ textAlign: 'center' }}>{materialsinCart[0].kode_custom_order}</p>
+                        <Button onClick={() => setShowDetails(true)} style={{ backgroundColor: 'white', fontWeight: 'bold', color: '#51bea5', margin: '5px 0 0 20px' }}>click for details</Button>
+                    </div>
+                )
+            })
+        )
+    }
+
+    const ShowMaterials = () => {
+        return (
+            materialsinCart.map((item, index) => {
+                if (showDetails) return (
+                    <div key={index} style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '10px 10px 10px', display: 'flex', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
+                        <p>{item.nama_bahan_baku}</p>
+                        <p style={{ marginTop: '20px' }}>{item.total_beli_satuan + item.nama_uom}</p>
+                    </div>
+                )
+            })
+        )
+    }
+
     return (
         <div>
             <Navbar />
             <h1 style={{ margin: '17px 40px', fontSize: '34px' }}>Your Cart</h1>
             <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
                 <div style={{ borderTop: '4px solid #51bea5', flexGrow: 2, padding: '30px 0 0 40px', maxWidth: '65vw' }}>
+                    <p style={{ fontSize: '18px' }}>Products</p>
                     <Render />
+                    <p style={{ fontSize: '18px', margin: '25px' }}>Active Ingredients</p>
+                    <IngredientsCode />
+                    <div style={{ display: 'flex' }}>
+                        <ShowMaterials />
+                        {showDetails
+                            ?
+                            <Button onClick={() => setShowDetails(false)} style={{ backgroundColor: 'white', fontWeight: 'bold' }}>X</Button>
+                            :
+                            <></>
+                        }
+                    </div>
                 </div>
                 <div style={{ flexGrow: 1, position: 'relative' }}>
-                    <Panel header="Shopping" shaded={true} style={{ backgroundColor: 'white', height: '305px', width: '280px', position: 'fixed', margin: '50px 0 0 40px', border: '2px solid #4f79c5', borderRadius: '20px' }}>
+                    <Panel header="Shopping" shaded={true} style={{ backgroundColor: 'white', height: '305px', width: '280px', position: 'fixed', margin: '50px 0 0 40px', border: '3px solid #d3d3d3', borderRadius: '20px', padding: '20px 10px 20px 10px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <p style={{ fontSize: '16px', marginTop: '10px' }}>Total Price</p>
-                            <p style={{ fontSize: '18px', textAlign: 'center' }}>Rp {grandTotal().toLocaleString('id-ID')}</p>
+                            <p style={{ fontSize: '16px', marginTop: '10px' }}>Products</p>
+                            <p style={{ fontSize: '16px', textAlign: 'center' }}>Rp {totalPriceProducts().toLocaleString('id-ID')}</p>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
-                            <p style={{ fontSize: '16px', marginTop: '10px' }}>Shipping</p>
-                            <p style={{ fontSize: '16px', textAlign: 'center', color: '#51bea5', fontWeight: 'bold' }}>ALWAYS FREE</p>
+                            <p style={{ fontSize: '16px', marginTop: '10px' }}>Active Ingredients</p>
+                            <p style={{ fontSize: '16px', textAlign: 'center' }}>Rp {totalPriceIngredients().toLocaleString('id-ID')}</p>
                         </div>
                         <div style={{ borderBottom: '4px solid gray', marginTop: '30px' }}></div>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px', fontWeight: 'bold', fontSize: '18px', }}>
                             <p style={{ marginTop: '10px' }}>Grand Total</p>
-                            <p style={{ textAlign: 'center' }}>Rp {grandTotal().toLocaleString('id-ID')}</p>
+                            <p style={{ textAlign: 'center', color: '#51bea5', fontWeight: 'bold' }}>Rp {(totalPriceProducts() + totalPriceIngredients()).toLocaleString('id-ID')}</p>
                         </div>
                         <Button onClick={continueCheckout} style={{ width: '100%', backgroundColor: '#51bea5', color: 'white', fontWeight: 'bold', marginTop: '10px' }}>Continue</Button>
 

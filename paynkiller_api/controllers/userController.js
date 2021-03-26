@@ -5,8 +5,8 @@ const { validationResult } = require('express-validator')
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const handlebars = require('handlebars')
-const { asyncQuery, generateQueryBody } = require('../helpers/queryHelp')
-const { createToken, verifyToken } = require('../helpers/jwt')
+const {asyncQuery, generateQueryBody} = require('../helpers/queryHelp')
+const {createToken, verifyToken} = require('../helpers/jwt')
 
 var salt = bcrypt.genSaltSync(10);
 

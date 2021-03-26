@@ -9,7 +9,7 @@ const fs = require('fs')
 module.exports = {
     addToCart: async (req, res) => {
         const id_customer = parseInt(req.params.idcustomer)
-        const { order_number, id_produk, qty, komposisi, harga_produk, aturan_pakai, total_harga } = req.body
+        const { order_number, id_produk, qty, total_harga } = req.body
         console.log(req.body)
         try {
             const cek = `SELECT * FROM orders WHERE id_customer = ${id_customer} AND id_status = 1`
@@ -24,8 +24,7 @@ module.exports = {
                 await asyncQuery(addOrders)
             }
             // console.log(id_produk)
-            const cekQty = `select o.order_number, o.id_customer, od.id_produk, od.qty,
-                            od.total_harga, o.id_status 
+            const cekQty = `select o.order_number, o.id_customer, od.id_produk, od.qty, od.total_harga, o.id_status 
                             from orders o left join order_details od on o.order_number = od.order_number 
                             where od.id_produk=${db.escape(req.body.id_produk)} and o.order_number=${current_order_number} having o.id_status=1;`
             const qcekQty = await asyncQuery(cekQty)
@@ -55,8 +54,8 @@ module.exports = {
         const id = parseInt(req.params.idcustomer)
         console.log('id customer', id)
         try {
-            const get = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, p.gambar_obat, od.id_details, od.qty, sp.jumlah_produk as stock, p.harga_produk, 
-                        p.komposisi, os.status as status_order, od.total_harga 
+            const get = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, p.gambar_obat, od.id_details, od.qty, sp.jumlah_produk as stock, 
+                        p.harga_produk, p.komposisi, os.status as status_order, od.total_harga 
                         from orders o join order_details od on o.order_number = od.order_number 
                         join produk p on od.id_produk = p.id_produk
                         join stok_produk sp on p.id_produk = sp.id_produk
@@ -122,9 +121,84 @@ module.exports = {
             res.sendStatus(200)
         }
         catch (err) {
-          res.status(400).send(err)
+            res.status(400).send(err)
             console.log(err)
         }
+    },
+    ordersCheckout: async (req, res) => {
+        // console.log(req.user)
+        const id = parseInt(req.params.idcustomer)
+        console.log('id customer produk', id)
+        try {
+            const products = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, p.gambar_obat, od.id_details, od.qty, sp.jumlah_produk as stock, p.harga_produk, 
+                                p.komposisi, os.status as status_order, od.total_harga 
+                                from orders o join order_details od on o.order_number = od.order_number 
+                                join produk p on od.id_produk = p.id_produk
+                                join stok_produk sp on p.id_produk = sp.id_produk
+                                join order_status os on o.id_status = os.id
+                                where o.id_status = 2 and o.id_customer = ${db.escape(id)} and od.id_custom_order is null`
+            // console.log(get)
+            const showProducts = await asyncQuery(products)
+            console.log(showProducts)
+          
+            res.status(200).send(showProducts)
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+        }
+    },
+    paymentMethods: async (req, res) => {
+        try {
+            const get = `select * from opsi_pembayaran`
+            const qget = await asyncQuery(get)
+            res.status(200).send(qget)
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+
+        }
+    },
+    uploadPaymentProof: async (req, res) => {
+        const order_number = parseInt(req.params.ordernumber)
+        console.log('reqfile', req.file)
+        if (!req.file) return res.status(400).send('no image !')
+        
+        const imageUpload = `images/${req.file.filename}`
+        console.log('image upload', imageUpload)
+        
+        try {
+            
+            const today = new Date()
+            const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() 
+            console.log(date)
+            
+            const pay = `UPDATE orders SET id_status = 3, bukti_bayar = '${imageUpload}', tanggal_bayar='${date}' WHERE order_number = ${order_number}`
+            await asyncQuery(pay)
+            
+            res.sendStatus(200)
+        }
+        catch (err) {
+            console.log(err)
+            res.status(400).send(err)
+        }
+    },
+    detailsPaymentProof: async (req, res) => {
+        const { order_number, jenis_pembayaran } = req.body
+        try {
+            const cekPayment = `select id from opsi_pembayaran where jenis_pembayaran='${jenis_pembayaran}'`
+            const idPayment = await asyncQuery(cekPayment[0])
+            console.log('id payment:', idPayment)
+
+            const details = `UPDATE orders SET opsi_pembayaran =${idPayment}, WHERE order_number = ${order_number}`
+            await asyncQuery(details)
+            res.sendStatus(200)          
+        }
+        catch (err) {
+            console.log(err)
+        }
+        
     },
     getAllOrder: async(req,res) => {
 
@@ -237,16 +311,6 @@ module.exports = {
             const showProducts = await asyncQuery(products)
             console.log(showProducts)
 
-            // const grandTotal = `select grandTotal_checkout from orders where id_customer=${db.escape(id)}`
-            // const qgrandTotal = await asyncQuery(grandTotal)
-
-            // const showGrandTotal = qgrandTotal[0].grandTotal_checkout
-
-            // const totalQty = `select sum(od.qty) as total_qty from orders o join order_details od on o.order_number = od.order_number
-            //                 where o.id_status = 2 and o.id_customer = ${db.escape(id)}`
-            // const qtotalQty = await asyncQuery(totalQty)
-            // const showTotalQty = qtotalQty[0].total_qty
-            // console.log(showTotalQty)
             res.status(200).send(showProducts)
         }
         catch (err) {
