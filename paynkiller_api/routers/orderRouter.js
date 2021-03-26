@@ -14,5 +14,8 @@ router.get('/paymentMethods', orderController.paymentMethods)
 router.post('/paymentProof', uploader, orderController.uploadPaymentProof)
 router.get('/getallorder', orderController.getAllOrder)
 router.post('/getorderdetailspecific/:orderNumber', orderController.getSpecificOrderDetail)
+router.post('/acceptpayment/:id', orderController.acceptOrderPayment)
+router.post('/rejectpayment/:id', orderController.rejectOrderPayment)
+
 
 module.exports = router

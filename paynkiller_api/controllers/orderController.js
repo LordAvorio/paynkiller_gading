@@ -2,6 +2,10 @@ const { asyncQuery, generateQueryBody } = require('../helpers/queryHelp')
 const transporter = require('../helpers/nodemailer')
 const handlebars = require('handlebars')
 const db = require('../database')
+const transporter = require('../helpers/nodemailer')
+const handlebars = require('handlebars')
+const fs = require('fs')
+
 module.exports = {
     addToCart: async (req, res) => {
         const id_customer = parseInt(req.params.idcustomer)
@@ -137,6 +141,79 @@ module.exports = {
             let rows = await asyncQuery(sql)
 
             res.status(200).send(rows)
+
+        }
+        catch(err){
+            res.status(400).send(err)
+            console.log(err)
+        }
+    },
+    acceptOrderPayment: async(req,res) => {
+
+        let id = parseInt(req.params.id)
+
+
+        try{
+            let sql = `UPDATE orders SET id_status = 5 WHERE order_number = ${id}`
+            let rows = await asyncQuery(sql)
+
+            let sql2 = `SELECT * FROM data_customer WHERE id_customer = ${req.body.id_customer}`
+            let rows2 = await asyncQuery(sql2)
+
+            const option = {
+                from: `admin <andhika.jeremia@gmail.com>`,
+                to: `${rows2[0].email}`,
+                subject: 'Order Payment Accepted',
+                text: '',
+                attachments: [{
+                    filename: 'paynkiller.svg',
+                    path: __dirname + '/images/logo/paynkiller.png',
+                    cid:'paynkiller'
+                }],
+            }
+
+            const fileEmail = fs.readFileSync('./email/orderPaymentAccept.html').toString()
+            const template = handlebars.compile(fileEmail)
+            option.html = template({username: rows2[0].username, kode: id})
+
+            const info = await transporter.sendMail(option)
+            res.status(200).send('Email Sended')
+
+        }
+        catch(err){
+            res.status(400).send(err)
+            console.log(err)
+        }
+    },
+    rejectOrderPayment: async(req,res) => {
+
+        let id = parseInt(req.params.id)
+
+        try{
+            let sql = `UPDATE orders SET id_status = 8 WHERE order_number = ${id}`
+            let rows = await asyncQuery(sql)
+
+            let sql2 = `SELECT * FROM data_customer WHERE id_customer = ${req.body.id_customer}`
+            let rows2 = await asyncQuery(sql2)
+
+            const option = {
+                from: `admin <andhika.jeremia@gmail.com>`,
+                to: `${rows2[0].email}`,
+                subject: 'Order Payment Rejected',
+                text: '',
+                attachments: [{
+                    filename: 'paynkiller.svg',
+                    path: __dirname + '/images/logo/paynkiller.png',
+                    cid:'paynkiller'
+                }],
+            }
+
+            const fileEmail = fs.readFileSync('./email/orderPaymentReject.html').toString()
+            const template = handlebars.compile(fileEmail)
+            option.html = template({username: rows2[0].username, komentar: req.body.keteranganReject, kode: id})
+
+            const info = await transporter.sendMail(option)
+            res.status(200).send('Email Sended')
 
         }
         catch(err){
