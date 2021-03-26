@@ -10,6 +10,8 @@ import LoginScreen from './pages/loginscreen'
 import AdminLoginScreen from './pages/adminLoginScreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
+import CartScreen from './pages/cartscreen'
+import CheckoutScreen from './pages/checkoutScreen'
 import MasterCategory from './pages/masterCategory'
 import DashboardScreen from './pages/dashboard'
 import MasterBrandScreen from './pages/masterBrands'
@@ -20,9 +22,11 @@ import MasterAdminScreen from './pages/masterAdmin'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
-import CartScreen from './pages/cartscreen'
 import OrderScreen from './pages/orderScreen'
 import CustomOrderAdminScreen from './pages/customOrderAdmin'
+import CustomOrderScreen from './pages/customOrderScreen'
+import ShowCustomOrderScreen from './pages/showCustomOrderScreen'
+import UserHistoryScreen from './pages/historyUserScreen'
 
 import {useDispatch} from 'react-redux'
 
@@ -45,6 +49,7 @@ export default function App() {
         <Route path='/register' component={RegisterScreen} />
         <Route path='/profile' component={ProfileScreen}/>
         <Route path='/cart' component={CartScreen}/>
+        <Route path='/checkout' component={CheckoutScreen}/>
         <Route path='/login' component={LoginScreen} />
         <Route path='/loginadmin' component={AdminLoginScreen} />
         <Route path='/profile' component={ProfileScreen} />
@@ -63,7 +68,9 @@ export default function App() {
         <Route path='/admin/order/customorder' component={CustomOrderAdminScreen} />
         <Route path='/admin/master/admin' component={MasterAdminScreen} />
         <Route path='/products' component={ProductListScreen} />
-
+        <Route path='/customOrder' component={CustomOrderScreen} />
+        <Route path='/ShowCustomOrder' component={ShowCustomOrderScreen} />
+        <Route path='/historyUser' component={UserHistoryScreen} />
       </Switch>
     </div>
   )

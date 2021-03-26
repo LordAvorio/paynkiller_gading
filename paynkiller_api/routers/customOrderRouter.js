@@ -11,6 +11,6 @@ router.post('/customorderacc/:id', customOrderController.acceptOrder)
 router.post('/customordernoacc/:id', customOrderController.rejectedOrder)
 router.post('/addcustomorderdetail/:id', customOrderController.addCustomOrderDetail)
 router.post('/customordertocart/:id', customOrderController.addCustomOrderToCart)
-
+router.get('/ShowCustomOrder/:id', customOrderController.showCustomOrder)
 
 module.exports = router

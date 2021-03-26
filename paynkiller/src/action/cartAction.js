@@ -69,3 +69,15 @@ export const deleteCartItem = (body) => {
         }
     }
 }
+
+export const getOrdersInCheckout = (id_customer) => {
+    return async (dispatch) => {
+        try {
+            const res = await Axios.get(`http://localhost:2000/order/ordersCheckout/${id_customer}`)
+            dispatch({type: 'GET_CHECKOUT', payload: res.data})
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+}

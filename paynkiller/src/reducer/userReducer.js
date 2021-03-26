@@ -3,7 +3,8 @@ let INITIAL_STATE = {
     id_customer: null,
     errLogin: "",
     errFpass: '',
-    FpassRes: ''
+    FpassRes: '',
+    biodata: {}
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -13,7 +14,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 username: action.payload.username,
                 id_customer: action.payload.id_customer,
-                cart: action.payload.cart
+                // cart: action.payload.cart
             }
         case 'LOGOUT':
             return INITIAL_STATE
@@ -33,11 +34,20 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 FpassRes: action.payload
             }
         case 'REMOVE_RES' :
-            return INITIAL_STATE
+            return {
+                ...state,
+                FpassRes: '',
+                errFpass: ''
+            }
         case 'Err_FORGOT_PASS':
             return{
                 ...state,
                 errFpass: action.payload
+            }
+        case 'GET_PROFILE': 
+            return {
+                ...state,
+                biodata: action.payload
             }
         default:
             return state

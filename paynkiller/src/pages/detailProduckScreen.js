@@ -18,8 +18,7 @@ const DetailProdukScreen = (props) => {
   console.log(Data);
 
   React.useEffect(() => {
-    axios
-      .post(`http://localhost:2000/produk/getProduk?${id_produk}`)
+    axios.post(`http://localhost:2000/produk/getProduk?${id_produk}`)
       .then((res) => setData(res.data[0]));
   }, []);
 
@@ -81,7 +80,7 @@ const DetailProdukScreen = (props) => {
               <Row>
                 <Col md={4}>
                   <Button
-                    
+
                     onClick={() => setAngka((prev) => parseInt(prev) - 1)}
                     disabled={angka === 0}
                     style={{ backgroundColor: angka !== 0 ? '#dfe6e9' : '#636e72' }}
@@ -101,7 +100,7 @@ const DetailProdukScreen = (props) => {
                 </Col>
                 <Col md={4}>
                   <Button
-                    
+
                     onClick={() => setAngka((prev) => parseInt(prev) + 1)}
                     disabled={angka >= Data.jumlah_produk}
                     style={{ backgroundColor: angka >= Data.jumlah_produk ? '#636e72' : '#dfe6e9' }}
@@ -110,7 +109,7 @@ const DetailProdukScreen = (props) => {
                   </Button>
                 </Col>
                 <Col md={24} style={{ padding: '0px 50px' }}>
-                  <p id='minititle' style={{marginTop: 10, marginLeft: 10}}>Stock : {Data.jumlah_produk}</p>
+                  <p id='minititle' style={{ marginTop: 10, marginLeft: 10 }}>Stock : {Data.jumlah_produk}</p>
                   <Button
                     color="green"
                     style={{ width: "100%", marginTop: '20px', }}
