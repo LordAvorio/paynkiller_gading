@@ -10,8 +10,8 @@ module.exports = {
     customOrder: async (req, res) => {
         const id = parseInt(req.params.id)
 
+        if (!req.file) return res.status(400).send('No Image Uploaded')
         let imageUpload = `images/${req.file.filename}`
-        if (!req.file) return res.status(400).send('no image !')
 
         let generateCode = Math.random().toString(36).substring(7)
         let codeKapital = generateCode.toUpperCase()
@@ -24,7 +24,7 @@ module.exports = {
             const sql = `INSERT INTO custom_order (gambar_resep, id_user, status, kode_custom_order) VALUES ('${imageUpload}', '${id}', 1, '${finalCode}')`
             await asyncQuery(sql)
 
-            res.status(200).send('uploaded')
+            res.status(200).send('Your Medical Prescription has been Uploaded')
         }
         catch (err) {
             res.status(400).send(err)

@@ -22,11 +22,11 @@ import MasterAdminScreen from './pages/masterAdmin'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
-import CartScreen from './pages/cartscreen'
 import OrderScreen from './pages/orderScreen'
 import CustomOrderAdminScreen from './pages/customOrderAdmin'
 import CustomOrderScreen from './pages/customOrderScreen'
 import ShowCustomOrderScreen from './pages/showCustomOrderScreen'
+import UserHistoryScreen from './pages/historyUserScreen'
 
 import {useDispatch} from 'react-redux'
 
@@ -70,7 +70,7 @@ export default function App() {
         <Route path='/products' component={ProductListScreen} />
         <Route path='/customOrder' component={CustomOrderScreen} />
         <Route path='/ShowCustomOrder' component={ShowCustomOrderScreen} />
-
+        <Route path='/historyUser' component={UserHistoryScreen} />
       </Switch>
     </div>
   )
