@@ -2,19 +2,30 @@ import React from 'react'
 import axios from 'axios'
 import Navbar from "../components/TopNavigation"
 import { useSelector, useDispatch } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import { Table, Modal, Button } from 'rsuite'
+import { ReuploadTransactionEvidence } from '../action'
 const { Column, HeaderCell, Cell } = Table
 
 const UserHistoryScreen = () => {
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const [Data, setData] = React.useState([])
     const [Data2, setData2] = React.useState([])
     const [show, setShow] = React.useState(false)
+    const [showCancel, setShowCancel] = React.useState(false)
+    const [showRes, setShowRes] = React.useState(false)
+    const [showErr, setShowErr] = React.useState(false)
+    const [showUpload, setShowUpload] = React.useState(false)
     const [orderNumber, setOrderNumber] = React.useState(null)
+    const [gocheckout, setgocheckout] = React.useState(false)
+    const [image, setImage] = React.useState({})
+    const [cancel, setCancel] = React.useState('')
 
-    const { id_customer } = useSelector((state) => {
+    const { id_customer, res, errRes } = useSelector((state) => {
         return {
-            id_customer: state.userReducer.id_customer
+            id_customer: state.userReducer.id_customer,
+            res: state.historyUserReducer.resUpload,
+            errRes: state.historyUserReducer.errUpload
         }
     })
     React.useEffect(() => {
@@ -32,25 +43,60 @@ const UserHistoryScreen = () => {
         }
     }, [orderNumber])
 
-    console.log(Data)
+    React.useEffect(() => {
+        if (res) {
+            setShowRes(true)
+        }
+        if (errRes) {
+            setShowErr(true)
+        }
+    }, [res, errRes])
 
-    const showDetail = (data) => {
-        console.log(data)
-        setOrderNumber(data)
-        setShow(true)
+    React.useEffect(() => {
+        if(cancel) {
+            setShowCancel(true)
+        }
+    }, [cancel])
+
+    const goToCheckout = () => {
+        setgocheckout(true)
     }
+    console.log(gocheckout)
+
+    if (gocheckout) {
+        return (
+            <Redirect to='/checkout' />
+        )
+    }
+
+    const handleChoose = (e) => {
+        console.log(e.target.files[0])
+        setImage(e.target.files[0])
+    }
+
+    const doneShow = () => {
+        const data = new FormData()
+        data.append('IMG', image)
+        dispatch(ReuploadTransactionEvidence(data, orderNumber))
+
+        setShowUpload(false)
+    }
+
+
+    console.log(Data)
+    console.log('res', showRes)
     return (
         <div style={{ height: '100vh', backgroundColor: '#b2bec3' }}>
             <Navbar />
-            <div style={{ width: '100%', padding: 30 }}>
+            <div style={{ width: '100%', paddingLeft: 20, paddingRight: 20, paddingTop: 20 }}>
                 <Table
-                    height={600}
+                    height={550}
                     data={Data}
-                    onRowClick={(data) => showDetail(data.order_number)}
+                    // onRowClick={(data) => showDetail(data.order_number)}
                     rowHeight={70}
                     headerHeight={50}
                 >
-                    <Column width={150} align="center" fixed>
+                    <Column width={150} align="center" fixed >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Order Number</HeaderCell>
                         <Cell dataKey="order_number" style={{ fontSize: 16 }} />
                     </Column>
@@ -60,7 +106,7 @@ const UserHistoryScreen = () => {
                         <Cell>
                             {(rowData) => {
                                 return (
-                                    <p style={{ fontSize: 16 }}>Rp. {rowData.grandTotal_checkout.toLocaleString()}</p>
+                                    <p style={{ fontSize: 16 }}>{rowData.grandTotal_checkout ? `${rowData.grandTotal_checkout.toLocaleString()}` : rowData.grandTotal_checkout}</p>
                                 )
                             }}
                         </Cell>
@@ -71,37 +117,64 @@ const UserHistoryScreen = () => {
                         <Cell dataKey="jenis_pembayaran" style={{ fontSize: 16 }} />
                     </Column>
 
-                    <Column width={350} align="center" >
+                    <Column width={200} align="center" resizable>
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Annotation</HeaderCell>
                         <Cell dataKey="keterangan" style={{ fontSize: 16 }} />
                     </Column>
 
-                    <Column width={155} align="center" >
+                    <Column width={150} align="center" >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Transaction Date</HeaderCell>
-                        <Cell dataKey="tanggal_transaksi" style={{ fontSize: 16 }} />
+                        <Cell>
+                            {(rowData) => {
+                                return (
+                                    <p style={{ fontSize: 16 }}>{rowData.tanggal_transaksi ? `${rowData.tanggal_transaksi.substring(0, 10)}` : rowData.tanggal_transaksi}</p>
+                                )
+                            }}
+                        </Cell>
                     </Column>
 
                     <Column width={150} align="center" >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Pay Date</HeaderCell>
-                        <Cell dataKey="tanggal_bayar" style={{ fontSize: 16 }} />
+                        <Cell>
+                            {(rowData) => {
+                                return (
+                                    <p style={{ fontSize: 16 }}>{rowData.tanggal_bayar ? `${rowData.tanggal_bayar.substring(0, 10)}` : rowData.tanggal_bayar}</p>
+                                )
+                            }}
+                        </Cell>
                     </Column>
 
-                    <Column width={100} align="center" >
+                    <Column width={150} align="center" >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Status</HeaderCell>
                         <Cell dataKey="status" style={{ fontSize: 16 }} />
                     </Column>
 
-                    <Column width={180} align="center" fixed='right' >
+                    <Column width={335} align="center" fixed='right' >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Action</HeaderCell>
                         <Cell>
                             {rowData => {
-                                const handleAction = () => {
-                                    alert(`id:${rowData.order_number}`);
+                                const btnshowUpload = (data) => {
+                                    setOrderNumber(data)
+                                    setShowUpload(true)
                                 }
+                                const showDetail = (data) => {
+                                    console.log(data)
+                                    setOrderNumber(data)
+                                    setShow(true)
+                                }
+                                const btnCancel = (data) => {
+                                    console.log(data)
+                                    axios.post(`http://localhost:2000/history/cancelOrder/${data}`)
+                                    .then((res) => setCancel(res.data))
+                                    .catch((err) => console.log(err))
+                                }
+                                const id_status = rowData.id_status
                                 return (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Button onClick={handleAction}> Upload </Button>
-                                        <Button onClick={handleAction}> Cancel </Button>
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <Button onClick={() => btnshowUpload(rowData.order_number)} style={{ width: '100%', backgroundColor: id_status === 8 ? '#04BF8A' : '#2d3436', color: 'white' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 2}> Upload </Button>
+                                        <Button onClick={() => btnCancel(rowData.order_number)} color='red' style={{ marginLeft: 5, marginRight: 5, width: '100%' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 8}> Cancel </Button>
+                                        <Button onClick={() => showDetail(rowData.order_number)} style={{ width: '100%' }}> Detail </Button>
+                                        <Button onClick={goToCheckout} color='blue' style={{ marginLeft: 5, width: '100%' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 8}> Checkout </Button>
                                     </div>
 
                                 );
@@ -148,7 +221,7 @@ const UserHistoryScreen = () => {
                             <Cell>
                                 {(rowData) => {
                                     return (
-                                        <p style={{ fontSize: 16 }}>Rp. {rowData.total_harga.toLocaleString()}</p>
+                                        <p style={{ fontSize: 16 }}>{rowData.total_harga ? `Rp. ${rowData.total_harga.toLocaleString()}` : rowData.total_harga}</p>
                                     )
                                 }}
                             </Cell>
@@ -157,6 +230,67 @@ const UserHistoryScreen = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => setShow(false)} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal backdrop={true} show={showUpload} onHide={doneShow}>
+                <Modal.Header>
+                    <Modal.Title>Reupload Transaction Evidence</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div style={{ marginTop: 10 }}>
+                        <form encType="multipart/form-data">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                name="IMG"
+                                onChange={(e) => handleChoose(e)}
+                            />
+                        </form>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={doneShow} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal backdrop={true} show={showErr} onHide={() => setShowErr(false)}>
+                <Modal.Header>
+                    <Modal.Title>Error Re-Upload Transaction Evidence</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {errRes}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setShowErr(false)} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal backdrop={true} show={showRes} onHide={() => setShowRes(false)}>
+                <Modal.Header>
+                    <Modal.Title>Success Re-Upload Transaction Evidence</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {res}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setShowRes(false)} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal backdrop={true} show={showCancel} onHide={() => setShowCancel(false)}>
+                <Modal.Header>
+                    <Modal.Title>Success Cancel</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {cancel}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setShowCancel(false)} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
                         Ok
                     </Button>
                 </Modal.Footer>
