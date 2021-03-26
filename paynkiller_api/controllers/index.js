@@ -10,6 +10,7 @@ const rawMaterialController = require('./rawMaterialController')
 const stokProdukController = require('./stokProdukController')
 const stokRawMaterialController = require('./stokRawMaterialController')
 const customOrderController = require('./customOrderController')
+const userHistoryController = require('./userHistoryController')
 
 module.exports = {
     userController,
@@ -23,5 +24,6 @@ module.exports = {
     rawMaterialController,
     stokProdukController,
     stokRawMaterialController,
-    customOrderController
+    customOrderController,
+    userHistoryController
 }

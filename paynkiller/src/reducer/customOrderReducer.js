@@ -4,17 +4,19 @@ let INITIAL_STATE = {
     errLogin: "",
     materialsinCart: [],
     materialsCheckout: []
+    res: '',
+    errRes: ''
 }
 
 const customOrderReducer = (state = INITIAL_STATE, action) => {
-    switch(action.type){
+    switch (action.type) {
         case 'GET_CUSTOM_ORDER_ALL':
-            return{
+            return {
                 ...state,
                 dataCustomOrder: action.payload
             }
         case 'GET_CUSTOM_ORDER_DETAIL':
-            return{
+            return {
                 ...state,
                 dataCustomOrderDetail: action.payload
             }
@@ -37,6 +39,21 @@ const customOrderReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 materialsCheckout: action.payload
+        case 'CUSTOM_ORDER_RES':
+            return {
+                ...state,
+                res: action.payload
+            }
+        case 'REMOVE_RES_UPLOAD':
+            return {
+                ...state,
+                res: '',
+                errRes: ''
+            }
+        case 'CUSTOM_ORDER_RES_ERR':
+            return {
+                ...state,
+                errRes: action.payload
             }
         default:
             return state

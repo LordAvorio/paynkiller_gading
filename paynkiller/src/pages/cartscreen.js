@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 import { Redirect } from 'react-router-dom'
-import { Panel, IconButton, Button, Input, InputGroup, } from 'rsuite'
+import { Panel, IconButton, Button, Input, InputGroup, Alert } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserCart, editCartQty, deleteCartItem, keeplogin, getMaterialsInCart } from '../action'
 import Navbar from '../components/TopNavigation'
@@ -12,6 +12,8 @@ const CartScreen = () => {
     const [toCheckout, setToCheckout] = React.useState(false)
     const [showDetails, setShowDetails] = React.useState(false)
     const { id_customer, cart, materialsinCart } = useSelector((state) => {
+
+    const { id_customer, cart } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
             cart: state.cartReducer.cart,
@@ -35,18 +37,24 @@ const CartScreen = () => {
         ))
     }
 
-    const minus = async (id) => {
-        const tempProduk = cart.find(e => e.id_details == id && (e.qty = e.qty - 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
-        console.log('minus', tempProduk)
+    const minus = async (id, index) => {
+        if (cart[index].qty > 1) {
+            const tempProduk = cart.find(e => e.id_details == id && (e.qty = e.qty - 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
+            console.log('minus', tempProduk)
+            await dispatch(editCartQty(tempProduk, id_customer))
+        }
 
-        await dispatch(editCartQty(tempProduk, id_customer))
     }
 
-    const plus = async (id) => {
-        const tempProduk = cart.find(e => e.id_details === id && (e.qty = parseInt(e.qty) + 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
-        console.log('plus', tempProduk)
+    const plus = async (id, index) => {
+        if (cart[index].qty < cart[index].stock) {
+            const tempProduk = cart.find(e => e.id_details === id && (e.qty = parseInt(e.qty) + 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
+            console.log('plus', tempProduk)
 
-        await dispatch(editCartQty(tempProduk, id_customer))
+            await dispatch(editCartQty(tempProduk, id_customer))
+        } else {
+            Alert.error(`there are only ${cart[index].stock + ' ' + cart[index].nama_produk} available`, 5000)
+        }
     }
 
     const totalPriceProducts = () => {
@@ -58,6 +66,7 @@ const CartScreen = () => {
         // }
         return counter
     }
+
 
     const totalPriceIngredients = () => {
         let n = 0
@@ -80,6 +89,7 @@ const CartScreen = () => {
 
             let grandTotal = products + ingredients
             console.log(grandTotal)
+
             const body = {
                 grandTotal,
                 order_number: cart[0].order_number
@@ -92,27 +102,15 @@ const CartScreen = () => {
         catch (err) {
             console.log(err)
         }
-
     }
 
     if (toCheckout) return <Redirect to="/checkout" />
-
-
     const Render = () => {
         return (
             cart.map((item, index) => {
                 return (
                     <div key={index} style={{ backgroundColor: 'white', height: '160px', width: '650px', border: '1px solid gray', margin: '10px 0 0 10px', display: 'flex', flexDirection: 'row', borderRadius: '20px' }}>
                         <div style={{ flexGrow: 3, width: '40vw', padding: '40px 0 0 30px', display: 'flex', flexDirection: 'row' }}>
-                            {/* <div style={{
-                                height: '70%',
-                                width: '30%',
-                                // backgroundColor: 'violet',
-                                backgroundPosition: 'center',
-                                backgroundSize: 'contain',
-                                backgroundRepeat: 'no-repeat',
-                                backgroundImage: `url(${URL_IMG + item.gambar_obat})`
-                            }}></div> */}
                             <img src={URL_IMG + item.gambar_obat} style={{ height: '80px', width: '100px' }} />
                             <div>
                                 <h1 style={{ fontSize: '15px', fontWeight: 600, margin: '-15px 0 0 20px', lineHeight: '2' }}>{item.nama_produk}</h1>
@@ -139,7 +137,6 @@ const CartScreen = () => {
                                         disabled={true}
                                     // onChange={e => change(e)}
                                     />
-
                                     <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
                                         <span className="material-icons">add</span>
                                     </InputGroup.Button>

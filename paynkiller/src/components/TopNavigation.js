@@ -43,6 +43,9 @@ export default function TopNavigation() {
                                     <Link to ='/products'>
                                         <Nav.Item>Products</Nav.Item>
                                     </Link>
+                                    <Link to ='/customOrder'>
+                                        <Nav.Item>Custom Order</Nav.Item>
+                                    </Link>
                                 </>
                                 :
                                 <>

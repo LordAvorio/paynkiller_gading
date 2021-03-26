@@ -29,6 +29,7 @@ const CheckoutScreen = () => {
     const [cekProofModal, setCeckProofModal] = React.useState(false)
     const [toHome, setToHome] = React.useState(false)
 
+
     const { id_customer, checkoutOrders, biodata, materialsCheckout } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
@@ -46,7 +47,7 @@ const CheckoutScreen = () => {
         dispatch(getMaterialsCheckout(id_customer))
         console.log(checkoutOrders)
         console.log(materialsCheckout)
-
+      
         Axios.get(`http://localhost:2000/order/paymentMethods`)
             .then(res => setPayments(res.data))
     }, [id_customer])
@@ -124,13 +125,6 @@ const CheckoutScreen = () => {
     }
 
 
-    // const closeModalPayment = () => {
-    //     setModalPayments({
-    //         show: false,
-    //         selectedPayment: ''
-    //     })
-    // }
-
 
     const totalQty = () => {
         let counter = 0
@@ -143,9 +137,7 @@ const CheckoutScreen = () => {
     const grandTotal = () => {
         let counter = 0
         checkoutOrders ? checkoutOrders.forEach(item => counter += item.total_harga) : counter = 0
-        // if (checkoutOrders.length !== 0) {
-        //     checkoutOrders.forEach(item => counter += item.total_harga)
-        // }
+
         return counter
     }
 
@@ -170,6 +162,7 @@ const CheckoutScreen = () => {
         console.log('sebelom append', modalSelectedPay.bukti_bayar)
         data.append('IMG', modalSelectedPay.bukti_bayar)
         console.log('data, setelah append', data)
+      
         const body = {
             order_number: checkoutOrders[0].order_number,
             jenis_pembayaran: modalSelectedPay.jenis_pembayaran,
@@ -183,6 +176,7 @@ const CheckoutScreen = () => {
     }
 
     if (toHome) return <Redirect to="/" />
+
     const Render = () => {
         return (
             checkoutOrders.map((item, index) => {
@@ -213,7 +207,7 @@ const CheckoutScreen = () => {
     const CekBiodata = () => {
         if (!biodata.firstname || !biodata.lastname || !biodata.alamat || !biodata.phone) return (
             <div>
-                <h6 style={{ color: 'red', fontSize: '14px' }}>please fill up your data</h6>
+                <h6 style={{ color: 'red', fontSize:'14px' }}>please fill up your data</h6>
             </div>
         )
         return (
@@ -245,7 +239,6 @@ const CheckoutScreen = () => {
             })
         )
     }
-
 
     return (
         <div>
@@ -356,6 +349,7 @@ const CheckoutScreen = () => {
                         <h6 style={{ fontSize: '18px', textAlign: 'center', color: '#51bea5' }}>Upload Payment Proof</h6>
                         <h6 style={{ fontSize: '14px' }}>{modalSelectedPay.jenis_pembayaran}</h6>
                         <h6 style={{ fontSize: '14px' }}>Transfer to: {modalSelectedPay.nomor_rekening}</h6>
+
                         <div style={{ display: 'flex', fontSize: '14px' }}>
                             <p style={{ margin: '8px 5px' }}>bank account:  </p>
                             <p style={{ color: '#51bea5' }}>  PaynKiller Indonesia</p>
@@ -366,6 +360,7 @@ const CheckoutScreen = () => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
+
                     <div>
                         <form encType="multipart/form-data">
                             <input

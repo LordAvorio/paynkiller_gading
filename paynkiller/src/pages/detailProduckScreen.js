@@ -32,7 +32,8 @@ const DetailProdukScreen = (props) => {
             .then((res) => setData(res.data[0]))
         dispatch(getUserCart(id_customer))
         console.log(cart)
-    }, [id_customer, cart.length])
+    }, [id_customer])
+
 
     const btnBuy = () => {
         console.log(angka)

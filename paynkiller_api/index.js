@@ -35,6 +35,7 @@ const {
     stokRawMaterialRouter,
     customOrderRouter,
     adminRouter,
+    userHistoryRouter
 
 } = require('./routers')
 
@@ -50,6 +51,7 @@ app.use('/rawmaterial', rawMaterialRouter)
 app.use('/stokproduk', stokProdukRouter)
 app.use('/stokrawmaterial', stokRawMaterialRouter)
 app.use('/customorder', customOrderRouter)
+app.use('/history', userHistoryRouter)
 
 const port = 2000
 app.listen(port, () => console.log('Connected to Port = ' + port))

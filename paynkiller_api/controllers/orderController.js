@@ -1,5 +1,11 @@
 const { asyncQuery, generateQueryBody } = require('../helpers/queryHelp')
+const transporter = require('../helpers/nodemailer')
+const handlebars = require('handlebars')
 const db = require('../database')
+const transporter = require('../helpers/nodemailer')
+const handlebars = require('handlebars')
+const fs = require('fs')
+
 module.exports = {
     addToCart: async (req, res) => {
         const id_customer = parseInt(req.params.idcustomer)
@@ -60,8 +66,8 @@ module.exports = {
 
             // const grandTotal = `select sum(od.harga_produk) as grand_total from orders o join order_details od on o.order_number = od.order_number 
             // join produk p on od.id_produk = p.id_produk
-            // join order_status os on o.status = os.id
-            // where o.status = 1 and o.id_customer = ${req.user.id_user}`
+            // join order_status os on o.id_status = os.id
+            // where o.id_status = 1 and o.id_customer = ${req.user.id_user}`
             // const qgrandTotal =await asyncQuery(grandTotal)
             res.status(200).send(qget)
         }
@@ -77,7 +83,7 @@ module.exports = {
         const { qty, total_harga, id_details } = req.body
         try {
             const edit = `update order_details set qty=${qty}, total_harga=${total_harga} 
-                        where id_details=${id_details}`
+            where id_details=${id_details}`
             await asyncQuery(edit)
             console.log('berhasil edit qty')
             res.sendStatus(200)
@@ -85,7 +91,7 @@ module.exports = {
         catch (err) {
             res.status(400).send(err)
             console.log(err)
-            
+
         }
     },
     delete: async (req, res) => {
@@ -134,17 +140,7 @@ module.exports = {
             // console.log(get)
             const showProducts = await asyncQuery(products)
             console.log(showProducts)
-
-            // const grandTotal = `select grandTotal_checkout from orders where id_customer=${db.escape(id)}`
-            // const qgrandTotal = await asyncQuery(grandTotal)
-
-            // const showGrandTotal = qgrandTotal[0].grandTotal_checkout
-
-            // const totalQty = `select sum(od.qty) as total_qty from orders o join order_details od on o.order_number = od.order_number
-            //                 where o.id_status = 2 and o.id_customer = ${db.escape(id)}`
-            // const qtotalQty = await asyncQuery(totalQty)
-            // const showTotalQty = qtotalQty[0].total_qty
-            // console.log(showTotalQty)
+          
             res.status(200).send(showProducts)
         }
         catch (err) {
@@ -224,6 +220,140 @@ module.exports = {
         catch(err){
             res.status(400).send(err)
             console.log(err)
+        }
+    },
+    acceptOrderPayment: async(req,res) => {
+
+        let id = parseInt(req.params.id)
+
+
+        try{
+            let sql = `UPDATE orders SET id_status = 5 WHERE order_number = ${id}`
+            let rows = await asyncQuery(sql)
+
+            let sql2 = `SELECT * FROM data_customer WHERE id_customer = ${req.body.id_customer}`
+            let rows2 = await asyncQuery(sql2)
+
+            const option = {
+                from: `admin <andhika.jeremia@gmail.com>`,
+                to: `${rows2[0].email}`,
+                subject: 'Order Payment Accepted',
+                text: '',
+                attachments: [{
+                    filename: 'paynkiller.svg',
+                    path: __dirname + '/images/logo/paynkiller.png',
+                    cid:'paynkiller'
+                }],
+            }
+
+            const fileEmail = fs.readFileSync('./email/orderPaymentAccept.html').toString()
+            const template = handlebars.compile(fileEmail)
+            option.html = template({username: rows2[0].username, kode: id})
+
+            const info = await transporter.sendMail(option)
+            res.status(200).send('Email Sended')
+
+        }
+        catch(err){
+            res.status(400).send(err)
+            console.log(err)
+        }
+    },
+    rejectOrderPayment: async(req,res) => {
+
+        let id = parseInt(req.params.id)
+
+        try{
+            let sql = `UPDATE orders SET id_status = 8 WHERE order_number = ${id}`
+            let rows = await asyncQuery(sql)
+
+            let sql2 = `SELECT * FROM data_customer WHERE id_customer = ${req.body.id_customer}`
+            let rows2 = await asyncQuery(sql2)
+
+            const option = {
+                from: `admin <andhika.jeremia@gmail.com>`,
+                to: `${rows2[0].email}`,
+                subject: 'Order Payment Rejected',
+                text: '',
+                attachments: [{
+                    filename: 'paynkiller.svg',
+                    path: __dirname + '/images/logo/paynkiller.png',
+                    cid:'paynkiller'
+                }],
+            }
+
+            const fileEmail = fs.readFileSync('./email/orderPaymentReject.html').toString()
+            const template = handlebars.compile(fileEmail)
+            option.html = template({username: rows2[0].username, komentar: req.body.keteranganReject, kode: id})
+
+            const info = await transporter.sendMail(option)
+            res.status(200).send('Email Sended')
+
+        }
+        catch(err){
+            res.status(400).send(err)
+            console.log(err)
+        }
+    },
+    ordersCheckout: async (req, res) => {
+        // console.log(req.user)
+        const id = parseInt(req.params.idcustomer)
+        console.log('id customer produk', id)
+        try {
+            const products = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, p.gambar_obat, od.id_details, od.qty, sp.jumlah_produk as stock, p.harga_produk, 
+                        p.komposisi, os.status as status_order, od.total_harga 
+                        from orders o join order_details od on o.order_number = od.order_number 
+                        join produk p on od.id_produk = p.id_produk
+                        join stok_produk sp on p.id_produk = sp.id_produk
+                        join order_status os on o.id_status = os.id
+                        where o.id_status = 2 and o.id_customer = ${db.escape(id)}`
+            // console.log(get)
+            const showProducts = await asyncQuery(products)
+            console.log(showProducts)
+
+            res.status(200).send(showProducts)
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+
+        }
+    },
+    paymentMethods: async (req, res) => {
+        try {
+            const get = `select * from opsi_pembayaran`
+            const qget = await asyncQuery(get)
+            res.status(200).send(qget)
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+
+        }
+    },
+    uploadPaymentProof: async (req, res) => {
+        const { order_number, jenis_pembayaran } = req.body
+        const imageUpload = `images/${req.file.filename}`
+
+        if (!req.file) return res.status(400).send('no image !')
+
+        try {
+            const cekPayment = `select id from opsi_pembayaran where jenis_pembayaran='${jenis_pembayaran}'`
+            const idPayment = await asyncQuery(cekPayment[0])
+            console.log(idPayment)
+
+            const today = new Date()
+            const date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear()
+            console.log(date)
+
+            const pay = `UPDATE orders SET id_status = 3, bukti_bayar = '${imageUpload}', opsi_pembayaran =${idPayment}, tanggal_bayar='${date}' WHERE order_number = ${order_number}`
+            await asyncQuery(pay)
+
+            res.sendStatus(200)
+        }
+        catch (err) {
+            console.log(err)
+            res.status(400).send(err)
         }
     },
     getSpecificOrderDetail: async(req,res) => {

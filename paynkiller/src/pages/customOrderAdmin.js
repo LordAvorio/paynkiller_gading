@@ -366,6 +366,7 @@ export default function CustomOrderAdmin() {
                     height: "250px",
                     backgroundImage: `url(${URL_IMG + gambarResep})`,
                     backgroundPosition: "center",
+                    backgroundRepeat: 'no-repeat'
                   }}
                 />
               </Col>

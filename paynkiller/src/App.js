@@ -10,6 +10,8 @@ import LoginScreen from './pages/loginscreen'
 import AdminLoginScreen from './pages/adminLoginScreen'
 import ChangePassScreen from './pages/changepassScreen'
 import DetailProdukScreen from './pages/detailProduckScreen'
+import CartScreen from './pages/cartscreen'
+import CheckoutScreen from './pages/checkoutScreen'
 import MasterCategory from './pages/masterCategory'
 import DashboardScreen from './pages/dashboard'
 import MasterBrandScreen from './pages/masterBrands'
@@ -20,12 +22,14 @@ import MasterAdminScreen from './pages/masterAdmin'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
-import CartScreen from './pages/cartscreen'
-import CheckoutScreen from './pages/checkoutScreen'
+
 import OrderScreen from './pages/orderScreen'
 import CustomOrderAdminScreen from './pages/customOrderAdmin'
 import OrderRawMaterials from './pages/orderRawMaterials'
 
+import CustomOrderScreen from './pages/customOrderScreen'
+import ShowCustomOrderScreen from './pages/showCustomOrderScreen'
+import UserHistoryScreen from './pages/historyUserScreen'
 
 import {useDispatch} from 'react-redux'
 
@@ -67,7 +71,13 @@ export default function App() {
         <Route path='/admin/order/customorder' component={CustomOrderAdminScreen} />
         <Route path='/admin/master/admin' component={MasterAdminScreen} />
         <Route path='/products' component={ProductListScreen} />
+
         <Route path='/ordermaterials' component={OrderRawMaterials}/>
+
+        <Route path='/customOrder' component={CustomOrderScreen} />
+        <Route path='/ShowCustomOrder' component={ShowCustomOrderScreen} />
+        <Route path='/historyUser' component={UserHistoryScreen} />
+
       </Switch>
     </div>
   )

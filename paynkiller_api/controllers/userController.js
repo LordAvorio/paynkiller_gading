@@ -11,23 +11,23 @@ const {createToken, verifyToken} = require('../helpers/jwt')
 var salt = bcrypt.genSaltSync(10);
 
 module.exports = {
-    login: async(req,res) => {
+    login: async (req, res) => {
 
         let username = req.body.username
         let password = req.body.password
-        
-        try{
+
+        try {
             let sql = `SELECT * FROM data_customer WHERE username = '${username}' `
             let rows = await asyncQuery(sql)
 
-            if(rows.length === 0) return res.status(400).send("Username salah !")
+            if (rows.length === 0) return res.status(400).send("Username salah !")
 
             let hash = rows[0].password
 
             let hasil = await bcrypt.compare(password, hash)
-            
-            if(hasil === false) return res.status(400).send("Password salah !")
-            
+
+            if (hasil === false) return res.status(400).send("Password salah !")
+
             const token = createToken({
                 username: rows[0].username,
                 id_user: rows[0].id_customer
@@ -42,54 +42,54 @@ module.exports = {
 
             res.status(200).send(data)
         }
-        catch(err){
+        catch (err) {
             console.log(err)
             res.status(400).send(err)
         }
     },
-   register: async (req, res) => {
-        const {username, email, password} = req.body
-        
+    register: async (req, res) => {
+        const { username, email, password } = req.body
+
         const errors = validationResult(req)
-        if(!errors.isEmpty()) return res.status(400).send(errors.array()[0].msg)
+        if (!errors.isEmpty()) return res.status(400).send(errors.array()[0].msg)
         // data_customer
         try {
             const cek = `SELECT * FROM data_customer WHERE username='${username}' 
             OR email='${email}'`
             const qcek = await asyncQuery(cek)
             if (qcek.length !== 0) return res.status(400).send('username/email has already been used')
-            
+
             const hash = await bcrypt.hash(password, salt)
-            const regis  = `INSERT INTO data_customer (username, password, email)
+            const regis = `INSERT INTO data_customer (username, password, email)
             VALUES ('${username}', '${hash}','${email}')`
             const qregis = await asyncQuery(regis)
-            
-            const token = createToken({username: username, id_user: qregis.insertId})
+
+            const token = createToken({ username: username, id_user: qregis.insertId })
             const result = `SELECT id_customer, username, email, '${token}' as token FROM data_customer WHERE username='${username}'`
             const qresult = await asyncQuery(result)
-            
+
             const option = {
-                    from : 'admin <ezrayamin16@gmail.com>',
-                    to : `${email}`,
-                    subject: 'account verification',
-                    text: ''
-                }
-                
-                const emailFile = fs.readFileSync('./email/verify.html').toString()
-                const template = handlebars.compile(emailFile)
-                option.html = template({token: token, name: username})
-                const info = await transporter.sendMail(option)
-                // res.status(200).send(info.response)
-                res.status(200).send(qresult[0])
+                from: 'admin <ezrayamin16@gmail.com>',
+                to: `${email}`,
+                subject: 'account verification',
+                text: ''
             }
-            catch (err) {
-                res.status(400).send(err)
-                console.log(err)
-            }
-        },
-    keeplogin : async(req, res) => {   
-        const {username, id_user} = req.user
-        try{
+
+            const emailFile = fs.readFileSync('./email/verify.html').toString()
+            const template = handlebars.compile(emailFile)
+            option.html = template({ token: token, name: username })
+            const info = await transporter.sendMail(option)
+            // res.status(200).send(info.response)
+            res.status(200).send(qresult[0])
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+        }
+    },
+    keeplogin: async (req, res) => {
+        const { username, id_user } = req.user
+        try {
             const sql = `SELECT * FROM data_customer WHERE username = '${username}' AND id_customer = '${id_user}' `
             const rows = await asyncQuery(sql)
             const data = {
@@ -98,13 +98,13 @@ module.exports = {
             }
             res.status(200).send(data)
         }
-        catch(err){
+        catch (err) {
             res.status(400).send('error' + err)
         }
     },
-    forgotPass: async(req, res) => {
-        const {email} = req.body
-        try{
+    forgotPass: async (req, res) => {
+        const { email } = req.body
+        try {
             const sql = `SELECT * FROM data_customer WHERE email = '${email}'`
             const rows = await asyncQuery(sql)
             if (rows.length === 0) return res.status(400).send('email tidak di temukan')
@@ -123,23 +123,23 @@ module.exports = {
                 attachments: [{
                     filename: 'paynkiller.svg',
                     path: __dirname + '/images/logo/paynkiller.png',
-                    cid:'paynkiller'
+                    cid: 'paynkiller'
                 }],
             }
             const fileEmail = fs.readFileSync('./file_email/index.html').toString()
 
             const template = handlebars.compile(fileEmail)
-            option.html = template({token : token, nama: username})
+            option.html = template({ token: token, nama: username })
             const info = await transporter.sendMail(option)
             res.status(200).send('Email Sended')
         }
-        catch(err){
+        catch (err) {
             res.status(400).send('error' + err)
         }
     },
-    changePass: async(req,res) => {
-        const {username, id_user} = req.user
-        const {password} = req.body
+    changePass: async (req, res) => {
+        const { username, id_user } = req.user
+        const { password } = req.body
         let errors = validationResult(req)
         console.log(errors)
         const msg = errors.array().map(
@@ -148,10 +148,10 @@ module.exports = {
         if (!errors.isEmpty()) {
             return res.status(400).send(msg)
         }
-        try{
+        try {
             const sql = `SELECT * FROM data_customer WHERE username = '${username}' AND id_customer = '${id_user}' `
             const rows = await asyncQuery(sql)
-            if(!rows) return res.status(400).send('there is no account')
+            if (!rows) return res.status(400).send('there is no account')
             // update password
             const hash = await bcrypt.hashSync(password, salt)
             console.log(hash)
@@ -159,7 +159,7 @@ module.exports = {
             const rows2 = await asyncQuery(sql2)
             res.status(200).send('Password Changed')
         }
-        catch(err){
+        catch (err) {
             res.status(400).send('error' + err)
         }
     },
