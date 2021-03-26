@@ -1,7 +1,9 @@
 let INITIAL_STATE = {
     dataCustomOrder: [],
     dataCustomOrderDetail: [],
-    errLogin: ""
+    errLogin: "",
+    materialsinCart: [],
+    materialsCheckout: []
 }
 
 const customOrderReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +27,16 @@ const customOrderReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 errLogin: ""
+            }
+        case 'MATERIALS_CART':
+            return {
+                ...state,
+                materialsinCart: action.payload
+            }
+        case 'MATERIALS_CHECKOUT':
+            return {
+                ...state,
+                materialsCheckout: action.payload
             }
         default:
             return state

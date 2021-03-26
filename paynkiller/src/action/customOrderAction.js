@@ -110,6 +110,40 @@ export const addCustomOrderToCart = (idCustomOrder,body) => {
     }
 }
 
+export const getMaterialsInCart = (id_customer) => {
+    return async(dispatch) => {
+        try{
+            const res = await Axios.get(`http://localhost:2000/customorder/cartMaterials/${id_customer}`)
+
+            dispatch({
+                type: 'MATERIALS_CART',
+                payload: res.data
+            })
+
+        }
+        catch(err){
+            console.log(err)   
+        }
+    }
+}
+
+export const getMaterialsCheckout = (id_customer) => {
+    return async(dispatch) => {
+        try {
+            console.log('id di action', id_customer)
+            const res = await Axios.get(`http://localhost:2000/customorder/checkoutMaterials/${id_customer}`)
+            console.log(res.data)
+            dispatch({
+                type: 'MATERIALS_CHECKOUT',
+                payload: res.data
+            })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+}
+
 export const removeError = () => {
     return{
         type: 'REMOVE_ERR'

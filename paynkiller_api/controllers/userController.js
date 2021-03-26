@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator')
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const handlebars = require('handlebars')
-const {asyncQuery, generateQuery} = require('../helpers/queryHelp')
+const {asyncQuery, generateQueryBody} = require('../helpers/queryHelp')
 const {createToken, verifyToken} = require('../helpers/jwt')
 
 var salt = bcrypt.genSaltSync(10);
@@ -162,5 +162,41 @@ module.exports = {
         catch(err){
             res.status(400).send('error' + err)
         }
+    },
+    showProfile: async (req, res) => {
+        const { username, id_user } = req.user
+        
+        try {
+            const show = `select username, email, firstname, lastname, gambar, birthdate, alamat, phone 
+            from data_customer WHERE username = '${username}' AND id_customer = ${id_user}`
+            const qshow = await asyncQuery(show)
+            console.log(qshow[0])
+            res.status(200).send(qshow[0])
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+        }
+
+    },
+    editProfile: async (req, res) => {
+        const id = parseInt(req.params.idcustomer)
+
+        try {
+            const cek = `SELECT * FROM data_customer WHERE id_customer = ${id} `
+            const qcek = await asyncQuery(cek)
+            
+            if (!qcek) return res.status(400).send('have you signed in your account yet?')
+            
+            const update =`update data_customer set${generateQueryBody(req.body)} WHERE id_customer = ${id}`
+            await asyncQuery(update)
+            
+            res.sendStatus(200)
+        }
+        catch (err) {
+            res.status(400).send(err)
+            console.log(err)
+        }
+
     }
 }

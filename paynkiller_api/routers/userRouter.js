@@ -34,5 +34,7 @@ router.post('/login',userController.login)
 router.post('/keeplogin', verifyToken, userController.keeplogin)
 router.post('/forgotPass', userController.forgotPass)
 router.post('/changepass', passValidation, verifyToken, userController.changePass)
+router.post('/showProfile', verifyToken, userController.showProfile)
+router.patch('/editProfile/:idcustomer', userController.editProfile)
 
 module.exports = router
