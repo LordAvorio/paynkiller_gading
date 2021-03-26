@@ -74,7 +74,7 @@ export default function MasterProduct() {
         if(loginError){
             setTextError(true)
         }
-    }, [loginError,productData.length,brandData.length,cate.length])
+    }, [loginError])
 
     const handleAddProduk = () => {
         

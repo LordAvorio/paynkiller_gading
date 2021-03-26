@@ -213,7 +213,7 @@ module.exports = {
                 let grandTotal = parseFloat(rowSum[0].grandTotal)
                 console.log(grandTotal)
 
-                let queryInsert = `INSERT INTO order_details (order_number,id_custom_order,qty,total_harga) VALUES (${current_order_number},${id_custom_order},1,${grandTotal})`
+                let queryInsert = `INSERT INTO order_details (order_number,id_produk,id_custom_order,qty,total_harga) VALUES (${current_order_number},0,${id_custom_order},1,${grandTotal})`
                 let rowsQueryInsert = await asyncQuery(queryInsert)
 
             }else{
@@ -226,7 +226,7 @@ module.exports = {
 
                 let grandTotal2 = parseFloat(rowSum2[0].grandTotal)
 
-                let queryInsert2 = `INSERT INTO order_details (order_number,id_custom_order,qty,total_harga) VALUES (${current_order_number},${id_custom_order},1,${grandTotal2})`
+                let queryInsert2 = `INSERT INTO order_details (order_number,id_produk,id_custom_order,qty,total_harga) VALUES (${current_order_number},0,${id_custom_order},1,${grandTotal2})`
                 let rowsQueryInsert2 = await asyncQuery(queryInsert2)
             }
 

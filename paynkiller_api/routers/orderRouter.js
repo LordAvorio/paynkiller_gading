@@ -8,5 +8,8 @@ router.patch('/editQty', orderController.editQty)
 router.delete('/delete/:iddetails', orderController.delete)
 router.get('/getallorder', orderController.getAllOrder)
 router.post('/getorderdetailspecific/:orderNumber', orderController.getSpecificOrderDetail)
+router.post('/acceptpayment/:id', orderController.acceptOrderPayment)
+router.post('/rejectpayment/:id', orderController.rejectOrderPayment)
+
 
 module.exports = router
