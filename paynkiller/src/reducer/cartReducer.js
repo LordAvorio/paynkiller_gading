@@ -12,7 +12,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 cart: action.payload
             }
 
-        case 'GET_CHECKOUT': {
+        case 'GET_CHECKOUT': 
             return{
                 ...state,
                 checkout: action.payload
@@ -22,7 +22,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 paymentProof:action.payload
             }
-        }
+        
         default:
             return state
     }

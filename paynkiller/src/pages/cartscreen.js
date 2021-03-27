@@ -11,9 +11,9 @@ const URL_IMG = 'http://localhost:2000/'
 const CartScreen = () => {
     const [toCheckout, setToCheckout] = React.useState(false)
     const [showDetails, setShowDetails] = React.useState(false)
-    const { id_customer, cart, materialsinCart } = useSelector((state) => {
+    // const { id_customer, cart, materialsinCart } = useSelector((state) => {
 
-    const { id_customer, cart } = useSelector((state) => {
+    const { id_customer, cart, materialsinCart } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
             cart: state.cartReducer.cart,

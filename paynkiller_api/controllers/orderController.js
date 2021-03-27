@@ -2,8 +2,6 @@ const { asyncQuery, generateQueryBody } = require('../helpers/queryHelp')
 const transporter = require('../helpers/nodemailer')
 const handlebars = require('handlebars')
 const db = require('../database')
-const transporter = require('../helpers/nodemailer')
-const handlebars = require('handlebars')
 const fs = require('fs')
 
 module.exports = {
