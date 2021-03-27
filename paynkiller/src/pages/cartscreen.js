@@ -11,9 +11,8 @@ const URL_IMG = 'http://localhost:2000/'
 const CartScreen = () => {
     const [toCheckout, setToCheckout] = React.useState(false)
     const [showDetails, setShowDetails] = React.useState(false)
-    const { id_customer, cart, materialsinCart } = useSelector((state) => {
 
-    const { id_customer, cart } = useSelector((state) => {
+    const { id_customer, cart, materialsinCart } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
             cart: state.cartReducer.cart,
@@ -38,29 +37,29 @@ const CartScreen = () => {
     }
 
     const minus = async (id, index) => {
-        if (cart[index].qty > 1) {
+        // if (cart[index].qty > 1) {
             const tempProduk = cart.find(e => e.id_details == id && (e.qty = e.qty - 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
             console.log('minus', tempProduk)
             await dispatch(editCartQty(tempProduk, id_customer))
-        }
+        // }
 
     }
 
     const plus = async (id, index) => {
-        if (cart[index].qty < cart[index].stock) {
+        // if (cart[index].qty < cart[index].stock) {
             const tempProduk = cart.find(e => e.id_details === id && (e.qty = parseInt(e.qty) + 1, true) && (e.total_harga = e.qty * e.harga_produk, true))
             console.log('plus', tempProduk)
 
             await dispatch(editCartQty(tempProduk, id_customer))
-        } else {
-            Alert.error(`there are only ${cart[index].stock + ' ' + cart[index].nama_produk} available`, 5000)
-        }
+        // } else {
+        //     Alert.error(`there are only ${cart[index].stock + ' ' + cart[index].nama_produk} available`, 5000)
+        // }
     }
 
     const totalPriceProducts = () => {
         console.log(cart)
         let counter = 0
-        cart ? cart.forEach(item => counter += item.total_harga) : counter = 0
+        cart.length !== 0 ? cart.forEach(item => counter += item.total_harga) : counter = 0
         // if (cart.length !== 0) {
         //     cart.forEach(item => counter += item.total_harga)
         // }
@@ -70,7 +69,7 @@ const CartScreen = () => {
 
     const totalPriceIngredients = () => {
         let n = 0
-        materialsinCart ? materialsinCart.forEach(item => n += item.total_harga) : n = 0
+        materialsinCart.length !== 0 ? materialsinCart.forEach(item => n += item.total_harga) : n = 0
         return n
 
     }
@@ -92,7 +91,7 @@ const CartScreen = () => {
 
             const body = {
                 grandTotal,
-                order_number: cart[0].order_number
+                order_number: cart.length !== 0 ? cart[0].order_number : materialsinCart[0].order_number
             }
             console.log(body)
 
@@ -127,9 +126,9 @@ const CartScreen = () => {
                                     <Button onClick={() => del(index)} style={{ backgroundColor: 'white', margin: '5px', position: 'initial', color: '#d3d3d3' }}><span color='gray' className="material-icons">delete</span></Button>
                                 </div>
                                 <InputGroup style={{ height: '30px', width: '160px', margin: '10px 0 0 20px' }}>
-                                    <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty === 1} onClick={() => minus(item.id_details)}>
+                                    <Button style={{ color: '#51bea5' }} disabled={item.qty === 1} onClick={() => minus(item.id_details)}>
                                         <span className="material-icons">remove</span>
-                                    </InputGroup.Button>
+                                    </Button>
                                     <Input
                                         type="number"
                                         style={{ color: 'black', textAlign: 'center', fontWeight: '400' }}
@@ -137,9 +136,9 @@ const CartScreen = () => {
                                         disabled={true}
                                     // onChange={e => change(e)}
                                     />
-                                    <InputGroup.Button style={{ color: '#51bea5' }} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
+                                    <Button style={{ color: '#51bea5' }} disabled={item.qty >= item.stock} onClick={() => plus(item.id_details)}>
                                         <span className="material-icons">add</span>
-                                    </InputGroup.Button>
+                                    </Button>
                                 </InputGroup>
                             </div>
                         </div>
@@ -152,14 +151,17 @@ const CartScreen = () => {
 
     const IngredientsCode = () => {
         return (
-            materialsinCart.map(item => {
-                return (
-                    <div style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '-10px 10px 10px', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
-                        <p style={{ textAlign: 'center' }}>{materialsinCart[0].kode_custom_order}</p>
-                        <Button onClick={() => setShowDetails(true)} style={{ backgroundColor: 'white', fontWeight: 'bold', color: '#51bea5', margin: '5px 0 0 20px' }}>click for details</Button>
-                    </div>
-                )
-            })
+            <div style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '-10px 10px 10px', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
+                {materialsinCart.length !== 0
+                ?
+                <div>
+                <p style={{ textAlign: 'center' }}>{materialsinCart[0].kode_custom_order}</p>
+                <Button onClick={() => setShowDetails(true)} style={{ backgroundColor: 'white', fontWeight: 'bold', color: '#51bea5', margin: '5px 0 0 20px' }}>click for details</Button>
+                </div>
+                :
+                <></>
+            }
+            </div>
         )
     }
 

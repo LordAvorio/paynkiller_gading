@@ -88,6 +88,27 @@ export const tambahStockProduct = (id,data) => {
     }
 }
 
+export const decreaseProductStock = (body) => {
+    return async(dispatch) => {
+        try{
+    
+            const res = await Axios.patch('http://localhost:2000/stokproduk/decreaseProductStock', body)
+            console.log(res)
+    
+            const res2 = await Axios.get('http://localhost:2000/stokproduk/stokproducts')
+    
+            dispatch({
+                type: 'GET_STOCK_PRODUCT',
+                payload: res2.data
+            })
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
+}
+
 export const removeError = () => {
     return{
         type: 'REMOVE_ERR'

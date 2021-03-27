@@ -41,7 +41,13 @@ const DetailProdukScreen = (props) => {
         if (angka >= Data.jumlah_produk) return swal("Oops!", `there are only ${Data.jumlah_produk} stocks available`, "error");
         if (!id_customer) return swal("Oops!", "you need to login first to continue your payment", "error");
         console.log(cart)
-        const tempProduk = cart.find(e => e.id_produk = Data.id_produk)
+
+        let tempProduk
+        cart.map(item => {
+          if (item.id_produk == Data.id_produk) {
+            tempProduk = item
+          }
+        })
         console.log(tempProduk)
         if (tempProduk) {
             if (tempProduk.qty + angka > Data.jumlah_produk) return swal("Oops!", `you have already added ${tempProduk.qty} products to your cart`, "error");
