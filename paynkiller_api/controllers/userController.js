@@ -116,7 +116,7 @@ module.exports = {
             })
             // send mail forgotPass
             const option = {
-                from: `admin <andhika.jeremia@gmail.com>`,
+                from: process.env.EMAIL_SEND,
                 to: email,
                 subject: 'Forgot Password',
                 text: '',

@@ -85,7 +85,7 @@ module.exports = {
             console.log(rows2[0].email)
 
             const option = {
-                from: `admin <andhika.jeremia@gmail.com>`,
+                from: process.env.EMAIL_SEND,
                 to: `${rows2[0].email}`,
                 subject: 'Custom Order Accepted',
                 text: '',
@@ -125,7 +125,7 @@ module.exports = {
             console.log(rows2[0].email)
 
             const option = {
-                from: `admin <andhika.jeremia@gmail.com>`,
+                from: process.env.EMAIL_SEND,
                 to: `${rows2[0].email}`,
                 subject: 'Custom Order Accepted',
                 text: '',
