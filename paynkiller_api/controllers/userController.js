@@ -117,7 +117,7 @@ module.exports = {
             // send mail forgotPass
             const option = {
                 from: `admin <andhika.jeremia@gmail.com>`,
-                to: 'emailsampahnyague287@gmail.com',
+                to: email,
                 subject: 'Forgot Password',
                 text: '',
                 attachments: [{
