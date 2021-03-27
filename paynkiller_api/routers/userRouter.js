@@ -36,5 +36,6 @@ router.post('/forgotPass', userController.forgotPass)
 router.post('/changepass', passValidation, verifyToken, userController.changePass)
 router.post('/showProfile', verifyToken, userController.showProfile)
 router.patch('/editProfile/:idcustomer', userController.editProfile)
-
+router.post('/verify', verifyToken, userController.emailVerification)
+router.post('/resendVerification', userController.resendEmail)
 module.exports = router
