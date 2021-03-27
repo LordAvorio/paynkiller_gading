@@ -13,6 +13,7 @@ const UserHistoryScreen = () => {
     const [Data2, setData2] = React.useState([])
     const [show, setShow] = React.useState(false)
     const [showCancel, setShowCancel] = React.useState(false)
+    const [showConfirm, setShowConfirm] = React.useState(false)
     const [showRes, setShowRes] = React.useState(false)
     const [showErr, setShowErr] = React.useState(false)
     const [showUpload, setShowUpload] = React.useState(false)
@@ -20,6 +21,7 @@ const UserHistoryScreen = () => {
     const [gocheckout, setgocheckout] = React.useState(false)
     const [image, setImage] = React.useState({})
     const [cancel, setCancel] = React.useState('')
+    const [confirm, setConfirm] = React.useState('')
 
     const { id_customer, res, errRes } = useSelector((state) => {
         return {
@@ -88,7 +90,7 @@ const UserHistoryScreen = () => {
     return (
         <div style={{ height: '100vh', backgroundColor: '#b2bec3' }}>
             <Navbar />
-            <div style={{ width: '100%', paddingLeft: 20, paddingRight: 20, paddingTop: 20 }}>
+            <div style={{ width: '100%', paddingTop: 40 }}>
                 <Table
                     height={550}
                     data={Data}
@@ -101,7 +103,7 @@ const UserHistoryScreen = () => {
                         <Cell dataKey="order_number" style={{ fontSize: 16 }} />
                     </Column>
 
-                    <Column width={200} align="center" >
+                    <Column width={150} align="center" >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Total Price</HeaderCell>
                         <Cell>
                             {(rowData) => {
@@ -122,7 +124,7 @@ const UserHistoryScreen = () => {
                         <Cell dataKey="keterangan" style={{ fontSize: 16 }} />
                     </Column>
 
-                    <Column width={150} align="center" >
+                    <Column width={170} align="center" >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Transaction Date</HeaderCell>
                         <Cell>
                             {(rowData) => {
@@ -149,7 +151,7 @@ const UserHistoryScreen = () => {
                         <Cell dataKey="status" style={{ fontSize: 16 }} />
                     </Column>
 
-                    <Column width={335} align="center" fixed='right' >
+                    <Column width={400} align="center" fixed='right' >
                         <HeaderCell style={{ fontSize: 18, fontWeight: 'bold' }}>Action</HeaderCell>
                         <Cell>
                             {rowData => {
@@ -162,19 +164,25 @@ const UserHistoryScreen = () => {
                                     setOrderNumber(data)
                                     setShow(true)
                                 }
-                                const btnCancel = (data) => {
+                                const btnCancel = (data, email, total_bayar) => {
                                     console.log(data)
-                                    axios.post(`http://localhost:2000/history/cancelOrder/${data}`)
+                                    axios.post(`http://localhost:2000/history/cancelOrder/${data}`, {email, total_bayar})
                                     .then((res) => setCancel(res.data))
+                                    .catch((err) => console.log(err))
+                                }
+                                const confirmArrived = (data, email, id_status) => {
+                                    axios.post(`http://localhost:2000/history/confirmArrived/${data}`, {email, id_status})
+                                    .then((res) => setConfirm(res.data))
                                     .catch((err) => console.log(err))
                                 }
                                 const id_status = rowData.id_status
                                 return (
                                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                                         <Button onClick={() => btnshowUpload(rowData.order_number)} style={{ width: '100%', backgroundColor: id_status === 8 ? '#04BF8A' : '#2d3436', color: 'white' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 2}> Upload </Button>
-                                        <Button onClick={() => btnCancel(rowData.order_number)} color='red' style={{ marginLeft: 5, marginRight: 5, width: '100%' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 8}> Cancel </Button>
+                                        <Button onClick={() => btnCancel(rowData.order_number, rowData.email, rowData.grandTotal_checkout)} color='red' style={{ marginLeft: 5, marginRight: 5, width: '100%' }} disabled={id_status === 1 || id_status === 2 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 8}> Cancel </Button>
                                         <Button onClick={() => showDetail(rowData.order_number)} style={{ width: '100%' }}> Detail </Button>
                                         <Button onClick={goToCheckout} color='blue' style={{ marginLeft: 5, width: '100%' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 6 || id_status === 7 || id_status === 8}> Checkout </Button>
+                                        <Button onClick={() => confirmArrived(rowData.order_number, rowData.email, rowData.id_status)} color='green' style={{ marginLeft: 5, width: '100%' }} disabled={id_status === 1 || id_status === 3 || id_status === 4 | id_status === 5 || id_status === 2 || id_status === 7 || id_status === 8}> Confirm </Button>
                                     </div>
 
                                 );
@@ -291,6 +299,19 @@ const UserHistoryScreen = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => setShowCancel(false)} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal backdrop={true} show={showConfirm} onHide={() => setShowConfirm(false)}>
+                <Modal.Header>
+                    <Modal.Title>Success Cancel</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {confirm}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setShowConfirm(false)} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
                         Ok
                     </Button>
                 </Modal.Footer>

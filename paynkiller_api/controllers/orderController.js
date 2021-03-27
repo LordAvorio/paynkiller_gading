@@ -233,7 +233,7 @@ module.exports = {
             let rows2 = await asyncQuery(sql2)
 
             const option = {
-                from: `admin <andhika.jeremia@gmail.com>`,
+                from: process.env.EMAIL_SEND,
                 to: `${rows2[0].email}`,
                 subject: 'Order Payment Accepted',
                 text: '',
@@ -269,7 +269,7 @@ module.exports = {
             let rows2 = await asyncQuery(sql2)
 
             const option = {
-                from: `admin <andhika.jeremia@gmail.com>`,
+                from: process.env.EMAIL_SEND,
                 to: `${rows2[0].email}`,
                 subject: 'Order Payment Rejected',
                 text: '',
