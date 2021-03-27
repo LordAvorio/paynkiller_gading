@@ -288,11 +288,13 @@ module.exports = {
         const { order_number, id_bahan_baku, qty, total_harga } = req.body
         console.log(req.body)
         try {
-            const get = `SELECT id_custom_order FROM custom_order where id_user=${id_customer} and status=1;`
+            const get = `select od.id_custom_order from orders o left join order_details od on o.order_number = od.order_number 
+                        where o.id_customer=${id_customer} and o.id_status=1 and od.id_custom_order is not null;`
             const qget = await asyncQuery(get)
             console.log('a', qget)
             console.log('b', qget[0])
             console.log('id customorder', qget[0].id_custom_order)
+            
             const id_custom_order = qget[0].id_custom_order
             const addCOD = `INSERT INTO custom_order_detail (id_custom_order, id_bahan_baku, total_beli_satuan, total_harga) VALUES
                             (${id_custom_order}, ${id_bahan_baku}, ${qty}, ${total_harga})`

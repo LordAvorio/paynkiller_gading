@@ -14,10 +14,11 @@ const OrderRawMaterials = () => {
     const [toCart, setToCart] = React.useState(false)
     const [showAcc, setShowAcc] = React.useState(false)
 
-    const { id_customer, rawMaterialData } = useSelector((state) => {
+    const { id_customer, rawMaterialData, materialsinCart } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
-            rawMaterialData: state.rawMaterialReducer.dataRawMaterial
+            rawMaterialData: state.rawMaterialReducer.dataRawMaterial,
+            materialsinCart: state.customOrderReducer.materialsinCart
         }
     })
 
@@ -65,6 +66,7 @@ const OrderRawMaterials = () => {
 
     const open = () => {
         if (SelectedMaterials.length === 0) return Alert.info('please pick a raw material before continuing your order', 5000)
+        if (materialsinCart.length !== 0) return Alert.error('your ingredients purchase cannot be edited')
         console.log(SelectedMaterials)
         SelectedMaterials.map((item, index) => {
             if (item.qty <= 0) {
@@ -81,6 +83,7 @@ const OrderRawMaterials = () => {
 
         const total_harga = grandTotal()
 
+
         Axios.post(`http://localhost:2000/customorder/addNewOrder/${id_customer}`, { total_harga })
             .then((res) => {
                 console.log(res.data)
@@ -90,7 +93,7 @@ const OrderRawMaterials = () => {
                 })
             })
         
-        Alert.success('your items have been added to your cart', 5000)
+        Alert.success('your items have been added to your cart (and cannot be edited)', 5000)
         setToCart(true)
     }
 

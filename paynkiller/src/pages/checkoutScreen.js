@@ -6,7 +6,9 @@ import {
     Button, Panel, Modal, Grid, Row, Col,
     Alert, InputPicker, FormGroup, ControlLabel, Input
 } from 'rsuite'
-import { getOrdersInCheckout, showProfile, editProfile, getMaterialsCheckout, uploadPaymentProof } from '../action'
+import { getOrdersInCheckout, showProfile, editProfile, getMaterialsCheckout, uploadPaymentProof,
+        decreaseProductStock, decreaseStockMaterial
+} from '../action'
 
 const URL_IMG = 'http://localhost:2000/'
 
@@ -29,7 +31,7 @@ const CheckoutScreen = () => {
     const [cekProofModal, setCeckProofModal] = React.useState(false)
     const [toHome, setToHome] = React.useState(false)
 
-
+    console.log(payments)
     const { id_customer, checkoutOrders, biodata, materialsCheckout } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
@@ -164,13 +166,15 @@ const CheckoutScreen = () => {
         console.log('data, setelah append', data)
       
         const body = {
-            order_number: checkoutOrders[0].order_number,
+            order_number: checkoutOrders.length !==0 ? checkoutOrders[0].order_number : materialsCheckout[0].order_number,
             jenis_pembayaran: modalSelectedPay.jenis_pembayaran,
             email: biodata.email
         }
         console.log(body.order_number)
 
         dispatch(uploadPaymentProof(data, body))
+        dispatch(decreaseStockMaterial(body))
+        dispatch(decreaseProductStock(body))
         Alert.success(`your purchase will be processed soon`, 5000)
         setToHome(true)
     }

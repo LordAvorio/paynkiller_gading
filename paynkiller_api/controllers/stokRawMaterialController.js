@@ -114,5 +114,39 @@ module.exports = {
             console.log(err)
             res.status(400).send(err)
         }
-    }
+    },
+    decreaseStockMaterial: async (req, res) => {
+        const { order_number, jenis_pembayaran } = req.body
+        try {
+            const getOrders = `select b.id_bahan_baku ,b.nama_bahan_baku, cod.total_beli_satuan
+                                from orders o join order_details od on o.order_number = od.order_number 
+                                join custom_order co on od.id_custom_order = co .id_custom_order
+                                join custom_order_detail cod on od.id_custom_order = cod.id_custom_order
+                                join bahan_baku b on cod.id_bahan_baku = b.id_bahan_baku
+                                join order_status os on o.id_status = os.id
+                                where o.order_number=${order_number}`
+            const qgetOrders = await asyncQuery(getOrders)
+            
+            if (qgetOrders.length === 0) return res.status(200).send('customer did not buy any ingredient') 
+            
+            const decreasing = `UPDATE stok_bahan_baku sb  JOIN bahan_baku b on sb.id_bahan = b.id_bahan_baku
+                                    JOIN custom_order_detail cod ON b.id_bahan_baku = cod.id_bahan_baku
+                                    JOIN order_details od ON cod.id_custom_order = od.id_custom_order
+                                    SET sb.total_bahan = sb.total_bahan - cod.total_beli_satuan
+                                    WHERE od.order_number = ${order_number}`
+            await asyncQuery(decreasing)
+
+            const bottle = `UPDATE stok_bahan_baku sb  JOIN bahan_baku b on sb.id_bahan = b.id_bahan_baku
+                                    JOIN custom_order_detail cod ON b.id_bahan_baku = cod.id_bahan_baku
+                                    JOIN order_details od ON cod.id_custom_order = od.id_custom_order
+                                    SET sb.jumlah_botol = sb.total_bahan / b.total_kapasitas
+                                    WHERE od.order_number = ${order_number}`
+            await asyncQuery(bottle)
+            
+            res.sendStatus(200)
+        }
+        catch (err) {
+            console.log(err)
+        }
+    },
 }

@@ -96,6 +96,26 @@ export const selectPickerRawMaterial = () => {
     }
 }
 
+
+export const decreaseStockMaterial = (body) => {
+    return async(dispatch) => {
+        try{
+    
+            const res = await Axios.patch('http://localhost:2000/stokrawmaterial/decreaseMaterialsStock', body)
+            console.log(res)
+    
+            const res2 = await Axios.get('http://localhost:2000/stokrawmaterial/stokrawmaterials')
+
+            dispatch({
+                type: 'GET_STOCK_RAW_MATERIAL',
+                payload: res2.data
+            })
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+}
 export const removeError = () => {
     return{
         type: 'REMOVE_ERR'

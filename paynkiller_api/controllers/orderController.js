@@ -186,10 +186,10 @@ module.exports = {
         const { order_number, jenis_pembayaran } = req.body
         try {
             const cekPayment = `select id from opsi_pembayaran where jenis_pembayaran='${jenis_pembayaran}'`
-            const idPayment = await asyncQuery(cekPayment[0])
-            console.log('id payment:', idPayment)
+            const idPayment = await asyncQuery(cekPayment)
+            console.log('id payment:', idPayment[0])
 
-            const details = `UPDATE orders SET opsi_pembayaran =${idPayment}, WHERE order_number = ${order_number}`
+            const details = `UPDATE orders SET opsi_pembayaran =${idPayment[0].id} WHERE order_number = ${order_number}`
             await asyncQuery(details)
             res.sendStatus(200)          
         }
@@ -291,67 +291,6 @@ module.exports = {
         catch(err){
             res.status(400).send(err)
             console.log(err)
-        }
-    },
-    ordersCheckout: async (req, res) => {
-        // console.log(req.user)
-        const id = parseInt(req.params.idcustomer)
-        console.log('id customer produk', id)
-        try {
-            const products = `select o.id_customer, o.order_number, p.id_produk, p.nama_produk, p.gambar_obat, od.id_details, od.qty, sp.jumlah_produk as stock, p.harga_produk, 
-                        p.komposisi, os.status as status_order, od.total_harga 
-                        from orders o join order_details od on o.order_number = od.order_number 
-                        join produk p on od.id_produk = p.id_produk
-                        join stok_produk sp on p.id_produk = sp.id_produk
-                        join order_status os on o.id_status = os.id
-                        where o.id_status = 2 and o.id_customer = ${db.escape(id)}`
-            // console.log(get)
-            const showProducts = await asyncQuery(products)
-            console.log(showProducts)
-
-            res.status(200).send(showProducts)
-        }
-        catch (err) {
-            res.status(400).send(err)
-            console.log(err)
-
-        }
-    },
-    paymentMethods: async (req, res) => {
-        try {
-            const get = `select * from opsi_pembayaran`
-            const qget = await asyncQuery(get)
-            res.status(200).send(qget)
-        }
-        catch (err) {
-            res.status(400).send(err)
-            console.log(err)
-
-        }
-    },
-    uploadPaymentProof: async (req, res) => {
-        const { order_number, jenis_pembayaran } = req.body
-        const imageUpload = `images/${req.file.filename}`
-
-        if (!req.file) return res.status(400).send('no image !')
-
-        try {
-            const cekPayment = `select id from opsi_pembayaran where jenis_pembayaran='${jenis_pembayaran}'`
-            const idPayment = await asyncQuery(cekPayment[0])
-            console.log(idPayment)
-
-            const today = new Date()
-            const date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear()
-            console.log(date)
-
-            const pay = `UPDATE orders SET id_status = 3, bukti_bayar = '${imageUpload}', opsi_pembayaran =${idPayment}, tanggal_bayar='${date}' WHERE order_number = ${order_number}`
-            await asyncQuery(pay)
-
-            res.sendStatus(200)
-        }
-        catch (err) {
-            console.log(err)
-            res.status(400).send(err)
         }
     },
     getSpecificOrderDetail: async(req,res) => {

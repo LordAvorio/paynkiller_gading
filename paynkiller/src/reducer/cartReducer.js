@@ -11,7 +11,6 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 cart: action.payload
             }
-
         case 'GET_CHECKOUT': 
             return{
                 ...state,
@@ -22,7 +21,6 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 paymentProof:action.payload
             }
-        
         default:
             return state
     }
