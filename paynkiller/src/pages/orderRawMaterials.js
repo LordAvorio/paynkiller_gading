@@ -6,7 +6,7 @@ import {
 } from 'rsuite'
 import { Link, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRawMaterial } from '../action/rawMaterialAction'
+import { getRawMaterial, getMaterialsInCart } from '../action'
 import MaterialTable from 'material-table'
 
 const OrderRawMaterials = () => {
@@ -26,10 +26,11 @@ const OrderRawMaterials = () => {
 
     React.useEffect(() => {
         dispatch(getRawMaterial())
+        dispatch(getMaterialsInCart(id_customer))
         setSelectedMaterials(SelectedMaterials)
         console.log(SelectedMaterials)
         console.log(rawMaterialData)
-    }, [SelectedMaterials])
+    }, [SelectedMaterials, id_customer])
 
     const add = (id_bahan_baku, nama_bahan_baku, harga_bahan_baku, nama_uom) => {
         setSelectedMaterials(pre => [...pre, { id_bahan_baku, nama_bahan_baku, harga_bahan_baku, nama_uom, qty: 0, total_harga: 0 }])
