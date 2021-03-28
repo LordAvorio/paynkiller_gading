@@ -66,7 +66,7 @@ module.exports = {
         const { email, total_bayar } = req.body
         console.log(email, total_bayar)
         try {
-            const getOrders = `select b.id_bahan_baku ,b.nama_bahan_baku, cod.total_beli_satuan, sbk.total_bahan
+            const getOrders = `select b.id_bahan_baku ,b.nama_bahan_baku, sum(distinct cod.total_beli_satuan) as total_beli_satuan, sum(distinct sbk.total_bahan ) as total_bahan
             from orders o join order_details od on o.order_number = od.order_number 
             join custom_order co on od.id_custom_order = co .id_custom_order
             join custom_order_detail cod on od.id_custom_order = cod.id_custom_order
@@ -74,25 +74,8 @@ module.exports = {
             join order_status os on o.id_status = os.id
             join stok_bahan_baku sbk on b.id_bahan_baku = sbk.id_bahan
             where o.order_number=${order_number}
-            order by b.id_bahan_baku`
+            group by b.id_bahan_baku`
             const qgetOrders = await asyncQuery(getOrders)
-            if (qgetOrders.length > 0) {
-                for (let a = 0; a <= qgetOrders.length; a++) {
-                    console.log('check a', a)
-                    for (let b = 1; b < qgetOrders.length; b++) {
-                        console.log('check b', b)
-                        if (qgetOrders[a].id_bahan_baku === qgetOrders[b].id_bahan_baku) {
-                            qgetOrders[a].total_beli_satuan += qgetOrders[b].total_beli_satuan
-                            a = qgetOrders.length
-                            qgetOrders.splice(b, 1)
-                            break
-                        }
-                        break
-                    }
-                    
-                }
-                
-            }
             qgetOrders.map(async (item, index) => {
                 try {
                     let updateCancel1 = `UPDATE stok_bahan_baku SET total_bahan = '${parseFloat(item.total_bahan + item.total_beli_satuan)}' WHERE id_bahan = '${item.id_bahan_baku}'`
@@ -100,8 +83,8 @@ module.exports = {
                     let checkBahanbaku = `SELECT bb.total_kapasitas, sbk.total_bahan, sbk.jumlah_botol, sbk.id_bahan FROM bahan_baku bb
                     LEFT JOIN stok_bahan_baku sbk ON sbk.id_bahan = bb.id_bahan_baku
                                           WHERE sbk.id_bahan = '${item.id_bahan_baku}'`
-                                          let hasilcheck2 = await asyncQuery(checkBahanbaku)
-                                          hasilcheck2.map(async (it, id) => {
+                    let hasilcheck2 = await asyncQuery(checkBahanbaku)
+                    hasilcheck2.map(async (it, id) => {
                         try {
                             let botol = it.jumlah_botol
                             let kapasitasTemp = parseInt(it.total_kapasitas * botol)
@@ -168,10 +151,10 @@ module.exports = {
             res.status(400).send(err)
         }
     },
-    confirmArrived : async(req, res) => {
+    confirmArrived: async (req, res) => {
         const order_number = req.params.orderNumber
-        const {email, id_status} = req.body
-        try{
+        const { email, id_status } = req.body
+        try {
             const sqlOrder = `SELECT o.order_number, o.grandTotal_checkout,o.keterangan, o.tanggal_transaksi, o.tanggal_bayar, dc.email, os.status, op.jenis_pembayaran, o.id_status
             FROM orders o
             INNER JOIN data_customer AS dc ON o.id_customer = dc.id_customer
@@ -206,16 +189,16 @@ module.exports = {
             const template = handlebars.compile(fileEmail)
             console.log(template)
             option.html = template({
-                 total_bayar: data.grandTotal_checkout, 
-                 nama: username,
-                 keterangan: data.keterangan,
-                 tanggal_transaksi: data.tanggal_transaksi,
-                 tanggal_bayar: data.tanggal_bayar,
-                 data_status: data.status,
-                 jenis_pembayaran: data.jenis_pembayaran ,
-                 nomor_order: order_number
-                })
-                console.log('ulala',option.html)
+                total_bayar: data.grandTotal_checkout,
+                nama: username,
+                keterangan: data.keterangan,
+                tanggal_transaksi: data.tanggal_transaksi,
+                tanggal_bayar: data.tanggal_bayar,
+                data_status: data.status,
+                jenis_pembayaran: data.jenis_pembayaran,
+                nomor_order: order_number
+            })
+            console.log('ulala', option.html)
             const info = await transporter.sendMail(option)
             console.log(info)
 
@@ -223,7 +206,7 @@ module.exports = {
             await asyncQuery(update_status)
             res.status(200).send('Your Order Has Been Confirmed')
         }
-        catch(err){
+        catch (err) {
             res.status(400).send(err)
         }
     }
