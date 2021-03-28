@@ -7,6 +7,7 @@ import {categoryReducer} from './categoryReducer'
 import brandReducer from './brandReducer'
 import uomReducer from './uomReducer'
 import productReducer from './productReducer'
+import reportReducer from './reportReducer'
 import rawMaterialReducer from './rawMaterialReducer'
 import stockRawMaterialReducer from './stokRawMaterialReducer'
 import stockProdukReducer from './stokProdukReducer'
@@ -19,6 +20,7 @@ const allReducer = combineReducers({
     adminReducer,
     cartReducer,
     categoryReducer,
+    reportReducer,
     brandReducer,
     uomReducer,
     productReducer,

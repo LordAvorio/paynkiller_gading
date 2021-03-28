@@ -1,6 +1,7 @@
 const userRouter = require('./userRouter')
 const orderRouter = require('./orderRouter')
 const categoryRouter = require('./categoryRouter')
+const reportRouter = require('./reportRouter')
 const produkRouter = require('./produkRouter')
 const brandRouter = require('./brandRouter')
 const uomRouter = require('./uomRouter')
@@ -15,6 +16,7 @@ const userHistoryRouter = require('./userHistoryRouter')
 module.exports = {
     userRouter,
     categoryRouter,
+    reportRouter,
     brandRouter,
     uomRouter,
     adminRouter,

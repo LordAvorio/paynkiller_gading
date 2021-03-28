@@ -32,6 +32,9 @@ import swal from "sweetalert";
 
 import "../css/pages/productList.css";
 
+import AOS from 'aos';
+
+
 const URL_IMG = "http://localhost:2000/";
 
 export default function ProductListScreen() {
@@ -89,6 +92,9 @@ export default function ProductListScreen() {
     
        dispatch(getStockProducts());
        dispatch(selectPickerCategory());
+       AOS.init({
+        duration : 1500
+      });
   }, [dataCategory.length,tempId,redirectTo]);
 
   const handleToDetailProduk = (id_produk) => {
@@ -110,8 +116,8 @@ export default function ProductListScreen() {
       <Navbar />
       <Grid fluid style={{ margin: "0px 10px" }}>
         <Row>
-          <Col md={4} style={{ padding: "15px", paddingTop: "45px" }}>
-            <Panel shaded style={{ backgroundColor: "white" }}>
+          <Col md={4} style={{ padding: "15px", paddingTop: "45px" }} >
+            <Panel shaded style={{ backgroundColor: "white" }} data-aos="flip-right">
               <Row>
                 <Col
                   md={24}
@@ -184,7 +190,7 @@ export default function ProductListScreen() {
               </Row>
             </Panel>
           </Col>
-          <Col md={20} style={{ padding: "20px" }}>
+          <Col md={20} style={{ padding: "20px" }} >
             <Row>
               {currentPosts.map((item, index) => {
                 return (

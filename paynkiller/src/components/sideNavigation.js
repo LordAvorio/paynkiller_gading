@@ -94,6 +94,14 @@ export default function SideNavigation() {
                       Management Admin
                     </Nav.Item>
                   </Link>
+                  <Dropdown eventKey="7" title="Management Recap" icon={<Icon icon="print" />}>
+                  <Link to="/admin/report/transaction">
+                    <Dropdown.Item eventKey="7-1">Report Keuangan</Dropdown.Item>
+                  </Link>
+                  <Link to="/admin/report/stocksale">
+                    <Dropdown.Item eventKey="7-1">Report Stock Sell</Dropdown.Item>
+                  </Link>
+                  </Dropdown>
                   
               </Nav>
           </Sidenav.Body>

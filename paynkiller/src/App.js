@@ -29,7 +29,10 @@ import OrderRawMaterials from './pages/orderRawMaterials'
 
 import CustomOrderScreen from './pages/customOrderScreen'
 import ShowCustomOrderScreen from './pages/showCustomOrderScreen'
+import ReportTransactionScreen from './pages/reportTransaction'
+import ReportProductSaleScreen from './pages/reportSaleProduct'
 import UserHistoryScreen from './pages/historyUserScreen'
+
 
 import {useDispatch} from 'react-redux'
 
@@ -70,6 +73,8 @@ export default function App() {
         <Route path='/admin/order/allorder' component={OrderScreen} />
         <Route path='/admin/order/customorder' component={CustomOrderAdminScreen} />
         <Route path='/admin/master/admin' component={MasterAdminScreen} />
+        <Route path='/admin/report/transaction' component={ReportTransactionScreen} />
+        <Route path='/admin/report/stocksale' component={ReportProductSaleScreen} />
         <Route path='/products' component={ProductListScreen} />
 
         <Route path='/ordermaterials' component={OrderRawMaterials}/>
