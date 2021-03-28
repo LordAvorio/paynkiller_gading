@@ -148,3 +148,9 @@ export const editProfile = (id_customer, body) => {
         }
     }
 }
+
+export const verification = () => {
+    return {
+        type: 'VERIFICATION'
+    }
+}
