@@ -6,7 +6,9 @@ import {
     Button, Panel, Modal, Grid, Row, Col,
     Alert, InputPicker, FormGroup, ControlLabel, Input
 } from 'rsuite'
-import { getOrdersInCheckout, showProfile, editProfile } from '../action'
+import { getOrdersInCheckout, showProfile, editProfile, getMaterialsCheckout, uploadPaymentProof,
+        decreaseProductStock, decreaseStockMaterial
+} from '../action'
 
 const URL_IMG = 'http://localhost:2000/'
 
@@ -29,11 +31,13 @@ const CheckoutScreen = () => {
     const [cekProofModal, setCeckProofModal] = React.useState(false)
     const [toHome, setToHome] = React.useState(false)
 
-    const { id_customer, checkoutOrders, biodata } = useSelector((state) => {
+    console.log(payments)
+    const { id_customer, checkoutOrders, biodata, materialsCheckout } = useSelector((state) => {
         return {
             id_customer: state.userReducer.id_customer,
             checkoutOrders: state.cartReducer.checkout,
-            biodata: state.userReducer.biodata
+            biodata: state.userReducer.biodata,
+            materialsCheckout: state.customOrderReducer.materialsCheckout
         }
     })
 
@@ -42,8 +46,10 @@ const CheckoutScreen = () => {
     React.useEffect(() => {
         dispatch(getOrdersInCheckout(id_customer))
         dispatch(showProfile())
+        dispatch(getMaterialsCheckout(id_customer))
         console.log(checkoutOrders)
-
+        console.log(materialsCheckout)
+      
         Axios.get(`http://localhost:2000/order/paymentMethods`)
             .then(res => setPayments(res.data))
     }, [id_customer])
@@ -120,50 +126,61 @@ const CheckoutScreen = () => {
         })
     }
 
-    
-    // const closeModalPayment = () => {
-        //     setModalPayments({
-            //         show: false,
-            //         selectedPayment: ''
-            //     })
-            // }
-            
-            
-            const totalQty = () => {
-                let counter = 0
-                if (checkoutOrders.length !== 0) {
+
+
+    const totalQty = () => {
+        let counter = 0
+        if (checkoutOrders.length !== 0) {
             checkoutOrders.forEach(item => counter += item.qty)
         }
         return counter
     }
-    
+
     const grandTotal = () => {
         let counter = 0
-        if (checkoutOrders.length !== 0) {
-            checkoutOrders.forEach(item => counter += item.total_harga)
-        }
+        checkoutOrders ? checkoutOrders.forEach(item => counter += item.total_harga) : counter = 0
+
         return counter
     }
 
+    const totalPriceIngredients = () => {
+        let n = 0
+        materialsCheckout ? materialsCheckout.forEach(item => n += item.total_harga) : n = 0
+        return n
+
+    }
+    
+    const handleChange = (e) => {
+        console.log(e.target.files)
+        setModalSelectedPay({
+            ...modalSelectedPay,
+            bukti_bayar: e.target.files[0]
+        })
+    }
     const paid = () => {
         if (!modalSelectedPay.bukti_bayar) return Alert.error('please input payment proof', 5000)
+        const data = new FormData()
+        console.log(data)
+        console.log('sebelom append', modalSelectedPay.bukti_bayar)
+        data.append('IMG', modalSelectedPay.bukti_bayar)
+        console.log('data, setelah append', data)
+      
         const body = {
-            order_number: checkoutOrders[0].order_number,
+            order_number: checkoutOrders.length !==0 ? checkoutOrders[0].order_number : materialsCheckout[0].order_number,
             jenis_pembayaran: modalSelectedPay.jenis_pembayaran,
             email: biodata.email
         }
-        console.log(body)
-        
-        Axios.post(`http://localhost:2000/order/paymentProof`, body)
-        .then((res) => {
-            console.log(res.data)
-            dispatch(getOrdersInCheckout(id_customer))
-            setToHome(true)
-            Alert.success('your purchase will be processed by us soon', 5000)
-        } )
+        console.log(body.order_number)
+
+        dispatch(uploadPaymentProof(data, body))
+        dispatch(decreaseStockMaterial(body))
+        dispatch(decreaseProductStock(body))
+        Alert.success(`your purchase will be processed soon`, 5000)
+        setToHome(true)
     }
-    
-    if (toHome) return <Redirect to="/checkout" />
+
+    if (toHome) return <Redirect to="/" />
+
     const Render = () => {
         return (
             checkoutOrders.map((item, index) => {
@@ -214,11 +231,17 @@ const CheckoutScreen = () => {
         )
     }
 
-    const handleChange = (e) => {
-        setModalSelectedPay({
-            ...modalSelectedPay,
-            bukti_bayar: e.target.files[0]
-        })
+    const ShowMaterials = () => {
+        return (
+            materialsCheckout.map((item, index) => {
+                return (
+                    <div key={index} style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '10px 10px 10px', display: 'flex', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
+                        <p>{item.nama_bahan_baku}</p>
+                        <p style={{ marginTop: '20px' }}>{item.total_beli_satuan + item.nama_uom}</p>
+                    </div>
+                )
+            })
+        )
     }
 
     return (
@@ -235,15 +258,24 @@ const CheckoutScreen = () => {
                         <Button onClick={openBiodataModal} appearance="ghost" style={{ color: 'gray', borderColor: '#d3d3d3' }}>Change Address</Button>
                     </div>
                     <div style={{ marginTop: 15, borderTop: '4px solid #d3d3d3' }}>
+                        <p style={{ fontSize: '18px' }}>Products</p>
                         <Render />
+                        <p style={{ fontSize: '18px', marginTop: '25px' }}>Active Ingredients</p>
+                        <div style={{ display: 'flex' }}>
+                            <ShowMaterials />
+                        </div>
                     </div>
                 </div>
                 <div style={{ flexGrow: 1, position: 'relative' }}>
-                    <Panel shaded={true} style={{ backgroundColor: 'white', height: '330px', width: '300px', position: 'fixed', margin: '50px 0 0 40px', border: '2px solid #4f79c5', borderRadius: '20px', padding: '20px 20px 0 20px' }}>
-                        <h3>Shopping</h3>
+                    <Panel shaded={true} style={{ backgroundColor: 'white', height: '350px', width: '280px', position: 'fixed', margin: '50px 0 0 40px', border: '3px solid #d3d3d3', borderRadius: '20px', padding: '20px 10px 20px 10px' }}>
+                        <p style={{ fontSize: '18px', fontWeight: 'bold' }}>Shopping</p>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <p style={{ fontSize: '16px', marginTop: '30px' }}>Total Price ({totalQty()} items)</p>
                             <p style={{ fontSize: '18px', textAlign: 'end', marginTop: '28px' }}>Rp {grandTotal().toLocaleString('id-ID')}</p>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
+                            <p style={{ fontSize: '16px', marginTop: '10px' }}>Active Ingredients</p>
+                            <p style={{ fontSize: '16px', textAlign: 'center' }}>Rp {totalPriceIngredients().toLocaleString('id-ID')}</p>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
                             <p style={{ fontSize: '16px', marginTop: '10px' }}>Shipping</p>
@@ -252,7 +284,7 @@ const CheckoutScreen = () => {
                         <div style={{ borderBottom: '4px solid gray', marginTop: '20px' }}></div>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '18px', }}>
                             <p style={{ marginTop: '10px' }}>Grand Total</p>
-                            <p style={{ fontSize: '18px', textAlign: 'center' }}>Rp {grandTotal().toLocaleString('id-ID')}</p>
+                            <p style={{ fontSize: '18px', textAlign: 'center' }}>Rp {(grandTotal() + totalPriceIngredients()).toLocaleString('id-ID')}</p>
                             {/* <p style={{ textAlign: 'center' }}>Rp {checkoutOrders['showGrandTotal'].toLocaleString('id-ID')}</p> */}
                         </div>
                         <Button onClick={openModalPayment} style={{ height: '8vh', width: '80%', backgroundColor: '#51bea5', color: 'white', fontWeight: 'bold', margin: '25px 0 0 27px' }}>Choose Payment Method</Button>
@@ -321,23 +353,29 @@ const CheckoutScreen = () => {
                         <h6 style={{ fontSize: '18px', textAlign: 'center', color: '#51bea5' }}>Upload Payment Proof</h6>
                         <h6 style={{ fontSize: '14px' }}>{modalSelectedPay.jenis_pembayaran}</h6>
                         <h6 style={{ fontSize: '14px' }}>Transfer to: {modalSelectedPay.nomor_rekening}</h6>
-                        <div style={{display: 'flex', fontSize: '14px'}}>
-                        <p style={{margin:'8px 5px'}}>by the name of  </p>
-                        <p style={{ color: '#51bea5' }}>  PaynKiller Indonesia</p>
+
+                        <div style={{ display: 'flex', fontSize: '14px' }}>
+                            <p style={{ margin: '8px 5px' }}>bank account:  </p>
+                            <p style={{ color: '#51bea5' }}>  PaynKiller Indonesia</p>
                         </div>
-                        <h6 style={{ fontSize: '14px' }}>Rp {grandTotal().toLocaleString('id-ID')}</h6>
-                        <h6 style={{fontSize:'12px', marginTop:'20px'}}>please input jpg/png file</h6>
+                        <h6 style={{ fontSize: '14px' }}>Rp {(grandTotal() + totalPriceIngredients()).toLocaleString('id-ID')}</h6>
+                        <h6 style={{ fontSize: '12px', marginTop: '20px' }}>please input jpg/png file</h6>
                         {/* <img src={URL_IMG + modalSelectedPay.bukti_bayar} style={{ height: '60px', width: '60px' }} /> */}
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            name="IMG"
-                        onChange={(e) => handleChange(e)}
-                        />
-                    <Button style={{backgroundColor:'#51bea5', color:'white', fontWeight:'600', marginLeft:15}} onClick={() => setCeckProofModal(true)}>submit</Button>
+
+                    <div>
+                        <form encType="multipart/form-data">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                name="IMG"
+                                onChange={(e) => handleChange(e)}
+                            />
+                        </form>
+                    </div>
+                    <Button style={{ backgroundColor: '#51bea5', color: 'white', fontWeight: '600', marginLeft: 15 }} onClick={() => setCeckProofModal(true)}>submit</Button>
                 </Modal.Footer>
             </Modal>
             <Modal backdrop="static" show={cekProofModal} onHide={() => setCeckProofModal(false)}>

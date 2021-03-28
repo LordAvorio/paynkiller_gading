@@ -118,5 +118,32 @@ module.exports = {
             res.status(400).send(err)
         }
 
-    }
+    },
+    decreaseStock: async (req, res) => {
+        const { order_number } = req.body
+        try {
+            const getOrders = `select p.id_produk, p.nama_produk, od.qty
+                                from orders o join order_details od on o.order_number = od.order_number 
+                                join produk p on od.id_produk = p.id_produk
+                                join stok_produk sp on p.id_produk = sp.id_produk
+                                join order_status os on o.id_status = os.id
+                                where o.order_number=${order_number}`
+            const qgetOrders = await asyncQuery(getOrders)
+
+            console.log(qgetOrders)
+            
+            if (qgetOrders.length === 0) return res.status(200).send('customer did not buy any product')
+
+            const decreaseProduct = `UPDATE stok_produk sp  JOIN produk p on sp.id_produk = p.id_produk
+                            JOIN order_details od ON p.id_produk = od.id_produk
+                            JOIN orders o ON od.order_number = o.order_number
+                            SET sp.jumlah_produk = sp.jumlah_produk  - od.qty
+                            WHERE o.order_number = ${order_number}`
+            await asyncQuery(decreaseProduct)
+            res.sendStatus(200)
+        }
+        catch (err) {
+            console.log(err)
+        }
+    },
 }

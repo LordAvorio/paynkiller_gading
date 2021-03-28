@@ -81,3 +81,24 @@ export const getOrdersInCheckout = (id_customer) => {
         }
     }
 }
+
+export const uploadPaymentProof = (data, body) => {
+    return async (dispatch) => {
+        try{
+            const option = {
+                headers: {'Content-Type' : 'multipart/form-data'}
+            }
+            console.log('action', data, option)
+            console.log(body.order_number)
+            const res = await Axios.post(`http://localhost:2000/order/paymentProof/${body.order_number}`, data, option )
+            console.log(res.data)
+
+            const res2 = await Axios.post('http://localhost:2000/order/detailsPayment', body)
+            console.log(res2.data)
+            dispatch({type: 'PAYMENT_PROOF', payload: res2.data})
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+}

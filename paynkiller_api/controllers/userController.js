@@ -5,8 +5,8 @@ const { validationResult } = require('express-validator')
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const handlebars = require('handlebars')
-const { asyncQuery, generateQueryBody } = require('../helpers/queryHelp')
-const { createToken, verifyToken } = require('../helpers/jwt')
+const {asyncQuery, generateQueryBody} = require('../helpers/queryHelp')
+const {createToken, verifyToken} = require('../helpers/jwt')
 
 var salt = bcrypt.genSaltSync(10);
 
@@ -116,8 +116,8 @@ module.exports = {
             })
             // send mail forgotPass
             const option = {
-                from: `admin <andhika.jeremia@gmail.com>`,
-                to: 'emailsampahnyague287@gmail.com',
+                from: process.env.EMAIL_SEND,
+                to: email,
                 subject: 'Forgot Password',
                 text: '',
                 attachments: [{
@@ -167,7 +167,7 @@ module.exports = {
         const { username, id_user } = req.user
         
         try {
-            const show = `select username, email, firstname, lastname, gambar, birthdate, alamat, phone 
+            const show = `select username, email, firstname, lastname, gambar, birthdate, alamat, phone, id_status 
             from data_customer WHERE username = '${username}' AND id_customer = ${id_user}`
             const qshow = await asyncQuery(show)
             console.log(qshow[0])
@@ -177,11 +177,11 @@ module.exports = {
             res.status(400).send(err)
             console.log(err)
         }
-
+        
     },
     editProfile: async (req, res) => {
         const id = parseInt(req.params.idcustomer)
-
+        
         try {
             const cek = `SELECT * FROM data_customer WHERE id_customer = ${id} `
             const qcek = await asyncQuery(cek)
@@ -197,6 +197,47 @@ module.exports = {
             res.status(400).send(err)
             console.log(err)
         }
+        
+    },
+    emailVerification: async (req, res) => {
+        const { username, id_user } = req.user
+        
+        try {
+            const verify = `UPDATE data_customer SET id_status = 1 
+            WHERE id_customer = ${id_user} AND username = '${username}'`
+            console.log(verify)
+            const result = await asyncQuery(verify)
+            console.log(result)
+            
+            res.status(200).send('Email has been verified')
+        }
+        catch(err) {
+            console.log(err)
+            res.status(400).send(err)
+        }
+    },
+    resendEmail: async (req, res) => {
+        const { username, email, password } = req.body
+        try {
+            const result = `SELECT id_customer, username FROM data_customer WHERE username='${username}'`
+            const qresult = await asyncQuery(result)
 
+            const token = createToken({ username: username, id_user: qresult[0].id_customer })
+            const option = {
+                from: 'admin <ezrayamin16@gmail.com>',
+                to: `${email}`,
+                subject: 'account verification',
+                text: ''
+            }
+
+            const emailFile = fs.readFileSync('./email/verify.html').toString()
+            const template = handlebars.compile(emailFile)
+            option.html = template({ token: token, name: username })
+            const info = await transporter.sendMail(option)
+            res.status(200).send(info.response)
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 }

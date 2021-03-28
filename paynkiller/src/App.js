@@ -22,8 +22,11 @@ import MasterAdminScreen from './pages/masterAdmin'
 import ManagementStockProductScreen from './pages/stokProduk'
 import ManagementStockRawMaterialScreen from './pages/stokRawMaterial'
 import ProductListScreen from './pages/productListScreen'
+
 import OrderScreen from './pages/orderScreen'
 import CustomOrderAdminScreen from './pages/customOrderAdmin'
+import OrderRawMaterials from './pages/orderRawMaterials'
+
 import CustomOrderScreen from './pages/customOrderScreen'
 import ShowCustomOrderScreen from './pages/showCustomOrderScreen'
 import ReportTransactionScreen from './pages/reportTransaction'
@@ -73,9 +76,13 @@ export default function App() {
         <Route path='/admin/report/transaction' component={ReportTransactionScreen} />
         <Route path='/admin/report/stocksale' component={ReportProductSaleScreen} />
         <Route path='/products' component={ProductListScreen} />
+
+        <Route path='/ordermaterials' component={OrderRawMaterials}/>
+
         <Route path='/customOrder' component={CustomOrderScreen} />
         <Route path='/ShowCustomOrder' component={ShowCustomOrderScreen} />
         <Route path='/historyUser' component={UserHistoryScreen} />
+
       </Switch>
     </div>
   )

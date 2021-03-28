@@ -1,6 +1,7 @@
 let INITIAL_STATE = {
     cart: [],
-    checkout: []
+    checkout: [],
+    paymentProof: ''
 }
 
 const cartReducer = (state = INITIAL_STATE, action) => {
@@ -10,12 +11,16 @@ const cartReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 cart: action.payload
             }
-        case 'GET_CHECKOUT': {
+        case 'GET_CHECKOUT': 
             return{
                 ...state,
                 checkout: action.payload
             }
-        }
+        case 'PAYMENT_PROOF' : 
+            return{
+                ...state,
+                paymentProof:action.payload
+            }
         default:
             return state
     }
