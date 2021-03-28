@@ -36,14 +36,13 @@ const RegisterScreen = () => {
         let sym = /[?><:;"'.,!@#$%^*]/
         let cek = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         let numb = /[0-9]/
+        let uppercase = /^[A-Z]/
         if (username === "" || email === "" || password === "" || confpass === "") return setShowModal([true, "please input each form"])
         if (sym.test(username) || username.length < 6) return setShowModal([true, 'username cannot have symbol, and must have at least 6 characters'])
         if (!cek.test(email)) return setShowModal([true, 'your email is not valid'])
-        if (!numb.test(password) || !sym.test(password) || password.length < 8) return setShowModal([true, 'password must include symbols & numbers, with min. 8 characters'])
+        if (!numb.test(password) || !sym.test(password) || !uppercase.test(password) || password.length < 8) return setShowModal([true, 'password must include symbols & numbers, with min. 8 characters & 1 uppercase'])
 
         const user = { username, email, password }
-        if (password !== confpass) return setShowModal([true, "password doesn't match"])
-
         // Axios.get(`http://localhost:2000/user/cek`, user)
         //     .then((res) => setShowModal[true, res.data])
         //     .catch(err => console.log(err))

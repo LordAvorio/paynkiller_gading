@@ -1,9 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Navbar from '../components/TopNavigation'
 import { Button, Modal } from 'rsuite'
 import { RemoveResUpload, UploadMedPrescription } from '../action'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 const CustomOrderScreen = () => {
     const [show, setShow] = React.useState(false)
@@ -46,20 +47,27 @@ const CustomOrderScreen = () => {
         dispatch(RemoveResUpload())
         setDirect(2)
         setShow(false)
-        
+
     }
     const doneShowErr = () => {
         dispatch(RemoveResUpload())
         setDirect(0)
         setShowErr(false)
-        
+
     }
-    if(direct === 2) return <Redirect to='/ShowCustomOrder'/>
+    if (direct === 2) return <Redirect to='/ShowCustomOrder' />
     return (
         <div>
             <Navbar />
             <div style={{ display: 'flex', flexDirection: 'row', margin: 'auto', justifyContent: 'space-around', marginTop: 50 }}>
-                <div style={{ backgroundColor: '#04BF8A', height: 200, width: 500 }} id='Box'></div>
+                <div style={{backgroundColor: '#04BF8A', height: 200, width: 500 }} id='Box'>
+                    <p style={{ textAlign: 'center', fontSize: 26, fontWeight: 'bold', marginTop: 20, color: 'white' }}>Order Manually</p>
+                    <div style={{ marginTop: 30, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Link to='/ordermaterials'>
+                        <Button style={{ width: '100%' }} id="Button">Click Here</Button>
+                    </Link>
+                    </div>
+                </div>
                 <div style={{ backgroundColor: '#04BF8A', height: 200, width: 500 }} id='Box'>
                     <p style={{ textAlign: 'center', fontSize: 26, fontWeight: 'bold', marginTop: 20, color: 'white' }}>Upload Medical Prescription</p>
                     <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -89,7 +97,7 @@ const CustomOrderScreen = () => {
                     {res}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={doneShow} style={{backgroundColor: '#04BF8A', color:'white', fontWeight:'bold', width:100}}>
+                    <Button onClick={doneShow} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
                         Ok
                     </Button>
                 </Modal.Footer>
@@ -102,7 +110,7 @@ const CustomOrderScreen = () => {
                     {errRes}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={doneShowErr} style={{backgroundColor: '#04BF8A', color:'white', fontWeight:'bold', width:100}}>
+                    <Button onClick={doneShowErr} style={{ backgroundColor: '#04BF8A', color: 'white', fontWeight: 'bold', width: 100 }}>
                         Ok
                     </Button>
                 </Modal.Footer>
