@@ -121,13 +121,13 @@ module.exports = {
                     res.status(400).send(err)
                 }
             })
-            if (qgetOrders.length === 0) {
-                console.log('tralalalala')
-                let checkStokProduk = `SELECT sp.id_produk, sp.jumlah_produk, od.qty FROM stok_produk sp
-                                       LEFT JOIN order_details od ON od.id_produk = sp.id_produk
-                                       WHERE od.order_number = '${order_number}'`
-                let hasilchekproduk = await asyncQuery(checkStokProduk)
-                console.log(hasilchekproduk)
+            console.log('tralalalala')
+            let checkStokProduk = `SELECT sp.id_produk, sp.jumlah_produk, od.qty FROM stok_produk sp
+                                   LEFT JOIN order_details od ON od.id_produk = sp.id_produk
+                                   WHERE od.order_number = '${order_number}'`
+            let hasilchekproduk = await asyncQuery(checkStokProduk)
+            console.log(hasilchekproduk)
+            if (hasilchekproduk.length >= 0) {
                 hasilchekproduk.map(async (itm, idx) => {
                     try {
                         let updateStokProduk = `UPDATE stok_produk SET jumlah_produk = '${itm.jumlah_produk + itm.qty}' WHERE id_produk = '${itm.id_produk}'`
