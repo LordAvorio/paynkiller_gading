@@ -6,6 +6,8 @@ import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 
 import 'rsuite/dist/styles/rsuite-default.css'
+import 'aos/dist/aos.css';
+
 
 import {createStore, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'

@@ -37,6 +37,7 @@ const {
     stokRawMaterialRouter,
     customOrderRouter,
     adminRouter,
+    reportRouter,
     userHistoryRouter
 
 } = require('./routers')
@@ -46,6 +47,7 @@ app.use('/order', orderRouter)
 app.use('/category', categoryRouter)
 app.use('/produk', produkRouter)
 app.use('/brand', brandRouter)
+app.use('/report', reportRouter)
 app.use('/uom', uomRouter)
 app.use('/admin', adminRouter)
 app.use('/product', productRouter)
