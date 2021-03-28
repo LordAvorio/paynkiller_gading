@@ -13,10 +13,15 @@ module.exports = {
 
             let current_order_number = qcek.length !== 0 ? qcek[0].order_number : Date.now()
 
+            let hari = new Date()
+            let day = hari.getDate()
+            let bulan = hari.getMonth()
+            let tahun = hari.getFullYear()
+
             if (qcek.length === 0) {
 
-                const addOrders = `INSERT INTO orders (order_number, id_customer, id_status) VALUES
-                (${current_order_number}, ${id_customer}, 1)`
+                const addOrders = `INSERT INTO orders (order_number, id_customer, id_status, tanggal_transaksi) VALUES
+                (${current_order_number}, ${id_customer}, 1, '${tahun}-${bulan + 1}-${day}')`
                 await asyncQuery(addOrders)
             }
             // console.log(id_produk)

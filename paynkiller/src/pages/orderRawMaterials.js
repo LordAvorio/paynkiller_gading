@@ -6,8 +6,9 @@ import {
 } from 'rsuite'
 import { Link, Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getRawMaterial } from '../action/rawMaterialAction'
+import { getRawMaterial, getMaterialsInCart } from '../action'
 import MaterialTable from 'material-table'
+import Navbar from '../components/TopNavigation'
 
 const OrderRawMaterials = () => {
     const [SelectedMaterials, setSelectedMaterials] = React.useState([])
@@ -26,10 +27,11 @@ const OrderRawMaterials = () => {
 
     React.useEffect(() => {
         dispatch(getRawMaterial())
+        dispatch(getMaterialsInCart(id_customer))
         setSelectedMaterials(SelectedMaterials)
         console.log(SelectedMaterials)
         console.log(rawMaterialData)
-    }, [SelectedMaterials])
+    }, [SelectedMaterials, id_customer])
 
     const add = (id_bahan_baku, nama_bahan_baku, harga_bahan_baku, nama_uom) => {
         setSelectedMaterials(pre => [...pre, { id_bahan_baku, nama_bahan_baku, harga_bahan_baku, nama_uom, qty: 0, total_harga: 0 }])
@@ -94,7 +96,9 @@ const OrderRawMaterials = () => {
             })
         
         Alert.success('your items have been added to your cart (and cannot be edited)', 5000)
-        setToCart(true)
+        // setToCart(true)
+        setSelectedMaterials([])
+        setShowAcc(false)
     }
 
     const grandTotal = () => {
@@ -136,9 +140,10 @@ const OrderRawMaterials = () => {
         )
     }
 
-    if (toCart) return <Redirect to="/cart" />
+    // if (toCart) return <Redirect to="/cart" />
     return (
         <div>
+            <Navbar/>
             <Grid fluid style={{ margin: "0px", padding: "0px" }}>
                 <Row style={{ margin: "0px", padding: "0px" }}>
                     <Col md={18}>

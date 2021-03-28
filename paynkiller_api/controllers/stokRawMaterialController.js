@@ -132,16 +132,17 @@ module.exports = {
             const decreasing = `UPDATE stok_bahan_baku sb  JOIN bahan_baku b on sb.id_bahan = b.id_bahan_baku
                                     JOIN custom_order_detail cod ON b.id_bahan_baku = cod.id_bahan_baku
                                     JOIN order_details od ON cod.id_custom_order = od.id_custom_order
-                                    SET sb.total_bahan = sb.total_bahan - cod.total_beli_satuan
+                                    SET sb.total_bahan = sb.total_bahan - cod.total_beli_satuan, 
+                                    sb.jumlah_botol = ceil(sb.total_bahan / b.total_kapasitas)
                                     WHERE od.order_number = ${order_number}`
             await asyncQuery(decreasing)
 
-            const bottle = `UPDATE stok_bahan_baku sb  JOIN bahan_baku b on sb.id_bahan = b.id_bahan_baku
-                                    JOIN custom_order_detail cod ON b.id_bahan_baku = cod.id_bahan_baku
-                                    JOIN order_details od ON cod.id_custom_order = od.id_custom_order
-                                    SET sb.jumlah_botol = sb.total_bahan / b.total_kapasitas
-                                    WHERE od.order_number = ${order_number}`
-            await asyncQuery(bottle)
+            // const bottle = `UPDATE stok_bahan_baku sb JOIN bahan_baku b on sb.id_bahan = b.id_bahan_baku
+            //                         JOIN custom_order_detail cod ON b.id_bahan_baku = cod.id_bahan_baku
+            //                         JOIN order_details od ON cod.id_custom_order = od.id_custom_order
+            //                         SET sb.jumlah_botol = round(sb.total_bahan / b.total_kapasitas)
+            //                         WHERE od.order_number = ${order_number}`
+            // await asyncQuery(bottle)
             
             res.sendStatus(200)
         }

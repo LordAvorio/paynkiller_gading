@@ -151,13 +151,15 @@ const CartScreen = () => {
 
     const IngredientsCode = () => {
         return (
-            <div style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '-10px 10px 10px', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
+            <div>
                 {materialsinCart.length !== 0
                 ?
+            <div style={{ backgroundColor: 'white', height: '80px', width: '200px', border: '1px solid gray', margin: '-10px 10px 10px', borderRadius: '20px', padding: '10px 20px 10px 20px' }}>
                 <div>
                 <p style={{ textAlign: 'center' }}>{materialsinCart[0].kode_custom_order}</p>
                 <Button onClick={() => setShowDetails(true)} style={{ backgroundColor: 'white', fontWeight: 'bold', color: '#51bea5', margin: '5px 0 0 20px' }}>click for details</Button>
                 </div>
+            </div>
                 :
                 <></>
             }

@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios'
+import Axios from 'axios'
 import swal from 'sweetalert';
 import { Grid, Row, Col, Button, IconButton, Icon, Form, InputGroup, Input, Modal, Alert } from 'rsuite'
 import { Link } from 'react-router-dom'
@@ -8,62 +8,70 @@ import { addCart, getUserCart } from '../action'
 import '../css/pages/detailProduk.css'
 import TopNavigation from '../components/TopNavigation'
 const DetailProdukScreen = (props) => {
-    const URL_IMG = 'http://localhost:2000/'
+  const URL_IMG = 'http://localhost:2000/'
 
-    const [Data, setData] = React.useState({})
-    const id_produk = props.location.search.substring(1)
-    const [angka, setAngka] = React.useState(0)
+  const [Data, setData] = React.useState({})
+  const id_produk = props.location.search.substring(1)
+  const [angka, setAngka] = React.useState(0)
 
-    console.log(id_produk)
-    console.log(angka)
-    console.log(Data)
-
-
-    const dispatch = useDispatch()
-    const { id_customer, cart } = useSelector((state) => {
-        return {
-            id_customer: state.userReducer.id_customer,
-            cart: state.cartReducer.cart
-        }
-    })
-
-    React.useEffect(() => {
-        axios.post(`http://localhost:2000/produk/getProduk?${id_produk}`)
-            .then((res) => setData(res.data[0]))
-        dispatch(getUserCart(id_customer))
-        console.log(cart)
-    }, [id_customer])
+  console.log(id_produk)
+  console.log(angka)
+  console.log(Data)
 
 
-    const btnBuy = () => {
-        console.log(angka)
-        if(angka === 0) return swal("Oops!", 'please add the qty before taking the product to your cart', "error")
-        if (angka >= Data.jumlah_produk) return swal("Oops!", `there are only ${Data.jumlah_produk} stocks available`, "error");
-        if (!id_customer) return swal("Oops!", "you need to login first to continue your payment", "error");
-        console.log(cart)
-
-        let tempProduk
-        cart.map(item => {
-          if (item.id_produk == Data.id_produk) {
-            tempProduk = item
-          }
-        })
-        console.log(tempProduk)
-        if (tempProduk) {
-            if (tempProduk.qty + angka > Data.jumlah_produk) return swal("Oops!", `you have already added ${tempProduk.qty} products to your cart`, "error");
-        }
-
-        const sendCart = { ...Data, qty: angka, total_harga: angka * parseInt(Data.harga_produk) }
-        console.log(sendCart)
-        dispatch(addCart(id_customer, sendCart))
-
-        Alert.success(`${Data.nama_produk} has been added to your cart`, 5000)
-        setAngka(0)
+  const dispatch = useDispatch()
+  const { id_customer, cart } = useSelector((state) => {
+    return {
+      id_customer: state.userReducer.id_customer,
+      cart: state.cartReducer.cart
     }
+  })
 
-    console.log(Data)
-    return (
-        <div>
+  React.useEffect(() => {
+    Axios.post(`http://localhost:2000/produk/getProduk?${id_produk}`)
+      .then((res) => setData(res.data[0]))
+    dispatch(getUserCart(id_customer))
+    console.log(cart)
+  }, [id_customer])
+  
+  
+  const btnBuy = async () => {
+    console.log(angka)
+    if (angka === 0) return swal("Oops!", 'please add the qty before taking the product to your cart', "error")
+    if (angka >= Data.jumlah_produk) return swal("Oops!", `there are only ${Data.jumlah_produk} stocks available`, "error");
+    if (!id_customer) return swal("Oops!", "you need to login first to continue your payment", "error");
+    console.log(cart)
+    
+    try {
+      let tempProduk
+      cart.map(item => {
+        if (item.id_produk == Data.id_produk) {
+          tempProduk = item
+        }
+      })
+      console.log(tempProduk)
+      if (tempProduk) {
+        if (tempProduk.qty + angka > Data.jumlah_produk) return swal("Oops!", `you have already added ${tempProduk.qty} products to your cart`, "error");
+      }
+      
+      const sendCart = { ...Data, qty: angka, total_harga: angka * parseInt(Data.harga_produk) }
+      console.log(sendCart)
+
+      await Axios.post(`http://localhost:2000/order/addCart/${id_customer}`, sendCart)
+      // dispatch(addCart(id_customer, sendCart))
+      
+      Alert.success(`${Data.nama_produk} has been added to your cart`, 5000)
+      setAngka(0)
+    }
+    catch (err) {
+      dispatch(getUserCart(id_customer))
+      console.log(err)
+    }
+  }
+
+  console.log(Data)
+  return (
+    <div>
       <TopNavigation />
       <Col md={24} style={{ paddingTop: "20px", paddingLeft: "50px" }}>
         <Link to="/products">
