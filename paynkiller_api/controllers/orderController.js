@@ -1,6 +1,8 @@
 const { asyncQuery, generateQueryBody } = require('../helpers/queryHelp')
 const db = require('../database')
 const fs = require('fs')
+const handlebars = require('handlebars')
+const transporter = require('../helpers/nodemailer')
 
 module.exports = {
     addToCart: async (req, res) => {
